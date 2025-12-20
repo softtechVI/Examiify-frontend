@@ -14,12 +14,11 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup SSH
-  run: |
-    mkdir -p ~/.ssh
-    echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
-    chmod 600 ~/.ssh/id_rsa
-    ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts
-
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts
 
       - name: Build & Deploy on EC2
         run: |
@@ -28,7 +27,7 @@ jobs:
 
             echo "🚀 Deployment started"
 
-            cd /home/${{ secrets.EC2_USER }}/Examiify-frontend
+            cd /home/ec2-user/Examiify-frontend
 
             echo "⬇️ Pull latest code"
             git pull origin main
@@ -65,7 +64,7 @@ jobs:
             sudo find /var/www/examiify -type f -exec chmod 644 {} \;
             sudo chcon -R -t httpd_sys_content_t /var/www/examiify
 
-            echo "🔁 Reload Nginx"
+            echo "🔁 Reloading Nginx"
             sudo nginx -t
             sudo systemctl reload nginx
 
