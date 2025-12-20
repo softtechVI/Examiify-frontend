@@ -1,0 +1,35 @@
+@import "tailwindcss";
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .right-section-column {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+  .right-section-row{
+    flex-direction: row;
+    width: 250px;
+  }
+}
+button{
+  cursor: pointer;
+}
+
+/* In your global.css or App.css */
+.ant-spin-dot-item {
+  background-color: #049f99 !important; /* Use !important if needed to override Ant Design's default */
+}
+
+/* For the text tip if its color is not linked to the main color */
+.ant-spin-text {
+  color: #049f99; /* Change the color of the "Loading..." text */
+}

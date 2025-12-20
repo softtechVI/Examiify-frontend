@@ -1,0 +1,2 @@
+VITE_REACT_APP_ADMIN_SERVER_URL=http://admin.localhost:5000
+VITE_REACT_APP_SERVER_URL=http://localhost:5000

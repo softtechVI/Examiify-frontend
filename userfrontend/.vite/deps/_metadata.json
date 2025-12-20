@@ -1,0 +1,94 @@
+{
+  "hash": "e58c0cf9",
+  "configHash": "fbfcb3de",
+  "lockfileHash": "239bfb2f",
+  "browserHash": "640ce87b",
+  "optimized": {
+    "react/jsx-dev-runtime": {
+      "src": "../../node_modules/.pnpm/react@18.3.1/node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "6cde9503",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/.pnpm/react-dom@18.3.1_react@18.3.1/node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "bb21bf6b",
+      "needsInterop": true
+    },
+    "react": {
+      "src": "../../node_modules/.pnpm/react@18.3.1/node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "43aba275",
+      "needsInterop": true
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/.pnpm/react-router-dom@6.30.1_rea_32183f923d2f77881bbb08a88c6f2afc/node_modules/react-router-dom/dist/index.js",
+      "file": "react-router-dom.js",
+      "fileHash": "c9ff61c1",
+      "needsInterop": false
+    },
+    "antd": {
+      "src": "../../node_modules/.pnpm/antd@5.27.4_date-fns@3.6.0__b4025ba22d851a879d0402b263167247/node_modules/antd/es/index.js",
+      "file": "antd.js",
+      "fileHash": "826c72fc",
+      "needsInterop": false
+    },
+    "lucide-react": {
+      "src": "../../node_modules/.pnpm/lucide-react@0.462.0_react@18.3.1/node_modules/lucide-react/dist/esm/lucide-react.js",
+      "file": "lucide-react.js",
+      "fileHash": "fb4e3d60",
+      "needsInterop": false
+    },
+    "axios": {
+      "src": "../../node_modules/.pnpm/axios@1.12.2/node_modules/axios/index.js",
+      "file": "axios.js",
+      "fileHash": "50c721c0",
+      "needsInterop": false
+    },
+    "zustand": {
+      "src": "../../node_modules/.pnpm/zustand@5.0.8_@types+react@_904e69b6821b732044b561538cc37dbc/node_modules/zustand/esm/index.mjs",
+      "file": "zustand.js",
+      "fileHash": "2b472d4e",
+      "needsInterop": false
+    },
+    "sonner": {
+      "src": "../../node_modules/.pnpm/sonner@1.7.4_react-dom@18.3.1_react@18.3.1__react@18.3.1/node_modules/sonner/dist/index.mjs",
+      "file": "sonner.js",
+      "fileHash": "9fa5e8f1",
+      "needsInterop": false
+    },
+    "classnames": {
+      "src": "../../node_modules/.pnpm/classnames@2.5.1/node_modules/classnames/index.js",
+      "file": "classnames.js",
+      "fileHash": "cd2d0015",
+      "needsInterop": true
+    },
+    "@tabler/icons-react": {
+      "src": "../../node_modules/.pnpm/@tabler+icons-react@3.35.0_react@18.3.1/node_modules/@tabler/icons-react/dist/esm/tabler-icons-react.mjs",
+      "file": "@tabler_icons-react.js",
+      "fileHash": "cb4ad71a",
+      "needsInterop": false
+    },
+    "zustand/middleware/immer": {
+      "src": "../../node_modules/.pnpm/zustand@5.0.8_@types+react@_904e69b6821b732044b561538cc37dbc/node_modules/zustand/esm/middleware/immer.mjs",
+      "file": "zustand_middleware_immer.js",
+      "fileHash": "3241b57e",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-4LOFNNMA": {
+      "file": "chunk-4LOFNNMA.js"
+    },
+    "chunk-C4NW2Y5O": {
+      "file": "chunk-C4NW2Y5O.js"
+    },
+    "chunk-OELA7GPI": {
+      "file": "chunk-OELA7GPI.js"
+    },
+    "chunk-G3PMV62Z": {
+      "file": "chunk-G3PMV62Z.js"
+    }
+  }
+}
