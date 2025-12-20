@@ -7,6 +7,8 @@ import { Eye, EyeOff } from "lucide-react";
 import useIsLoginStore from "../store/IsLoginStore";
 import ResetPasswordFlow from "../components/ForgotPassword";
 import { Modal } from "antd";
+import logo from "../assets/logo5.png";
+import homeimg from "../assets/homeimage-login.png";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -75,7 +77,7 @@ const Login: React.FC = () => {
       {/* Left Side - Brand Image (Hidden on small screens) */}
       <div className="hidden lg:flex w-1/2 items-center justify-center bg-white">
         <img
-          src="../../public/homeimage-login.png"
+          src={homeimg}
           alt="Brand"
           className="w-full h-full object-cover"
         />
@@ -92,7 +94,7 @@ const Login: React.FC = () => {
         <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
           {/* Logo */}
           <div className="flex justify-center mb-4">
-            <img src="/logo5.png" alt="Logo" className="w-40 h-auto" />
+            <img src={logo} alt="Logo" className="w-40 h-auto" />
           </div>
 
           <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
@@ -158,7 +160,7 @@ const Login: React.FC = () => {
         </div>
       </div>
 
-     <Modal
+    <Modal
   open={forgotPassword}
   onCancel={() => setForgotPassword(false)}
   footer={null}

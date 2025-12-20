@@ -7,6 +7,8 @@ const { Option, OptGroup } = Select;
 import OTPModel from "@/components/OTPModel/index"; // Adjust the import path as necessary
 import PasswordModal from "@/components/SetPassword/index"; // <--- Import new PasswordModal
 import useIsLoginStore from "@/store/IsLoginStore";
+import logo from "../assets/logo5.png";
+import homeimg from "../assets/homeimage-login.png";
 
 const stateCityMap: Record<string, string[]> = {
   "Andhra Pradesh": ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore", "Kurnool", "Tirupati", "Rajahmundry", "Kadapa", "Anantapur", "Eluru"],
@@ -172,14 +174,14 @@ const { startLoading, stopLoading } = useIsLoginStore();
         <div className="flex flex-col lg:flex-row w-full h-full bg-white pt-10">
           {/* Left Side - Brand Info (Hidden on small screens) */}
           <div className="hidden lg:flex bg-white items-center justify-center">
-            <img src="../../public/homeimage-login.png" className="w-full h-175 object-cover" alt="Brand" />
+            <img src={homeimg} className="w-full h-175 object-cover" alt="Brand" />
           </div>
 
           {/* Right Side - Registration Form */}
           <div className="w-full lg:w-1/2 flex flex-col justify-center h-screen overflow-hidden">
             <div className="bg-white w-full max-w-md mx-auto px-6 overflow-y-auto max-h-[90vh] no-scrollbar">
               <div className="flex flex-col items-center justify-center">
-                <img src="../../public/logo5.png" className="w-50 h-28 block" alt="Logo" />
+                <img src={logo} className="w-50 h-28 block" alt="Logo" />
                 <p className="text-2xl font-bold text-[#049F99] leading-[0.1] mb-10">Registration</p>
               </div>
 

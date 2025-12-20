@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Badge } from "antd";
 import { Bell } from "lucide-react";
+import Notifiy from "../../assets/noticfication_icon.png"; // Ensure this path is correct
 
 const NotificationPanel = () => {
     const [open, setOpen] = useState(false);
@@ -57,7 +58,7 @@ const NotificationPanel = () => {
                 {notifications.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-10 text-gray-400">
                     <img
-                    src="/noticfication_icon.png" // Path from your public folder
+                    src={Notifiy} // Path from your public folder
                     alt="No Notifications"
                     className="w-24 mb-3" // Adjusted styling
                     />
