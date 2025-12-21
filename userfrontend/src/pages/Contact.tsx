@@ -17,7 +17,7 @@ const Contact = () => {
     {
       icon: Mail,
       title: "Email", 
-      details: ["support@examify.com", "admin@examify.com"],
+      details: ["support@Examiify.com", "admin@Examiify.com"],
       description: "Online support"
     },
     {
@@ -40,7 +40,7 @@ const Contact = () => {
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-foreground mb-4">Contact Us</h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Have questions about Examify? We're here to help. Send us a message and we'll respond as soon as possible.
+            Have questions about Examiify? We're here to help. Send us a message and we'll respond as soon as possible.
           </p>
         </div>
 

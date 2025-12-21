@@ -20,12 +20,7 @@ const Header = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
-            {/* <div className="text-2xl font-bold text-gradient">
-              Examify
-            </div> */}
-            <h1 className="text-2xl font-bold flex items-center text-[#049F99]">
-            <img src="/logo4.png" alt="Logo" className="h-10" />
-          </h1>
+          <img src="/logo4.png" alt="Logo" className="h-10" />
           </div>
 
           {/* Desktop Navigation */}

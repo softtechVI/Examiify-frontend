@@ -59,10 +59,10 @@ const InsideHeader = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link to="/" className="flex items-center">
-              <h1 className="text-2xl font-bold text-[#049F99]">
-                Exam<span className="text-[#027B7A]">ify</span>
-              </h1>
+            <Link to="/dashboard" className="flex items-center">
+              <div className="flex items-center">
+            <img src="/logo4.png" alt="Logo" className="h-10" />
+          </div>
             </Link>
           </div>
 

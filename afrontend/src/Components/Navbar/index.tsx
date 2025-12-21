@@ -12,7 +12,7 @@ const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto flex justify-between items-center">
         {/* Logo */}
         <h1 className="text-2xl font-bold">
-          {/* <Link to="/">Examify</Link> */}
+          {/* <Link to="/">Examiify</Link> */}
             <img src="/logo2.png" alt="Logo" className="h-10" />
         </h1>
 

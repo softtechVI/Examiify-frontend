@@ -11,7 +11,7 @@ const NotFound: FC = () => {
         <h1 className="text-5xl font-extrabold text-gray-900">Page 404</h1>
         <h2 className="text-2xl font-semibold text-gray-700 mt-2">Not Found</h2>
         <p className="text-gray-500 mt-4 max-w-md">
-          The page you are looking for might have been removed from Examify, had its name
+          The page you are looking for might have been removed from Examiify, had its name
           changed, or is temporarily unavailable. Don’t worry, you can always go
           back to your dashboard.
         </p>

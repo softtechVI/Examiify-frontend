@@ -135,7 +135,7 @@ const Dashboard = () => {
             <div className="space-y-8">
               <div className="inline-flex items-center gap-3 bg-primary/10 backdrop-blur-sm rounded-full px-6 py-3 border border-primary/20">
                 <Sparkles className="h-5 w-5 text-primary animate-pulse" />
-                <span className="text-primary font-semibold">Examify Dashboard</span>
+                <span className="text-primary font-semibold">Examiify Dashboard</span>
               </div>
               
               <h1 className="text-6xl md:text-7xl font-bold bg-gradient-to-r from-primary via-primary-dark to-accent bg-clip-text text-transparent leading-tight animate-fade-in">
@@ -202,11 +202,11 @@ const Dashboard = () => {
                 <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary-dark rounded-lg flex items-center justify-center">
                   <BookOpen className="h-4 w-4 text-white" />
                 </div>
-                <span className="font-bold text-card-foreground">Examify</span>
+                <span className="font-bold text-card-foreground">Examiify</span>
               </div>
               
               <p className="text-muted-foreground text-center">
-                © 2024 Examify. Empowering educational excellence.
+                © 2024 Examiify. Empowering educational excellence.
               </p>
               
               <div className="flex items-center gap-4 mt-4 md:mt-0">

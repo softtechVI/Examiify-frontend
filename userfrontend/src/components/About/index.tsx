@@ -61,7 +61,7 @@ const About = () => {
           <div className="animate-fade-in">
             <div className="inline-flex items-center px-4 py-2 rounded-full bg-accent/10 text-accent text-sm font-medium mb-6">
               <Globe className="h-4 w-4 mr-2" />
-              About Examify
+              About Examiify
             </div>
             
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-6">
@@ -70,7 +70,7 @@ const About = () => {
             </h2>
             
             <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-              Examify was born from the vision of transforming how educational institutions 
+              Examiify was born from the vision of transforming how educational institutions 
               manage examinations. We understand the challenges educators face - from creating 
               secure assessments to analyzing performance data - and we've built a comprehensive 
               solution that addresses every aspect of the examination lifecycle.
@@ -95,7 +95,7 @@ const About = () => {
           <div className="animate-slide-up">
             <img 
               src={aboutImage} 
-              alt="About Examify - Educational institution with digital overlay"
+              alt="About Examiify - Educational institution with digital overlay"
               className="w-full h-auto rounded-2xl shadow-xl"
             />
           </div>
@@ -108,7 +108,7 @@ const About = () => {
               Our Core Values
             </h3>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              The principles that guide everything we do at Examify
+              The principles that guide everything we do at Examiify
             </p>
           </div>
 

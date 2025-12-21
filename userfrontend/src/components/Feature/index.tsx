@@ -108,7 +108,7 @@ const Features = () => {
           <div className="animate-slide-up">
             <img 
               src={featuresImage} 
-              alt="Examify features illustration"
+              alt="Examiify features illustration"
               className="w-full h-auto rounded-2xl shadow-lg"
             />
           </div>
@@ -117,7 +117,7 @@ const Features = () => {
               Designed for Modern Education
             </h3>
             <p className="text-lg text-muted-foreground mb-8">
-              Built with educators in mind, Examify combines intuitive design with powerful functionality 
+              Built with educators in mind, Examiify combines intuitive design with powerful functionality 
               to deliver an unmatched examination experience.
             </p>
             

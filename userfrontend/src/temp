@@ -17,7 +17,7 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 214 27% 14%;
 
-    /* Teal color scheme for Examify */
+    /* Teal color scheme for Examiify */
     --primary: 174 72% 56%;
     --primary-foreground: 0 0% 100%;
     --primary-dark: 174 72% 46%;

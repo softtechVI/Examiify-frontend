@@ -151,11 +151,11 @@ const Dashboard = () => {
                 <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary-dark rounded-lg flex items-center justify-center">
                   <BookOpen className="h-4 w-4 text-white" />
                 </div>
-                <span className="font-bold text-card-foreground">Examify</span>
+                <span className="font-bold text-card-foreground">Examiify</span>
               </div>
 
               <p className="text-muted-foreground text-center">
-                © 2024 Examify. Empowering educational excellence.
+                © 2024 Examiify. Empowering educational excellence.
               </p>
 
               <div className="flex items-center gap-4 mt-4 md:mt-0">

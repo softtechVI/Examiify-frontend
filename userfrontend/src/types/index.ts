@@ -1,5 +1,5 @@
 /**
- * Common TypeScript interfaces and types for the Examify platform
+ * Common TypeScript interfaces and types for the Examiify platform
  */
 
 import { LucideIcon } from "lucide-react";

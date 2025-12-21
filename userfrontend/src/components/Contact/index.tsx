@@ -44,7 +44,7 @@ const Contact: React.FC = () => {
       icon: Mail,
       title: "Email Us",
       description: "Get in touch via email",
-      info: "support@examify.com",
+      info: "support@Examiify.com",
       color: "text-primary"
     },
     {
@@ -107,7 +107,7 @@ const Contact: React.FC = () => {
             <span className="block text-gradient">Exam Management?</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            Have questions about Examify? Want to schedule a demo? Our team is here to help you 
+            Have questions about Examiify? Want to schedule a demo? Our team is here to help you 
             get started on your journey to efficient exam management.
           </p>
         </div>
@@ -239,7 +239,7 @@ const Contact: React.FC = () => {
               </h3>
               <p className="text-muted-foreground mb-8">
                 Choose the support option that works best for you. Our dedicated team is available 
-                to assist with any questions about Examify.
+                to assist with any questions about Examiify.
               </p>
             </div>
 

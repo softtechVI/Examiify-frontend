@@ -58,7 +58,7 @@ const Footer = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-2xl sm:text-3xl font-bold text-foreground mb-4">
-              Stay Updated with Examify
+              Stay Updated with Examiify
             </h2>
             <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
               Get the latest updates on new features, educational insights, and industry best practices 
@@ -95,7 +95,7 @@ const Footer = () => {
           <div className="lg:col-span-2">
             <div className="flex items-center mb-6">
               <div className="text-2xl font-bold text-gradient">
-                Examify
+                Examiify
               </div>
             </div>
             <p className="text-muted-foreground mb-6 leading-relaxed">
@@ -114,7 +114,7 @@ const Footer = () => {
               </div>
               <div className="flex items-center space-x-3 text-muted-foreground">
                 <Mail className="h-4 w-4 text-primary flex-shrink-0" />
-                <span className="text-sm">support@examify.com</span>
+                <span className="text-sm">support@Examiify.com</span>
               </div>
             </div>
 
@@ -212,7 +212,7 @@ const Footer = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
             <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-              <span>© 2024 Examify. All rights reserved.</span>
+              <span>© 2024 Examiify. All rights reserved.</span>
               <span className="hidden md:inline">•</span>
               <span className="hidden md:inline">Built with ❤️ for educators</span>
             </div>
