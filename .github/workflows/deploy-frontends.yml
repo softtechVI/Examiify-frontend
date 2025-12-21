@@ -27,7 +27,7 @@ jobs:
 
             echo "🚀 Deployment started"
 
-            cd /home/ec2-user/Examiify-frontend
+            cd /home/ec2-user/Examiify/Examiify-frontend
             git pull origin main
 
             # ---------- ADMIN FRONTEND ----------
