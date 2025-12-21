@@ -33,7 +33,7 @@ jobs:
             # ---------- ADMIN FRONTEND ----------
             cd afrontend
             npm install
-            npm run build
+            NODE_OPTIONS="--max-old-space-size=4096" npm run build
 
             sudo rm -rf /var/www/examiify-admin/*
             sudo cp -r dist/* /var/www/examiify-admin/
@@ -43,7 +43,7 @@ jobs:
             # ---------- USER FRONTEND ----------
             cd ../userfrontend
             npm install
-            npm run build
+           NODE_OPTIONS="--max-old-space-size=4096" npm run build
 
             sudo rm -rf /var/www/examiify/*
             sudo cp -r dist/* /var/www/examiify/
