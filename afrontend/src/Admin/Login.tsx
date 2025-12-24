@@ -1,30 +1,34 @@
 import React from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { Form, Input, Button } from "antd";
 import { loginAdmin } from "../API/AllApi"; // Adjust the import path as necessary
+import useAlertStore from "../store/useAlertStore.ts";
+
+
 
 const { Password } = Input;
 
 const Login: React.FC = () => {
 	
 	const navigate = useNavigate();
-	
- const handleLogin = async (values: { email: string; password: string }) => {
-    try {
-      const data = await loginAdmin(values.email, values.password);
-      console.log("Login response:", data);
+	const showAlert = useAlertStore.getState().showAlert;
 
-      if (data.success) {
-        alert(data.message);
-        navigate(data.nextRoute || "/");
-      } else {
-        alert(data.message || "Login failed");
-      }
-    } catch (err) {
-      console.error("Login error:", err);
-      alert((err as Error).message || "An unexpected error occurred");
-    }
-  };
+	const handleLogin = async (values: { email: string; password: string }) => {
+		try {
+		const data = await loginAdmin(values.email, values.password);
+		console.log("Login response:", data);
+
+		if (data.success) {
+		   showAlert("success",data.message || "Login successful");
+			navigate(data.nextRoute || "/");
+		} else {
+			showAlert("error", "Login failed");
+		}
+		} catch (err) {
+		console.error("Login error:", err);
+		showAlert("error","An unexpected error occurred");
+		}
+	};
 
 
 	return (
@@ -54,10 +58,10 @@ const Login: React.FC = () => {
 
 					<Form.Item className="mt-6">
                     <Button
-                      type="primary"
-                      htmlType="submit"
-                     className="w-full !bg-[#049F99] !border-none hover:!bg-[#337774]" >
-                     Login
+						type="primary"
+						htmlType="submit"
+						className="w-full !bg-[#049F99] !border-none hover:!bg-[#337774]" >
+						Login
                     </Button>
                     </Form.Item>
 				</Form>

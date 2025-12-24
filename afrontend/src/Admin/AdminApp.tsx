@@ -8,6 +8,7 @@ import AddCoupon from "../Admin/Addcoupon";
 import NotFound from "./NotFount";
 import Login from "./Login";
 import AiPricing from "./AiPricing";
+import GlobalAlert from "../Components/GlobalAlert";
 
 import { checkAuth } from "../utils/checkauth"; // API call to backend
 
@@ -38,6 +39,7 @@ const LoginRoute: React.FC = () => {
 const AdminApp: React.FC = () => {
   return (
     <Router>
+      <GlobalAlert />
       <Routes>
         {/* Login Route */}
         <Route path="/login" element={<LoginRoute />} />
