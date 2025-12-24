@@ -2,6 +2,7 @@ import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../API/AllapiVerify";
 import { Eye, EyeOff } from "lucide-react";
+import DashboardButton from "../components/Dashboard/index";
 
 // Import the Zustand store
 import useIsLoginStore from "../store/IsLoginStore";
@@ -9,6 +10,7 @@ import ResetPasswordFlow from "../components/ForgotPassword";
 import { Modal } from "antd";
 import logo from "../assets/logo5.png";
 import homeimg from "../assets/homeimage-login.png";
+import Dashboard from "./InsideDashBoard";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -85,12 +87,7 @@ const Login: React.FC = () => {
 
       {/* Right Side - Login Form */}
       <div className="flex flex-col justify-center items-center w-full lg:w-1/2 p-6">
-       <button
-      className="absolute top-4 right-4 bg-white text-teal-500 py-1 px-3 rounded-md shadow hover:bg-gray-100"
-      onClick={() => navigate("/")}
-    >
-      Dashboard
-    </button>
+      <DashboardButton />
         <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
           {/* Logo */}
           <div className="flex justify-center mb-4">
