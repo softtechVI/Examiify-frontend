@@ -2,8 +2,9 @@
 
 import axios, { AxiosError } from "axios";
 import { message } from "antd";
-import useSessionStore, { User } from "../store/userSession";
+import useSessionStore  from "../store/userSession";
 import useAlertStore from "../store/useAlertStore";
+import type { User } from "@/types/index";
 
 const API_URL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 const Razorpay_key = import.meta.env.VITE_REACT_APP_RAZORPAY_KEY_ID;

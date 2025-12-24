@@ -1,15 +1,7 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { persist, createJSONStorage } from "zustand/middleware";
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  institutionType?: string;
-  role: string | number;
-  status: number;
-}
+import type { User } from "@/types/index";
 
 interface SessionState {
   user: User | null;

@@ -108,14 +108,31 @@ export interface ApiResponse<T> {
 }
 
 // User Types (for future authentication)
+// export interface User {
+//   id: string;
+//   name: string;
+//   email: string;
+//   role: 'admin' | 'teacher' | 'student';
+//   avatar?: string;
+// }
+
 export interface User {
   id: string;
   name: string;
   email: string;
-  role: 'admin' | 'teacher' | 'student';
+  institutionType?: string;
+  role: string | number;
+  status: number;
+  phoneNumber?: string;
+  aiStatus?: boolean;
   avatar?: string;
+  institute?: string;
+  address?: string;
+  state?: string;
+  city?: string;
+  validStart?: string;
+  validUpto?: string;
 }
-
 // Exam Types (for future exam management)
 export interface Exam {
   id: string;
