@@ -1,7 +1,9 @@
 // backend/constants/index.js
 export const roles = {
-    admin: 1,
-    institute: 2,
+    Superadmin: 1,
+    "Institute Admin": 2,
+    Teacher: 3,
+    Student: 4,
 };
 
 export const status = {

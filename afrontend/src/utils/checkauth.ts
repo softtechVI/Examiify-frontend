@@ -24,7 +24,7 @@ export const checkAuth = async (): Promise<boolean> => {
 export const logout = async (): Promise<boolean> => {
   try {
     const response = await axios.post(
-      `${API_URL}/auth/logout`,
+      `${API_URL}/api/auth/logout`,
       {},
       {
         withCredentials: true, 

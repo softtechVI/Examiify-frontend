@@ -5,6 +5,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import useSessionStore from "@/store/userSession";
+import type { User as UserSession   } from "@/types/index";
+import { roles } from "@/constants";
 
 const ProfilePage = () => {
   const { user } = useSessionStore();
@@ -16,9 +18,10 @@ const ProfilePage = () => {
   ]);
 
   const getRoleLabel = (role: string | number) => {
-    if (role === 2 || role === "2") return "Teacher";
-    if (role === 1 || role === "1") return "Admin";
-    return "Student";
+    if (role === roles["Institute Admin"]) return "Institute Admin";
+    if (role === roles.Teacher) return "Teacher";
+    if (role === roles.Student) return "Student";
+    return "User";
   };
 
   const getStatusLabel = (status: number) => {
@@ -119,7 +122,7 @@ const ProfilePage = () => {
                   <Phone className="w-5 h-5 text-primary mt-0.5" />
                   <div>
                     <p className="text-sm text-muted-foreground">Phone Number</p>
-                    <p className="font-medium text-foreground">{(user as any).phoneNumber || "N/A"}</p>
+                    <p className="font-medium text-foreground">{user.phoneNumber || "N/A"}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-3 rounded-lg bg-background/50">
@@ -143,7 +146,7 @@ const ProfilePage = () => {
                   <Building className="w-5 h-5 text-primary mt-0.5" />
                   <div>
                     <p className="text-sm text-muted-foreground">Institute Name</p>
-                    <p className="font-medium text-foreground">{(user as any).institute || "N/A"}</p>
+                    <p className="font-medium text-foreground">{user.institute || "N/A"}</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-3 rounded-lg bg-background/50">
@@ -151,7 +154,7 @@ const ProfilePage = () => {
                   <div>
                     <p className="text-sm text-muted-foreground">Institute Type</p>
                     <p className="font-medium text-foreground">
-                      {(user as any).instituteType || "N/A"}
+                      {user.institutionType ? (Number(user.institutionType) === 1 ? "School" : "College & University") : "N/A"}
                     </p>
                   </div>
                 </div>
@@ -160,7 +163,16 @@ const ProfilePage = () => {
                   <div>
                     <p className="text-sm text-muted-foreground">Address</p>
                     <p className="font-medium text-foreground">
-                      {(user as any).address || "N/A"}, {(user as any).city || "N/A"}, {(user as any).state || "N/A"}
+                      {user.address || "N/A"}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 p-3 rounded-lg bg-background/50 md:col-span-2">
+                  <MapPin className="w-5 h-5 text-primary mt-0.5" />
+                  <div>
+                    <p className="text-sm text-muted-foreground">City/State</p>
+                    <p className="font-medium text-foreground">
+                      {user.city || "N/A"} / {user.state || "N/A"}
                     </p>
                   </div>
                 </div>
@@ -179,7 +191,7 @@ const ProfilePage = () => {
                   <div>
                     <p className="text-sm text-muted-foreground">Valid From</p>
                     <p className="font-medium text-foreground">
-                      {(user as any).validStart ? new Date((user as any).validStart).toLocaleDateString() : "N/A"}
+                      {user.validStart ? new Date(user.validStart).toLocaleDateString("en-GB") : "N/A"}
                     </p>
                   </div>
                 </div>
@@ -188,16 +200,23 @@ const ProfilePage = () => {
                   <div>
                     <p className="text-sm text-muted-foreground">Valid Until</p>
                     <p className="font-medium text-foreground">
-                      {(user as any).validUpto ? new Date((user as any).validUpto).toLocaleDateString() : "N/A"}
-                    </p>
+  {user.validUpto
+    ? new Date(user.validUpto).toLocaleDateString("en-GB")
+    : "N/A"}
+</p>
+
                   </div>
                 </div>
                 <div className="flex items-start gap-3 p-3 rounded-lg bg-background/50">
                   <Sparkles className="w-5 h-5 text-primary mt-0.5" />
                   <div>
                     <p className="text-sm text-muted-foreground">AI Status</p>
-                    <p className="font-medium text-foreground">
-                      {(user as any).aiStatus === 1 ? "Active" : "Inactive"}
+                                        <p
+                      className={`font-medium text-foreground ${
+                        user.aiStatus ? "text-green-500" : "text-red-500"
+                      }`}
+                    >
+                      {user.aiStatus ? "Active" : "Inactive"}
                     </p>
                   </div>
                 </div>

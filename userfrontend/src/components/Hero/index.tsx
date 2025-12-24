@@ -55,7 +55,7 @@ const Hero = () => {
               {" "}
               Transform Your
             </h1>
-            <span className="block bg-gradient-to-r from-accent-light via-accent to-white bg-clip-text text-transparent">
+            <span className="text-white block bg-gradient-to-r from-accent-light via-accent to-white bg-clip-text text-transparent">
               Exam Management
             </span>
           </h1>

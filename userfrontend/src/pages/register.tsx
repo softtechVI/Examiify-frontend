@@ -9,6 +9,7 @@ import PasswordModal from "@/components/SetPassword/index"; // <--- Import new P
 import useIsLoginStore from "@/store/IsLoginStore";
 import logo from "../assets/logo5.png";
 import homeimg from "../assets/homeimage-login.png";
+import DashboardButton from "../components/Dashboard/index";
 
 const stateCityMap: Record<string, string[]> = {
   "Andhra Pradesh": ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore", "Kurnool", "Tirupati", "Rajahmundry", "Kadapa", "Anantapur", "Eluru"],
@@ -178,7 +179,9 @@ const { startLoading, stopLoading } = useIsLoginStore();
           </div>
 
           {/* Right Side - Registration Form */}
-          <div className="w-full lg:w-1/2 flex flex-col justify-center h-screen overflow-hidden">
+          <DashboardButton className="bg-[#038a85] text-white font-bold hover:bg-[#038a85]" />
+          <div className="w-full lg:w-1/2 flex flex-col justify-center h-screen overflow-hidden mt-10">
+          
             <div className="bg-white w-full max-w-md mx-auto px-6 overflow-y-auto max-h-[90vh] no-scrollbar">
               <div className="flex flex-col items-center justify-center">
                 <img src={logo} className="w-50 h-28 block" alt="Logo" />
