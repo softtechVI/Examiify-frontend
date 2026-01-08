@@ -80,7 +80,7 @@ export const GetAllPlan = async (instituteType: string) => {
       withCredentials: true,
        instituteType ,
     });
-    // console.log("Response Data:", response.data);
+
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {
