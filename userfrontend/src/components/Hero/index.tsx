@@ -38,7 +38,7 @@ const Hero = () => {
           {/* Badge */}
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 text-white mb-8">
             <span className="text-sm font-medium">
-              🚀 Trusted by 500+ Educational Institutions
+              🚀 Trusted by 100+ Educational Institutions
             </span>
           </div>
 
@@ -80,10 +80,24 @@ const Hero = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-            <Button className="btn-hero text-lg px-8 py-4 group">
-              Start Free Trial
+            {/* <Button className="btn-hero text-lg px-8 py-4 group">
+              Request Free Trial
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
+            </Button> */}
+
+            <Button
+  className="btn-hero text-lg px-8 py-4 group"
+  onClick={() =>
+    document
+      .getElementById("contact")
+      ?.scrollIntoView({ behavior: "smooth" })
+  }
+>
+  Request Free Trial
+  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+</Button>
+
+
             <Button
               variant="outline"
               size="lg"
@@ -97,7 +111,7 @@ const Hero = () => {
           <div className="grid grid-cols-3 gap-8 mt-16 pt-8 border-t border-white/20">
             <div className="text-center">
               <div className="text-3xl sm:text-4xl font-bold text-white">
-                500+
+                100+
               </div>
               <div className="text-white/80 font-medium">Schools</div>
             </div>
@@ -109,7 +123,7 @@ const Hero = () => {
             </div>
             <div className="text-center">
               <div className="text-3xl sm:text-4xl font-bold text-white">
-                98%
+                100%
               </div>
               <div className="text-white/80 font-medium">Uptime</div>
             </div>

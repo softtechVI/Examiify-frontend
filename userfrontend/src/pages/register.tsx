@@ -179,7 +179,7 @@ const { startLoading, stopLoading } = useIsLoginStore();
           </div>
 
           {/* Right Side - Registration Form */}
-          <DashboardButton className="bg-[#038a85] text-white font-bold hover:bg-[#038a85]" />
+          <DashboardButton className="bg-[#049F99] text-[#049F99] font-bold hover:bg-[#049F99] hover:text-white" />
           <div className="w-full lg:w-1/2 flex flex-col justify-center h-screen overflow-hidden mt-10">
           
             <div className="bg-white w-full max-w-md mx-auto px-6 overflow-y-auto max-h-[90vh] no-scrollbar">
