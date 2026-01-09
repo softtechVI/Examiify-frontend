@@ -1,7 +1,7 @@
 {
-  "name": "frontend",
+  "name": "admin_frontend",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -16,6 +16,7 @@
     "antd": "^5.25.4",
     "axios": "^1.9.0",
     "framer-motion": "^12.23.12",
+    "immer": "^11.1.3",
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.522.0",
     "react": "^19.1.0",

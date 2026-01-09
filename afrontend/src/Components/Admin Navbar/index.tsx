@@ -10,8 +10,10 @@ import {
 } from '@ant-design/icons';
 import { useState } from 'react';
 import { logout } from '../../utils/checkauth';
+import useSessionStore from '../../store/userSession';
 
 function Dashboard() {
+  const user = useSessionStore((state) => state.user);
   const location = useLocation();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -53,6 +55,7 @@ function Dashboard() {
         <div className="flex justify-center mb-4">
           <img src="/logo5.png" alt="Logo" className="h-20" />
         </div>
+        <h2>{user?.name}</h2>
         <div className="border-t-2 border-gray-300 mb-4"></div>
 
         <nav className="space-y-2">
