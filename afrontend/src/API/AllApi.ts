@@ -46,8 +46,45 @@ export const AddPlan = async (formData: FormData) => {
   }
 };
 
-// Admin Coupon Varify
+export const EmailOtpVerify = async (otp: number, email: string) => {
+  try {
+    const response = await axios.post(
+      `${API_URL}/api/admin/verifyemailotp`,
+      { otp, email },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      }
+    );
 
+        const user = response.data?.user;
+        const role = user?.role;
+
+    if (String(role) === "1") {
+      return {
+        success: true,
+        user,
+        nextRoute: "/admindashboard",
+        message: "Login successful",
+      };
+    } else {
+      return {
+        success: false,
+        user: null,
+        nextRoute: "/",
+        message: "Access denied: You are not authorized for this role.",
+      };
+    }
+  } catch (error: any) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.message || "Axios error");  
+    } else {
+      throw new Error("Something went wrong during OTP verification.");
+    }
+  }
+};
 
 export const loginAdmin = async (email: string, password: string) => {
   try {
@@ -62,26 +99,17 @@ export const loginAdmin = async (email: string, password: string) => {
       }
     );
 
-    const user = response.data?.user;
-    const role = user?.role;
-
-    if (String(role) === "1") {
-      return {
-        success: true,
-        user,
-        nextRoute: "/admindashboard",
-        message: "Login successful",
-      };
+    if (response.status === 200) {
+     return { success: true, message: response.data.message};
     }
 
-    return {
-      success: false,
-      message: "Access denied: You are not authorized for this role.",
-    };
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.message || "Axios error");
-    } else {
+      return {
+      success: false,
+      message: error.response?.data?.message || "Access denied You are not authorized for this role.",
+    };
+   } else {
       throw new Error("Something went wrong during login.");
     }
   }

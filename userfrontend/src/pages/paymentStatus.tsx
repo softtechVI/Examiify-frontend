@@ -100,7 +100,7 @@ const PaymentStatus: React.FC<PaymentStatusProps> = ({ status }) => {
             <p className="text-gray-600 text-base sm:text-lg leading-relaxed">
               Unfortunately, your payment was not successful. Please try again.
               To retry, you will need to log in again. If you have any
-              questions, please email us at <b>info@gmail.com</b>.
+              questions, please email us at <b>support@gmail.com</b>.
             </p>
             <Link
               to="/login"
