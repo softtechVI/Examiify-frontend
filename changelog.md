@@ -19,6 +19,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
 
 - [#21](https://github.com/softtechVI/Examify/issues/21) all changes merge till this.
 
+## Changed
+
+- [09-01-26](Set the free trial contact page)
+
 ## Released [0.0.1]
 
 - version 0.0.1 of project is know realesed
