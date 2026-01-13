@@ -86,17 +86,16 @@ const Hero = () => {
             </Button> */}
 
             <Button
-  className="btn-hero text-lg px-8 py-4 group"
-  onClick={() =>
-    document
-      .getElementById("contact")
-      ?.scrollIntoView({ behavior: "smooth" })
-  }
->
-  Request Free Trial
-  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-</Button>
-
+            className="btn-hero text-lg px-8 py-4 group"
+              onClick={() =>
+                document
+                  .getElementById("contact")
+                  ?.scrollIntoView({ behavior: "smooth" })
+                }
+            >
+              Request Free Trial
+              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
 
             <Button
               variant="outline"
