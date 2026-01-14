@@ -5,7 +5,7 @@
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { ContactFormData } from "@/types";
-import { sendContactMessage } from "@/API/contacts";
+import { sendContactMessage } from "@/API/AllapiVerify";
 interface UseContactFormReturn {
   formData: ContactFormData;
   isLoading: boolean;
@@ -20,6 +20,7 @@ interface UseContactFormReturn {
 const initialFormData: ContactFormData = {
   name: "",
   email: "",
+  phone: "",
   company: "",
   message: "",
 };
