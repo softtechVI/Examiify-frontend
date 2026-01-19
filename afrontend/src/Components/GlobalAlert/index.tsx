@@ -16,19 +16,20 @@ const GlobalAlert = () => {
   }, [message, type, clearAlert]);
 
   return (
-    <div className="flex justify-center fixed top-5 left-1/2 -translate-x-1/2 z-50 w-full ">
-      {message && type && (
-        <Alert
-          message={message}
-          type={type}
-          showIcon
-          className="mb-4 w-auto"
-          closable
-          onClose={clearAlert}
-        />
-      )}
-    </div>
-  );
+  <div className="fixed top-5 left-1/2 -translate-x-1/2 z-[9999] w-full flex justify-center">
+    {message && type && (
+      <Alert
+        message={message}
+        type={type}
+        showIcon
+        className="mb-4 w-auto"
+        closable
+        onClose={clearAlert}
+      />
+    )}
+  </div>
+);
+
 };
 
 export default GlobalAlert;

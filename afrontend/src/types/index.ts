@@ -1,59 +1,86 @@
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  institutionType?: string;
-  role: string | number;
-  status: number;
-  phoneNumber?: string;
-  aiStatus?: boolean;
-  avatar?: string;
-  institute?: string;
-  address?: string;
-  state?: string;
-  city?: string;
-  validStart?: string;
-  validUpto?: string;
-}
-// Exam Types (for future exam management)
-export interface Exam {
-  id: string;
-  title: string;
-  description: string;
+// Plan Types
+export interface Plan {
+  _id?: string;
+  planName: string;
   duration: number;
-  totalQuestions: number;
-  passingScore: number;
+  price: string | number;
+  plan_image: string;
+  status?: number;
+  createdAt: string;
+  instituteType: number;
+  description: string;
+}
+
+export interface AddPlanFormValues {
+  planName: string;
+  duration: string | number;
+  instituteType: string | number;
+  price: string | number;
+  image?: File;
+  description: string;
+}
+
+// Coupon Types
+export interface Coupon {
+  _id: string;
+  couponCode: string;
+  description: string;
+  discountType: "percentage" | "fixed";
+  discountValue: number;
+  maxDiscount?: number;
+  minOrderAmount?: number;
+  instituteType?: string;
+  startDate: string;
+  endDate: string;
+  usageLimit: number;
+  couponUsed?: number;
+  perUserLimit: number;
+  status: string;
+  applicablePlanName?: string[];
+  planId?: string[];
+}
+
+export interface AddCouponFormValues {
+  couponCode: string;
+  description: string;
+  discountType: "percentage" | "fixed";
+  discountValue: number;
+  maxDiscount?: number;
+  minOrderAmount?: number;
+  instituteType?: string;
+  startDate: string;
+  endDate: string;
+  usageLimit: number;
+  perUserLimit: number;
+  planId?: string[];
+}
+
+// AI Pricing Types
+export interface AiPrice {
+  _id: string;
+  priceCents: number;
+  active: boolean;
+  totalConnectedUsers: number;
   createdAt: string;
   updatedAt: string;
-  status: 'draft' | 'published' | 'archived';
 }
 
-export interface RoomPayload {
-  roomNumber: string;
-  name: string;
-  capacity: number;
-  type: string;
-  facilities: string[];
-  status: string;
-  location: string;
-}
-
-export interface Room extends RoomPayload {
+// User Types
+export interface User {
   _id: string;
+  email: string;
+  role: number;
+  name?: string;
 }
 
-
-// types.ts
-export interface ExamData {
-  _id?: string;
-  examName: string;
-  examDate: string;
-  examTime: string;
-  duration: number;
-  shifts: string;
-  semesterAndClass: string;
-  studentCount: number;
-  notes?: string;
-  status?: string;
+export interface ContactItem {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  company?: string;
+  message: string;
+  status: "new" | "read" | "replied";
+  createdAt: string;
+  updatedAt: string;
 }
