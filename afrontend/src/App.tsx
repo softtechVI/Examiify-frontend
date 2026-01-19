@@ -1,6 +1,138 @@
-import AdminApp from './Admin/AdminApp';
+// import { Toaster } from "@/components/ui/toaster";
+// import { Toaster as Sonner } from "@/components/ui/sonner";
+// import { TooltipProvider } from "@/components/ui/tooltip";
+// import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+// import { BrowserRouter, Routes, Route } from "react-router-dom";
+// import Dashboard from "./pages/Dashboard";
+// import AddPlan from "./pages/AddPlan";
+// import AddCoupon from "./pages/AddCoupon";
+// import AiPricing from "./pages/AiPricing";
+// import FeatureControl from "./pages/FeatureControl";
+// import NotFound from "./pages/NotFound";
 
-export default function App() {
-    return <AdminApp />;
-}
+// const queryClient = new QueryClient();
 
+// const App = () => (
+//   <QueryClientProvider client={queryClient}>
+//     <TooltipProvider>
+//       <Toaster />
+//       <Sonner />
+//       <BrowserRouter>
+//         <Routes>
+//           <Route path="/" element={<Dashboard />} />
+//           <Route path="/add-plan" element={<AddPlan />} />
+//           <Route path="/add-coupon" element={<AddCoupon />} />
+//           <Route path="/ai-pricing" element={<AiPricing />} />
+//           <Route path="/feature-control" element={<FeatureControl />} />
+//           <Route path="*" element={<NotFound />} />
+//         </Routes>
+//       </BrowserRouter>
+//     </TooltipProvider>
+//   </QueryClientProvider>
+// );
+
+// export default App;
+import React, { useEffect, useState } from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Spin } from "antd";
+
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+
+import ProtectedRoute from "./components/ProtectedRoute";
+import GlobalAlert from "./components/GlobalAlert";
+
+import Dashboard from "./pages/Dashboard";
+import AddPlan from "./pages/AddPlan";
+import AddCoupon from "./pages/AddCoupon";
+import AiPricing from "./pages/AiPricing";
+import FeatureControl from "./pages/FeatureControl";
+import Login from "./pages/Login"
+import NotFound from "./pages/NotFound";
+import ContactMessages from "./pages/ContactMessage";
+
+import { checkAuth } from "./utils/checkauth";
+
+const queryClient = new QueryClient();
+
+/* ---------------- LOGIN ROUTE (FROM CODE 1) ---------------- */
+
+const LoginRoute: React.FC = () => {
+  const [loading, setLoading] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const verify = async () => {
+      try {
+        const authenticated = await checkAuth();
+        setIsLoggedIn(authenticated);
+      } finally {
+        setLoading(false);
+      }
+    };
+    verify();
+  }, []);
+
+  if (loading) {
+    return (
+      <div
+        style={{
+          height: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Spin size="large" tip="Checking session..." />
+      </div>
+    );
+  }
+
+  return isLoggedIn ? (
+    <Navigate to="/admindashboard" replace />
+  ) : (
+    <Login />
+  );
+};
+
+/* ---------------- MAIN APP ---------------- */
+
+const App: React.FC = () => {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <GlobalAlert />
+
+          <Routes>
+            {/* Login */}
+            <Route path="/login" element={<LoginRoute />} />
+
+            {/* Not Found */}
+            <Route path="/not-found" element={<NotFound />} />
+
+            {/* Protected Admin Routes */}
+            <Route element={<ProtectedRoute expectedRole={1} />}>
+              <Route path="/admindashboard" element={<Dashboard />} />
+              <Route path="/add-plan" element={<AddPlan />} />
+              <Route path="/add-coupon" element={<AddCoupon />} />
+              <Route path="/ai-pricing" element={<AiPricing />} />
+              <Route path="/feature-control" element={<FeatureControl />} />
+              <Route path="/contact-info" element={<ContactMessages />} />
+            </Route>
+
+            {/* Default & Catch-all */}
+            <Route path="/" element={<Navigate to="/login" replace />} />
+            <Route path="*" element={<Navigate to="/not-found" replace />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
+
+export default App;
