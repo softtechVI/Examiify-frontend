@@ -355,3 +355,30 @@ export const ForgotPasswordVerifyOTP = async (otp: string, email: string) => {
     throw new Error("Something went wrong during login.");
   }
 };
+
+
+export interface ContactFormData {
+  name: string;
+  email: string;
+  phone: string;
+  company?: string;
+  message: string;
+}
+
+export const sendContactMessage = async (
+  formData: ContactFormData
+): Promise<void> => {
+  try {
+    await axios.post(
+      `${API_URL}/api/user/sendMessage`,
+      formData,
+      { withCredentials: true }
+    );
+
+    message.success("Message sent successfully!");
+  } catch (error: unknown) {
+    console.error("Contact form error:", error);
+    message.error("Failed to send message. Try again.");
+    throw error;
+  }
+};

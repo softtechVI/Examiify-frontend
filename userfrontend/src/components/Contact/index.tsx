@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+
 import { 
   Mail, 
   Phone, 
@@ -163,6 +164,26 @@ const Contact: React.FC = () => {
                       <p className="text-sm text-destructive">{errors.name}</p>
                     )}
                   </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Phone No. *</Label>
+                    <Input
+                      id="phone"
+                      name="phone"
+                      type="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      placeholder="+1 234 567 8901"
+                      required
+                      className="border-border focus:border-primary"
+                    />
+                    {errors.phone && (
+                      <p className="text-sm text-destructive">{errors.phone}</p>
+                    )}
+                  </div>
+                  
+                </div>
+                
                   <div className="space-y-2">
                     <Label htmlFor="email">Email Address *</Label>
                     <Input
@@ -179,7 +200,6 @@ const Contact: React.FC = () => {
                       <p className="text-sm text-destructive">{errors.email}</p>
                     )}
                   </div>
-                </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="company">Institution Name</Label>
