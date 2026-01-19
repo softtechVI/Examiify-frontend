@@ -87,14 +87,19 @@ const Login: React.FC = () => {
 
       {/* Right Side - Login Form */}
       <div className="flex flex-col justify-center items-center w-full lg:w-1/2 p-6">
-      <DashboardButton />
+      <DashboardButton className="bg-white text-[#049F99] font-bold" />
         <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
           {/* Logo */}
-          <div className="flex justify-center mb-4">
-            <img src={logo} alt="Logo" className="w-40 h-auto" />
-          </div>
-
-          <h2 className="text-2xl font-semibold text-center mb-6">Login</h2>
+            <div className="flex flex-col items-center justify-center mb-2">
+              <img
+                src={logo}
+                alt="Logo"
+                className="w-32 h-auto block"
+              />
+              <h2 className="text-2xl font-semibold mt-1 mb-0">
+                Login
+              </h2>
+            </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Email */}

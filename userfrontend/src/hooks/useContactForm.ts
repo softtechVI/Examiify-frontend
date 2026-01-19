@@ -5,7 +5,7 @@
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { ContactFormData } from "@/types";
-
+import { sendContactMessage } from "@/API/AllapiVerify";
 interface UseContactFormReturn {
   formData: ContactFormData;
   isLoading: boolean;
@@ -20,6 +20,7 @@ interface UseContactFormReturn {
 const initialFormData: ContactFormData = {
   name: "",
   email: "",
+  phone: "",
   company: "",
   message: "",
 };
@@ -79,7 +80,7 @@ export const useContactForm = (): UseContactFormReturn => {
 
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+    await sendContactMessage(formData);
       
       toast({
         title: "Message sent successfully!",

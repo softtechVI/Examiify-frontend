@@ -139,7 +139,7 @@ const About = () => {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-20 p-8 rounded-2xl bg-gradient-to-r from-primary via-accent to-primary-light text-white">
           <div className="text-center">
             <Users2 className="h-8 w-8 mx-auto mb-4 text-white/90" />
-            <div className="text-3xl sm:text-4xl font-bold mb-2">500+</div>
+            <div className="text-3xl sm:text-4xl font-bold mb-2">100+</div>
             <div className="text-white/90 font-medium">Partner Institutions</div>
           </div>
           <div className="text-center">
@@ -154,7 +154,7 @@ const About = () => {
           </div>
           <div className="text-center">
             <Award className="h-8 w-8 mx-auto mb-4 text-white/90" />
-            <div className="text-3xl sm:text-4xl font-bold mb-2">99.9%</div>
+            <div className="text-3xl sm:text-4xl font-bold mb-2">100%</div>
             <div className="text-white/90 font-medium">Satisfaction Rate</div>
           </div>
         </div>
