@@ -5,6 +5,7 @@ name: qodo-pr-review
 #     types: [opened, edited, synchronize, reopened, ready_for_review]
 on:
   pull_request_target:
+    types: [opened, edited, synchronize, reopened, ready_for_review]:wq
 
 jobs:
   qodo_review:
