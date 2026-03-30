@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +14,7 @@ import {
   Settings,
   LogOut,
   Sliders,
+  Shield,
   GraduationCap,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -29,6 +31,7 @@ const menuItems = [
   { icon: Users, label: "Manage Users", path: "/users" },
   { icon: BarChart3, label: "Reports", path: "/reports" },
   { icon: Sliders, label: "Feature Control", path: "/feature-control" },
+  { icon: Shield, label: "Roles", path: "/roles" },
   { icon: Settings, label: "Settings", path: "/settings" },
   { icon: LogOut, label: "Contact info", path: "/Contact-info" },
 ];
