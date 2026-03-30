@@ -9,7 +9,7 @@ const GlobalAlert = () => {
     if (message && type) {
       const timer = setTimeout(() => {
         clearAlert();
-      }, 3000); // auto close after 3s
+      }, 3000); // auto close after 3s dsnbjhebdjvbejd cjevggrdvt ervgtubyu
 
       return () => clearTimeout(timer);
     }
