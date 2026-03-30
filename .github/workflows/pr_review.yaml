@@ -1,8 +1,10 @@
 name: qodo-pr-review
 
+# on:
+#   pull_request:
+#     types: [opened, edited, synchronize, reopened, ready_for_review]
 on:
-  pull_request:
-    types: [opened, edited, synchronize, reopened, ready_for_review]
+  pull_request_target:
 
 jobs:
   qodo_review:
