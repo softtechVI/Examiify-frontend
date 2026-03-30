@@ -99,7 +99,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.G_TOKEN }}
 
           # ✅ Gemini API Key
-          GOOGLE_AI_STUDIO.GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GOOGLE_AI_STUDIO_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
           # ✅ Model (supported)
           config.model: "gemini/gemini-2.5-flash"
