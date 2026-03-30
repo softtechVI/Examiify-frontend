@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import { Alert } from "antd";
+import Alert from '@mui/material/Alert';
+
 import useAlertStore from "../../store/useAlertStore";
 
 const GlobalAlert = () => {
@@ -19,13 +20,12 @@ const GlobalAlert = () => {
   <div className="fixed top-5 left-1/2 -translate-x-1/2 z-[9999] w-full flex justify-center">
     {message && type && (
       <Alert
-        message={message}
-        type={type}
-        showIcon
-        className="mb-4 w-auto"
-        closable
-        onClose={clearAlert}
-      />
+          severity={type}   // ✅ yaha change
+          onClose={clearAlert}
+          className="mb-4 w-auto"
+        >
+          {message}        {/* ✅ yaha change */}
+        </Alert>
     )}
   </div>
 );

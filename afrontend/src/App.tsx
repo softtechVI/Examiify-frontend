@@ -32,17 +32,18 @@
 // );
 
 // export default App;
+
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Spin } from "antd";
+import { Box, CircularProgress, Typography } from "@mui/material";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/Components/ui/tooltip";
+import { Toaster } from "@/Components/ui/toaster";
+import { Toaster as Sonner } from "@/Components/ui/sonner";
 
-import ProtectedRoute from "./components/ProtectedRoute";
-import GlobalAlert from "./components/GlobalAlert";
+import ProtectedRoute from "./Components/ProtectedRoute";
+import GlobalAlert from "./Components/GlobalAlert";
 
 import Dashboard from "./pages/Dashboard";
 import AddPlan from "./pages/AddPlan";
@@ -85,7 +86,10 @@ const LoginRoute: React.FC = () => {
           justifyContent: "center",
         }}
       >
-        <Spin size="large" tip="Checking session..." />
+        <Box display="flex" flexDirection="column" alignItems="center" gap={1}>
+  <CircularProgress size={60} />
+  <Typography>Checking session...</Typography>
+</Box>
       </div>
     );
   }
