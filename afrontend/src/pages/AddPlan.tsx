@@ -16,9 +16,13 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  Grid,
+  Card,
+  CardContent,
+  Box,
+  CircularProgress,
 } from "@mui/material";
 
-import { Card, CardContent } from "@/Components/ui/card";
 import { Badge } from "@/Components/ui/badge";
 import {
   Plus,
@@ -225,17 +229,35 @@ const AddPlanPage = () => {
   /* ================= UI (100% SAME AS CODE 2) ================= */
   return (
     <AdminLayout>
-      <div className="p-6 lg:p-8 space-y-6">
+      <Box sx={{
+          p: { xs: 3, lg: 4 },
+          display: "flex",
+          flexDirection: "column",
+          gap: 3,
+        }}>
         {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div className="space-y-1">
-            <h1 className="text-2xl lg:text-3xl font-bold text-foreground">
-              Subscription Plans
-            </h1>
-            <p className="text-muted-foreground">
-              Manage your subscription plans and pricing
-            </p>
-          </div>
+        <Box sx={{
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            justifyContent: "space-between",
+            alignItems: { xs: "flex-start", sm: "center" },
+            gap: 2,
+          }}>
+                  <Box sx={{ display: "flex", flexDirection: "column", gap: 0.5 }}>
+          <Typography
+            sx={{
+              fontSize: { xs: "24px", lg: "30px" },
+              fontWeight: "bold",
+              color: "text.primary",
+            }}
+          >
+            Subscription Plans
+          </Typography>
+
+          <Typography sx={{ color: "text.secondary" }}>
+            Manage your subscription plans and pricing
+          </Typography>
+        </Box>
           <Button sx={{
             height: "40px",
             width: "150px",
@@ -367,295 +389,306 @@ const AddPlanPage = () => {
           </Dialog>
 
 
-<Dialog
-  open={!!viewPlan}
-  onClose={() => setViewPlan(null)}
-  maxWidth="md"
-  fullWidth
->
-  <DialogTitle>{viewPlan?.planName}</DialogTitle>
+        <Dialog
+          open={!!viewPlan}
+          onClose={() => setViewPlan(null)}
+          maxWidth="md"
+          fullWidth
+        >
+          <DialogTitle>{viewPlan?.planName}</DialogTitle>
 
-  <DialogContent>
-    {viewPlan && (
-      <div style={{ marginTop: "10px" }}>
-        {viewPlan.plan_image && (
-          <img
-            src={viewPlan.plan_image}
-            alt={viewPlan.planName}
-            style={{
-              width: "100%",
-              height: "240px",
-              objectFit: "contain",
-              border: "1px solid #ddd",
-              borderRadius: "8px",
-              marginBottom: "15px",
+          <DialogContent>
+            {viewPlan && (
+              <Box sx={{ mt: 1 }}>
+          {viewPlan.plan_image && (
+            <Box
+              component="img"
+              src={viewPlan.plan_image}
+              alt={viewPlan.planName}
+              sx={{
+                width: "100%",
+                height: "240px",
+                objectFit: "contain",
+                border: "1px solid #ddd",
+                borderRadius: "8px",
+                mb: 2,
+              }}
+            />
+          )}
+
+          {/* Status + Price + Duration + Category */}
+          <Box
+            sx={{
+              display: "flex",
+              gap: "10px",
+              flexWrap: "wrap",
+              mb: 2,
             }}
-          />
-        )}
+          >
+            <Chip
+              label={viewPlan.status === 1 ? "Active" : "Inactive"}
+              color={viewPlan.status === 1 ? "success" : "error"}
+            />
 
-        {/* Status + Price + Duration + Category */}
-        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", marginBottom: "15px" }}>
-          <Chip
-            label={viewPlan.status === 1 ? "Active" : "Inactive"}
-            color={viewPlan.status === 1 ? "success" : "error"}
-          />
+            <Chip label={`₹ ${viewPlan.price}`} />
+            <Chip label={getDurationLabel(viewPlan.duration)} />
+            <Chip label={getCategoryLabel(viewPlan.instituteType)} />
+          </Box>
 
-          <Chip label={`₹ ${viewPlan.price}`} />
-          <Chip label={getDurationLabel(viewPlan.duration)} />
-          <Chip label={getCategoryLabel(viewPlan.instituteType)} />
-        </div>
+          {/* Description */}
+          <Box>
+            <Typography variant="subtitle2">Description</Typography>
+            <Typography variant="body2" color="text.secondary">
+              {viewPlan.description}
+            </Typography>
+          </Box>
+        </Box>
+            )}
+          </DialogContent>
 
-        {/* Description */}
-        <div>
-          <Typography variant="subtitle2">Description</Typography>
-          <Typography variant="body2" color="text.secondary">
-            {viewPlan.description}
-          </Typography>
-        </div>
-      </div>
-    )}
-  </DialogContent>
-
-  <DialogActions>
-    <Button sx={{
-                    background: "#049F99"
-                  }}
-      onClick={() => setViewPlan(null)} variant="contained">
-      Close
-    </Button>
-  </DialogActions>
-</Dialog>
+          <DialogActions>
+            <Button sx={{
+                            background: "#049F99"
+                          }}
+              onClick={() => setViewPlan(null)} variant="contained">
+              Close
+            </Button>
+          </DialogActions>
+        </Dialog>
+        </Box>
 
 
-
-        </div>
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-  <Card>
-    <CardContent className="pt-6">
-      <div className="text-2xl font-bold">{plans.length}</div>
-      <p className="text-xs text-muted-foreground">Total Plans</p>
-    </CardContent>
-  </Card>
-
-  <Card>
-    <CardContent className="pt-6">
-      <div className="text-2xl font-bold text-success">
-        {plans.filter((p) => p.status === 1).length}
-      </div>
-      <p className="text-xs text-muted-foreground">Active Plans</p>
-    </CardContent>
-  </Card>
-
-  <Card>
-    <CardContent className="pt-6">
-      <div className="text-2xl font-bold text-muted-foreground">
-        {plans.filter((p) => p.status === 0).length}
-      </div>
-      <p className="text-xs text-muted-foreground">Inactive Plans</p>
-    </CardContent>
-  </Card>
-
-  <Card>
-    <CardContent className="pt-6">
-      <div className="text-2xl font-bold">
-        {plans.filter((p) => p.instituteType === 1).length}
-      </div>
-      <p className="text-xs text-muted-foreground">School Plans</p>
-    </CardContent>
-  </Card>
-
-  {/* ✅ NEW COLLEGE CARD */}
-  <Card>
-    <CardContent className="pt-6">
-      <div className="text-2xl font-bold">
-        {plans.filter((p) => p.instituteType === 2).length}
-      </div>
-      <p className="text-xs text-muted-foreground">College Plans</p>
-    </CardContent>
-  </Card>
-</div>
+        <Grid container spacing={2}>
+          {[
+            { title: "Total Plans", value: plans.length },
+            { title: "Active Plans", value: plans.filter(p => p.status === 1).length },
+            { title: "Inactive Plans", value: plans.filter(p => p.status === 0).length },
+            { title: "School Plans", value: plans.filter(p => p.instituteType === 1).length },
+            { title: "College Plans", value: plans.filter(p => p.instituteType === 2).length },
+          ].map((item, index) => (
+            <Grid item xs={25} sm={6} md={4} lg={2.4} key={index}>
+              <Card sx={{ width: 200, borderRadius: 3, boxShadow: 3 }}>
+                <CardContent sx={{ pt: 3 }}>
+                  <Typography variant="h4" fontWeight="bold">
+                    {item.value}
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    {item.title}
+                  </Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
 
 
-        <div className="flex flex-wrap gap-2">
-<Button
-  variant={planFilter === "all" ? "contained" : "outlined"}
-  onClick={() => setPlanFilter("all")}
-  sx={filterButtonStyle("all")}
->
-  All
-</Button>
+        <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mt: 2 }}>
+        <Button
+          variant={planFilter === "all" ? "contained" : "outlined"}
+          onClick={() => setPlanFilter("all")}
+          sx={filterButtonStyle("all")}
+        >
+          All
+        </Button>
 
-<Button
-  variant={planFilter === "active" ? "contained" : "outlined"}
-  onClick={() => setPlanFilter("active")}
-  sx={filterButtonStyle("active")}
->
-  Active
-</Button>
+        <Button
+          variant={planFilter === "active" ? "contained" : "outlined"}
+          onClick={() => setPlanFilter("active")}
+          sx={filterButtonStyle("active")}
+        >
+          Active
+        </Button>
 
-<Button
-  variant={planFilter === "inactive" ? "contained" : "outlined"}
-  onClick={() => setPlanFilter("inactive")}
-  sx={filterButtonStyle("inactive")}
->
-  Inactive
-</Button>
+        <Button
+          variant={planFilter === "inactive" ? "contained" : "outlined"}
+          onClick={() => setPlanFilter("inactive")}
+          sx={filterButtonStyle("inactive")}
+        >
+          Inactive
+        </Button>
 
-<Button
-  variant={planFilter === "school" ? "contained" : "outlined"}
-  onClick={() => setPlanFilter("school")}
-  sx={filterButtonStyle("school")}
->
-  School
-</Button>
+        <Button
+          variant={planFilter === "school" ? "contained" : "outlined"}
+          onClick={() => setPlanFilter("school")}
+          sx={filterButtonStyle("school")}
+        >
+          School
+        </Button>
 
-
-
-  <Button
-  sx={{
-    color: planFilter === "college" ? "#fff" : "#049F99",
-    backgroundColor: planFilter === "college" ? "#049F99" : "transparent",
-    borderColor: "#049F99",
-    "&:hover": {
-      backgroundColor:
-        planFilter === "college" ? "#038a85" : "rgba(4,159,153,0.1)",
-      borderColor: "#049F99",
-    },
-  }}
-    variant={planFilter === "college" ? "contained" : "outlined"}
-    onClick={() => setPlanFilter("college")}
-  >
-    College
-  </Button>
-</div>
+          <Button
+          sx={{
+            color: planFilter === "college" ? "#fff" : "#049F99",
+            backgroundColor: planFilter === "college" ? "#049F99" : "transparent",
+            borderColor: "#049F99",
+            "&:hover": {
+              backgroundColor:
+                planFilter === "college" ? "#038a85" : "rgba(4,159,153,0.1)",
+              borderColor: "#049F99",
+            },
+          }}
+            variant={planFilter === "college" ? "contained" : "outlined"}
+            onClick={() => setPlanFilter("college")}
+          >
+            College
+          </Button>
+        </Box>
 
         {/* ===== PLAN LIST (UNCHANGED UI) ===== */}
         {fetching ? (
-          <div className="flex justify-center py-20">
-            <Loader2 className="h-8 w-8 animate-spin" />
-          </div>
-        ) : (
-          <div className="grid gap-6">
-
-            {filteredPlans.map((plan) => (
-              <Card key={plan._id} className="overflow-hidden">
-  <div className="flex flex-col lg:flex-row">
-    
-    {/* IMAGE SECTION (TOP / LEFT) */}
-    <div className="lg:w-48 bg-muted flex items-center justify-center p-2">
-  <div className="w-40 h-32 rounded-xl bg-background border flex items-center justify-center overflow-hidden">
-
-        {plan.plan_image ? (
-          <img
-            src={plan.plan_image}
-            alt={plan.planName}
-            className="w-full h-full object-contain" // object fit contain property for image size 
-          />
-        ) : (
-          <Image className="h-10 w-10 text-muted-foreground" />
-        )}
-      </div>
-    </div>
-
-    {/* CONTENT SECTION */}
-    <CardContent className="flex-1 p-6">
-      <div className="flex flex-col lg:flex-row justify-between gap-4">
-
-        {/* DETAILS */}
-        <div className="space-y-3">
-          <div className="flex items-center gap-2 flex-wrap">
-            <h3 className="text-xl font-semibold">{plan.planName}</h3>
-<Badge
-  className={
-    plan.status === 1
-      ? "bg-green-100 text-green-700 border border-green-300"
-      : "bg-red-100 text-red-700 border border-red-300"
-  }
->
-  {plan.status === 1 ? "Active" : "Inactive"}
-</Badge>
-
-          </div>
-
-          <p className="text-sm text-muted-foreground max-w-xl line-clamp-2">
-  {plan.description}
-</p>
-
-
-          <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-            <div className="flex items-center gap-1">
-              <Clock className="h-4 w-4" />
-              {getDurationLabel(plan.duration)}
-            </div>
-            <div className="flex items-center gap-1">
-              <IndianRupee className="h-4 w-4" /> ₹{plan.price}
-            </div>
-            <div className="flex items-center gap-1">
-              <Building2 className="h-4 w-4" />
-              {getCategoryLabel(plan.instituteType)}
-            </div>
-            <div className="flex items-center gap-1">
-              <Calendar className="h-4 w-4" />
-              {new Date(plan.createdAt).toLocaleDateString("en-IN")}
-            </div>
-          </div>
-        </div>
-
-        {/* ACTIONS */}
-        <div className="flex gap-2">
-          <Button sx={{
-            height: "30px",
-            width: "60px",
-            color: "#fafafa",
-            background: "#049F99"
+          <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            py: 10,
           }}
-            variant="contained"
-            onClick={() => setViewPlan(plan)}
-          >
-            View
-          </Button>
+        >
+          <CircularProgress size={32} />
+        </Box>
+        ) : (
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+          {filteredPlans.map((plan) => (
+            <Card key={plan._id} sx={{ overflow: "hidden" }}>
+              <Box sx={{ display: "flex", flexDirection: { xs: "column", lg: "row" } }}>
+                
+                {/* IMAGE SECTION */}
+                <Box
+                  sx={{
+                    width: { lg: 190 },
+                    bgcolor: "action.hover",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    p: 1,
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: 160,
+                      height: 130,
+                      borderRadius: 2,
+                      bgcolor: "background.paper",
+                      border: "1px solid #ddd",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      overflow: "hidden",
+                    }}
+                  >
+                    {plan.plan_image ? (
+                      <Box
+                        component="img"
+                        src={plan.plan_image}
+                        alt={plan.planName}
+                        sx={{ width: "100%", height: "100%", objectFit: "contain" }}
+                      />
+                    ) : (
+                      <Image className="h-10 w-10 text-muted-foreground" />
+                    )}
+                  </Box>
+                </Box>
 
-          <Button
-  variant="outlined"
-  onClick={() => togglePlanStatus(plan._id, plan.status)}
-  sx={{
-    height: "30px",
-    width: "60px",
-    color: "#049F99",
-    borderColor: "#049F99",
-    "&:hover": {
-      borderColor: "#049F99",
-      backgroundColor: "rgba(4,159,153,0.08)"
-    }
-  }}
->
-  <Power className="h-4 w-4 mr-1" />
-</Button>
+                {/* CONTENT SECTION */}
+                <CardContent sx={{ flex: 1, p: 3 }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: { xs: "column", lg: "row" },
+                      justifyContent: "space-between",
+                      gap: 2,
+                    }}
+                  >
+                    {/* DETAILS */}
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                      <Box sx={{ display: "flex", alignItems: "center", gap: 1, flexWrap: "wrap" }}>
+                        <Typography variant="h6" fontWeight={600}>
+                          {plan.planName}
+                        </Typography>
 
-<Button sx={{
-            height: "30px",
-            width: "70px",
-            borderColor: "error.main",
-          }}
-  variant="contained"
-  color="error"
-  onClick={() => deletePlan(plan._id)}
->
-  <Trash2 className="h-4 w-4 mr-1" />
-  Delete
-</Button>
+                        <Chip
+                          label={plan.status === 1 ? "Active" : "Inactive"}
+                          color={plan.status === 1 ? "success" : "error"}
+                          size="small"
+                        />
+                      </Box>
 
-        </div>
+                      <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 600 }}>
+                        {plan.description}
+                      </Typography>
 
-      </div>
-    </CardContent>
-  </div>
-</Card>
+                      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, color: "text.secondary" }}>
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                          <Clock size={16} />
+                          {getDurationLabel(plan.duration)}
+                        </Box>
 
-            ))}
-          </div>
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                          <IndianRupee size={16} /> ₹{plan.price}
+                        </Box>
+
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                          <Building2 size={16} />
+                          {getCategoryLabel(plan.instituteType)}
+                        </Box>
+
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+                          <Calendar size={16} />
+                          {new Date(plan.createdAt).toLocaleDateString("en-IN")}
+                        </Box>
+                      </Box>
+                    </Box>
+
+                    {/* ACTIONS */}
+                    <Box sx={{ display: "flex", gap: 1 }}>
+                      <Button
+                        variant="contained"
+                        sx={{
+                          height: 30,
+                          width: 60,
+                          color: "#fafafa",
+                          background: "#049F99",
+                        }}
+                        onClick={() => setViewPlan(plan)}
+                      >
+                        View
+                      </Button>
+
+                      <Button
+                        variant="contained"
+                        color="error"
+                        sx={{ height: 30, width: 70 }}
+                        onClick={() => deletePlan(plan._id)}
+                      >
+                        <Trash2 size={16} />
+                        Delete
+                      </Button>
+
+                      <Button
+                        variant="outlined"
+                        onClick={() => togglePlanStatus(plan._id, plan.status)}
+                        sx={{
+                          height: 30,
+                          width: 60,
+                          color: "#049F99",
+                          borderColor: "#049F99",
+                          "&:hover": {
+                            borderColor: "#049F99",
+                            backgroundColor: "rgba(4,159,153,0.08)",
+                          },
+                        }}
+                      >
+                        <Power size={16} />
+                      </Button>
+
+
+                    </Box>
+                  </Box>
+                </CardContent>
+              </Box>
+            </Card>
+          ))}
+        </Box>
         )}
-      </div>
+      </Box>
     </AdminLayout>
   );
 };
