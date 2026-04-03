@@ -18,6 +18,8 @@ import FeatureControl from "./pages/FeatureControl";
 import Login from "./pages/Login"
 import NotFound from "./pages/NotFound";
 import ContactMessages from "./pages/ContactMessage";
+import Roles from "./pages/Roles";
+import RoleEdit from "./pages/RoleEdit";
 
 import { checkAuth } from "./utils/checkauth";
 
@@ -92,6 +94,8 @@ const App: React.FC = () => {
               <Route path="/ai-pricing" element={<AiPricing />} />
               <Route path="/feature-control" element={<FeatureControl />} />
               <Route path="/contact-info" element={<ContactMessages />} />
+              <Route path="/roles" element={<Roles />} />
+              <Route path="/roles/:roleId" element={<RoleEdit />} />
             </Route>
 
             {/* Default & Catch-all */}

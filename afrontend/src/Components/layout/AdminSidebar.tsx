@@ -13,6 +13,7 @@ import {
   Settings,
   LogOut,
   Sliders,
+  Shield,
   GraduationCap,
   Contact,
   Menu,
@@ -32,17 +33,18 @@ const TEXT    = "#1a1a1a";
 const TEXT_MUTED = "#6b7280";
 
 const menuItems = [
-  { icon: LayoutDashboard, label: "Dashboard",       path: "/admindashboard"  },
-  { icon: Plus,            label: "Add Plan",         path: "/add-plan"        },
-  { icon: Ticket,          label: "Add Coupon",       path: "/add-coupon"      },
-  { icon: Brain,           label: "AI Pricing",       path: "/ai-pricing"      },
-  { icon: Building2,       label: "Check Institutes", path: "/institutes"      },
-  { icon: FileText,        label: "Manage Exams",     path: "/exams"           },
-  { icon: Users,           label: "Manage Users",     path: "/users"           },
-  { icon: BarChart3,       label: "Reports",          path: "/reports"         },
-  { icon: Sliders,         label: "Feature Control",  path: "/feature-control" },
-  { icon: Settings,        label: "Settings",         path: "/settings"        },
-  { icon: Contact,         label: "Contact info",     path: "/Contact-info"    },
+  { icon: LayoutDashboard, label: "Dashboard", path: "/admindashboard" },
+  { icon: Plus, label: "Add Plan", path: "/add-plan" },
+  { icon: Ticket, label: "Add Coupon", path: "/add-coupon" },
+  { icon: Brain, label: "AI Pricing", path: "/ai-pricing" },
+  { icon: Building2, label: "Check Institutes", path: "/institutes" },
+  { icon: FileText, label: "Manage Exams", path: "/exams" },
+  { icon: Users, label: "Manage Users", path: "/users" },
+  { icon: BarChart3, label: "Reports", path: "/reports" },
+  { icon: Sliders, label: "Feature Control", path: "/feature-control" },
+  { icon: Shield, label: "Roles", path: "/roles" },
+  { icon: Settings, label: "Settings", path: "/settings" },
+  { icon: LogOut, label: "Contact info", path: "/Contact-info" },
 ];
 
 export const AdminSidebar = () => {

@@ -1,88 +1,118 @@
 name: qodo-pr-review
+
+# on:
+#   pull_request:
+#     types: [opened, edited, synchronize, reopened, ready_for_review]
 on:
-    pull_request:
-        types: [opened, edited, synchronize, reopened, ready_for_review]
+  pull_request_target:
+    types: [opened, edited, synchronize, reopened, ready_for_review]
 
 jobs:
-    qodo_review:
-        runs-on: ubuntu-latest
-        permissions:
-            pull-requests: write
-            contents: read
-        steps:
-            -   name: Check out
-                uses: actions/checkout@v4
+  qodo_review:
+    runs-on: ubuntu-latest
 
-            -   name: Extract issues from commits and build ISSUE_CONTEXT.md
-                uses: actions/github-script@v7
-                with:
-                    script: |
-                        const fs = require('fs');
+    permissions:
+      pull-requests: write
+      contents: read
 
-                        const owner = context.repo.owner;
-                        const repo = context.repo.repo;
-                        const prNumber = context.payload.pull_request.number;
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
 
-                        const commits = await github.paginate(
-                            github.rest.pulls.listCommits,
-                            { owner, repo, pull_number: prNumber, per_page: 100 }
-                        );
+      - name: Extract issues from commits and build ISSUE_CONTEXT.md
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
 
-                        const issueNums = new Set();
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const prNumber = context.payload.pull_request.number;
 
-                        const kw = '(?:close[sd]?|fixe?d?|resolve[sd]?)?';
-                        const repoPrefix = '(?:([\\w.-]+)/([\\w.-]+))?';
-                        const hashNum = '#(\\d+)';
-                        const reHash = new RegExp(`${kw}\\s*${repoPrefix}\\s*${hashNum}`, 'gi');
-                        const reUrl = /https?:\/\/github\.com\/([\w.-]+)\/([\w.-]+)\/issues\/(\d+)/gi;
+            const commits = await github.paginate(
+              github.rest.pulls.listCommits,
+              { owner, repo, pull_number: prNumber, per_page: 100 }
+            );
 
-                        for (const c of commits) {
-                            const msg = c.commit?.message || '';
-                            let m;
-                            while ((m = reHash.exec(msg)) !== null) {
-                                const prefOwner = m[1];
-                                const prefRepo = m[2];
-                                const num = parseInt(m[3], 10);
-                                if (!prefOwner || (prefOwner === owner && prefRepo === repo)) issueNums.add(num);
-                            }
-                            while ((m = reUrl.exec(msg)) !== null) {
-                                const urlOwner = m[1];
-                                const urlRepo = m[2];
-                                const num = parseInt(m[3], 10);
-                                if (urlOwner === owner && urlRepo === repo) issueNums.add(num);
-                            }
-                        }
-                        console.log('Number of issues linked in this pr: ', issueNums.length);
-                        if (!issueNums.size) {
-                            fs.writeFileSync('ISSUE_CONTEXT.md', '# Issue Context\n\n_No issues referenced in commits._\n');
-                            core.setOutput('issue_context_path', 'ISSUE_CONTEXT.md');
-                        } else {
-                            const out = ['# Issue Context\n'];
-                            for (const num of issueNums) {
-                                try {
-                                    const { data } = await github.rest.issues.get({ owner, repo, issue_number: num });
-                                    out.push(`## #${num} — ${data.title}\n\n${data.body || '_No description_'}\n`);
-                                } catch (e) {
-                                    out.push(`## #${num}\n\n_Failed to fetch issue: ${e.message}_\n`);
-                                }
-                            }
-                            fs.writeFileSync('ISSUE_CONTEXT.md', out.join('\n'));
-                            core.setOutput('issue_context_path', 'ISSUE_CONTEXT.md');
-                        }
+            const issueNums = new Set();
 
-            -   name: Qodo PR Review
-                uses: qodo-ai/pr-agent@main
-                with:
-                        pr-number: ${{ github.event.pull_request.number }}
-                        extra-context-file: ISSUE_CONTEXT.md
-                env:
+            const kw = '(?:close[sd]?|fixe?d?|resolve[sd]?)?';
+            const repoPrefix = '(?:([\\w.-]+)/([\\w.-]+))?';
+            const hashNum = '#(\\d+)';
+            const reHash = new RegExp(`${kw}\\s*${repoPrefix}\\s*${hashNum}`, 'gi');
+            const reUrl = /https?:\/\/github\.com\/([\w.-]+)\/([\w.-]+)\/issues\/(\d+)/gi;
 
-                        GITHUB_TOKEN: ${{ secrets.G_TOKEN }}
-                        config.model: "gemini/gemini-2.5-flash"
-                        config.fallback_models: '["gemini/gemini-2.5-flash"]'
-                        GOOGLE_AI_STUDIO.GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-                        github_action_config.auto_review: "true"
-                        github_action_config.auto_describe: "true"
-                        github_action_config.auto_improve: "true"
-                        github_action_config.debug: "true"
-                        github_action_config.pr_actions: '["opened", "reopened", "ready_for_review", "review_requested", "synchronize"]' 
+            for (const c of commits) {
+              const msg = c.commit?.message || '';
+              let m;
+
+              while ((m = reHash.exec(msg)) !== null) {
+                const prefOwner = m[1];
+                const prefRepo = m[2];
+                const num = parseInt(m[3], 10);
+                if (!prefOwner || (prefOwner === owner && prefRepo === repo)) issueNums.add(num);
+              }
+
+              while ((m = reUrl.exec(msg)) !== null) {
+                const urlOwner = m[1];
+                const urlRepo = m[2];
+                const num = parseInt(m[3], 10);
+                if (urlOwner === owner && urlRepo === repo) issueNums.add(num);
+              }
+            }
+
+            console.log('Number of issues linked in this pr: ', issueNums.length);
+
+            if (!issueNums.size) {
+              fs.writeFileSync('ISSUE_CONTEXT.md', '# Issue Context\n\n_No issues referenced in commits._\n');
+              core.setOutput('issue_context_path', 'ISSUE_CONTEXT.md');
+            } else {
+              const out = ['# Issue Context\n'];
+
+              for (const num of issueNums) {
+                try {
+                  const { data } = await github.rest.issues.get({ owner, repo, issue_number: num });
+                  out.push(`## #${num} — ${data.title}\n\n${data.body || '_No description_'}\n`);
+                } catch (e) {
+                  out.push(`## #${num}\n\n_Failed to fetch issue: ${e.message}_\n`);
+                }
+              }
+
+              fs.writeFileSync('ISSUE_CONTEXT.md', out.join('\n'));
+              core.setOutput('issue_context_path', 'ISSUE_CONTEXT.md');
+            }
+
+      # ✅ DEBUG STEP (IMPORTANT)
+      - name: Debug Gemini Key
+        run: |
+          if [ -z "$GOOGLE_AI_STUDIO_GEMINI_API_KEY" ]; then
+            echo "❌ GEMINI KEY NOT AVAILABLE"
+          else
+            echo "✅ GEMINI KEY AVAILABLE"
+          fi
+
+      - name: Qodo PR Review
+        uses: qodo-ai/pr-agent@main
+        with:
+          pr-number: ${{ github.event.pull_request.number }}
+          extra-context-file: ISSUE_CONTEXT.md
+
+        env:
+          # ✅ FIXED: Use default GitHub token
+          GITHUB_TOKEN: ${{ secrets.G_TOKEN }}
+
+          # ✅ Gemini API Key
+          GOOGLE_AI_STUDIO_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+          # ✅ Model (supported)
+          config.model: "gemini/gemini-2.5-flash"
+          config.fallback_models: '["gemini/gemini-2.5-flash"]'
+
+          # ✅ Enable all features
+          github_action_config.auto_review: "true"
+          github_action_config.auto_describe: "true"
+          github_action_config.auto_improve: "true"
+          github_action_config.debug: "true"
+          github_action_config.publish_output: "true"
+
+          github_action_config.pr_actions: '["opened", "reopened", "ready_for_review", "review_requested", "synchronize"]'
