@@ -187,6 +187,7 @@ import useIsLoginStore from "../../store/IsLoginStore";
 import useAlertStore from "../../store/useAlertStore";
 import useSessionStore from "../../store/userSession";
 import { Box, Button, TextField, Typography } from "@mui/material";
+import { pageWrapperSx } from "@/theme";
 
 const OTP_LENGTH = 6;
 
@@ -267,9 +268,9 @@ const OTPInput: React.FC<OTPInputProps> = ({
   };
 
   return (
-    <Box className="mb-6">
-      <Typography className="text-md font-semibold mb-2">{label}</Typography>
-      <Box className="flex justify-center gap-2">
+    <Box sx={pageWrapperSx}>
+      <Typography >{label}</Typography>
+      <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
         {otp.map((digit, index) => (
           <TextField
             key={index}
@@ -324,39 +325,74 @@ const EmailOTPVerify: React.FC<OTPModelProps> = ({
   };
 
   return (
-    <Box className="fixed top-10 left-1/2 z-50 -translate-x-1/2 px-4">
-      <Box className="relative bg-white p-6 rounded-lg shadow-xl w-full max-w-md text-center border">
-        <Box
-          className="absolute top-3 right-3 text-gray-500 cursor-pointer"
-          onClick={onClose}
-        >
-          ✕
-        </Box>
-
-        <Typography className="text-xl font-semibold mb-4">
-          Verify OTP
-        </Typography>
-
-        <OTPInput
-          label={label}
-          onComplete={handleOtpComplete}
-          disabled={emailOtpVerified}
-        />
-
-        <Button
-          onClick={verifyOtp}
-          disabled={otp.length !== OTP_LENGTH}
-          variant="contained"
-          className={`mt-2 w-full text-white ${
-            otp.length !== OTP_LENGTH
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-green-600 hover:bg-green-700"
-          }`}
-        >
-          Verify OTP
-        </Button>
-      </Box>
+    <Box
+  sx={{
+    position: "fixed",
+    top: 80,
+    left: "50%",
+    transform: "translateX(-50%)",
+    zIndex: 1300,
+    px: 2,
+    width: "100%",
+    maxWidth: "500px",
+  }}
+>
+  <Box
+    sx={{
+      position: "relative",
+      backgroundColor: "#fff",
+      p: 3,
+      borderRadius: 2,
+      boxShadow: 5,
+      textAlign: "center",
+      border: "1px solid #e5e7eb",
+    }}
+  >
+    <Box
+      onClick={onClose}
+      sx={{
+        position: "absolute",
+        top: 12,
+        right: 12,
+        color: "#6b7280",
+        cursor: "pointer",
+        fontSize: "18px",
+      }}
+    >
+      ✕
     </Box>
+
+    <Typography
+      sx={{
+        fontSize: "20px",
+        fontWeight: 600,
+        mb: 2,
+      }}
+    >
+      Verify OTP
+    </Typography>
+
+    <OTPInput
+      label={label}
+      onComplete={handleOtpComplete}
+      disabled={emailOtpVerified}
+    />
+
+    <Button
+      onClick={verifyOtp}
+      disabled={otp.length !== OTP_LENGTH}
+      variant="contained"
+      sx={{
+        mt: 2,
+        width: "100%",
+        color: "#fff",
+        cursor: otp.length !== OTP_LENGTH ? "not-allowed" : "pointer",
+      }}
+    >
+      Verify OTP
+    </Button>
+  </Box>
+</Box>
   );
 };
 

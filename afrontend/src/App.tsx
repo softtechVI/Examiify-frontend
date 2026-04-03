@@ -1,38 +1,3 @@
-// import { Toaster } from "@/components/ui/toaster";
-// import { Toaster as Sonner } from "@/components/ui/sonner";
-// import { TooltipProvider } from "@/components/ui/tooltip";
-// import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-// import { BrowserRouter, Routes, Route } from "react-router-dom";
-// import Dashboard from "./pages/Dashboard";
-// import AddPlan from "./pages/AddPlan";
-// import AddCoupon from "./pages/AddCoupon";
-// import AiPricing from "./pages/AiPricing";
-// import FeatureControl from "./pages/FeatureControl";
-// import NotFound from "./pages/NotFound";
-
-// const queryClient = new QueryClient();
-
-// const App = () => (
-//   <QueryClientProvider client={queryClient}>
-//     <TooltipProvider>
-//       <Toaster />
-//       <Sonner />
-//       <BrowserRouter>
-//         <Routes>
-//           <Route path="/" element={<Dashboard />} />
-//           <Route path="/add-plan" element={<AddPlan />} />
-//           <Route path="/add-coupon" element={<AddCoupon />} />
-//           <Route path="/ai-pricing" element={<AiPricing />} />
-//           <Route path="/feature-control" element={<FeatureControl />} />
-//           <Route path="*" element={<NotFound />} />
-//         </Routes>
-//       </BrowserRouter>
-//     </TooltipProvider>
-//   </QueryClientProvider>
-// );
-
-// export default App;
-
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Box, CircularProgress, Typography } from "@mui/material";

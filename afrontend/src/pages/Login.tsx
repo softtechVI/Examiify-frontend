@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextField, Button, Box } from "@mui/material";
+import { TextField, Button, Box, Typography } from "@mui/material";
 import { loginAdmin } from "../services/api"
 import useAlertStore from "../store/useAlertStore";
 import EmailOTPVerify from "../Components/OTPModel/index";
@@ -63,69 +63,116 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 relative">
+    <Box
+  sx={{
+    minHeight: "100vh",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#f3f4f6",
+    position: "relative",
+  }}
+>
+  {/* -------- LOGIN FORM -------- */}
+  <Box
+    sx={{
+      backgroundColor: "#fff",
+      boxShadow: 5,
+      borderRadius: 3,
+      p: { xs: 3, sm: 4 },
+      width: "90%",
+      maxWidth: "400px",
+      pointerEvents: showOtpScreen ? "none" : "auto",
+      filter: showOtpScreen ? "blur(1px)" : "none",
+    }}
+  >
+    <Box
+      component="img"
+      src="/logo5.png"
+      alt="logo"
+      sx={{
+        width: "100%",
+        height: 160,
+        objectFit: "contain",
+        mb: 1,
+      }}
+    />
 
-      {/* -------- LOGIN FORM -------- */}
-      <div
-        className={`bg-white shadow-lg rounded-xl p-6 sm:p-7 w-[90%] max-w-sm
-          ${showOtpScreen ? "pointer-events-none blur-[1px]" : ""}
-        `}
-      >
-        <img src="/logo5.png" className="w-90 h-40" alt="logo" />
-        <p className="text-center text-base text-gray-600 mb-3">
-          Login into your account
-        </p>
+    <Typography
+      sx={{
+        textAlign: "center",
+        fontSize: "16px",
+        color: "#6b7280",
+        mb: 2,
+      }}
+    >
+      Login into your account
+    </Typography>
 
-        <Box component="form">
-          <TextField
-            fullWidth
-            label="Email"
-            type="email"
-            margin="normal"
-            value={formData.email}
-            onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
-          />
+    <Box component="form">
+      <TextField
+        label="Email"
+        type="email"
+        margin="normal"
+        fullWidth
+        value={formData.email}
+        onChange={(e) =>
+          setFormData({ ...formData, email: e.target.value })
+        }
+      />
 
-          <TextField
-            fullWidth
-            label="Password"
-            type="password"
-            margin="normal"
-            value={formData.password}
-            onChange={(e) =>
-              setFormData({ ...formData, password: e.target.value })
-            }
-          />
+      <TextField
+        label="Password"
+        type="password"
+        margin="normal"
+        fullWidth
+        value={formData.password}
+        onChange={(e) =>
+          setFormData({ ...formData, password: e.target.value })
+        }
+      />
 
-          <Box className="mt-6">
-            <Button
-              variant="contained"
-              onClick={handleLogin}
-              disabled={showOtpScreen}
-              className="w-full !bg-[#049F99] !border-none hover:!bg-[#337774]"
-            >
-              Login
-            </Button>
-          </Box>
-        </Box>
-      </div>
+      <Box sx={{ mt: 2 }}>
+        <Button
+          variant="contained"
+          onClick={handleLogin}
+          disabled={showOtpScreen}
+          sx={{
+            width: "100%",
+            backgroundColor: "#049F99",
+            border: "none",
+            "&:hover": {
+              backgroundColor: "#337774",
+            },
+          }}
+        >
+          Login
+        </Button>
+      </Box>
+    </Box>
+  </Box>
 
-      {/* -------- OVERLAY -------- */}
-      {showOtpScreen && (
-        <div className="fixed inset-0 bg-black/40 z-40" />
-      )}
+  {/* -------- OVERLAY -------- */}
+  {showOtpScreen && (
+    <Box
+      sx={{
+        position: "fixed",
+        inset: 0,
+        backgroundColor: "rgba(0,0,0,0.4)",
+        zIndex: 40,
+      }}
+    />
+  )}
 
-      {/* -------- OTP MODAL -------- */}
-      {showOtpScreen && (
-        <EmailOTPVerify
-          label="OTP sent to admin mail id's"
-          onVerifyOtp={handleVerifyEmailOtp}
-          onClose={() => setShowOtpScreen(false)}
-        />
-      )}
-    </div>
+  {/* -------- OTP MODAL -------- */}
+  {showOtpScreen && (
+    <EmailOTPVerify
+      label="OTP sent to admin mail id's"
+      onVerifyOtp={handleVerifyEmailOtp}
+      onClose={() => setShowOtpScreen(false)}
+    />
+  )}
+</Box>
   );
 };
 

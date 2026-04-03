@@ -1,6 +1,116 @@
-import { useState } from "react";
+// import { Link, useLocation } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
+// import {
+//   LayoutDashboard,
+//   Plus,
+//   Ticket,
+//   Brain,
+//   Building2,
+//   FileText,
+//   Users,
+//   BarChart3,
+//   Settings,
+//   LogOut,
+//   Sliders,
+//   GraduationCap,
+//   Contact,
+// } from "lucide-react";
+// import { cn } from "@/lib/utils";
+// import { logout } from "@/utils/checkauth";
+// import useIsLoginStore from "@/store/IsLoginStore";
+// import { Box, Button } from "@mui/material";
+
+// const menuItems = [
+//   { icon: LayoutDashboard, label: "Dashboard", path: "/admindashboard" },
+//   { icon: Plus, label: "Add Plan", path: "/add-plan" },
+//   { icon: Ticket, label: "Add Coupon", path: "/add-coupon" },
+//   { icon: Brain, label: "AI Pricing", path: "/ai-pricing" },
+//   { icon: Building2, label: "Check Institutes", path: "/institutes" },
+//   { icon: FileText, label: "Manage Exams", path: "/exams" },
+//   { icon: Users, label: "Manage Users", path: "/users" },
+//   { icon: BarChart3, label: "Reports", path: "/reports" },
+//   { icon: Sliders, label: "Feature Control", path: "/feature-control" },
+//   { icon: Settings, label: "Settings", path: "/settings" },
+//   { icon: Contact, label: "Contact info", path: "/Contact-info" },
+// ];
+
+// export const AdminSidebar = () => {
+//   const location = useLocation();
+//   const navigate = useNavigate();
+//   const { startLoading, stopLoading } = useIsLoginStore();
+
+//   const handleLogout = async () => {
+//     startLoading("Logging out...");
+//     try {
+//       const success = await logout();
+//       if (success) {
+//         sessionStorage.clear();
+//         navigate("/login");
+//       }
+//     } catch (error) {
+//       console.error("Error logging out:", error);
+//     } finally {
+//       stopLoading();
+//     }
+//   };
+
+//   return (
+//     <Box className="w-64 max-h-[100vh] bg-sidebar border-r border-sidebar-border flex flex-col">
+//       {/* Logo */}
+//       <Box className="p-6 border-b border-sidebar-border">
+//         <Box className="flex items-center gap-2">
+//           <GraduationCap className="h-8 w-8 text-primary" />
+//           <span className="text-2xl font-bold">
+//             Exami<span className="text-primary">fy</span>
+//           </span>
+//         </Box>
+//       </Box>
+
+//       {/* Admin Info */}
+//       <Box className="p-4 border-b border-sidebar-border">
+//         <p className="text-sm font-medium text-sidebar-foreground">Admin Shubham</p>
+//       </Box>
+
+//       {/* Navigation */}
+//       <Box component="nav" className="flex-1 p-3 space-y-1">
+//         {menuItems.map((item) => {
+//           const isActive = location.pathname === item.path;
+//           return (
+//             <Link
+//               key={item.path}
+//               to={item.path}
+//               className={cn(
+//                 "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200",
+//                 isActive
+//                   ? "bg-primary text-primary-foreground shadow-md"
+//                   : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+//               )}
+//             >
+//               <item.icon className="h-5 w-5" />
+//               {item.label}
+//             </Link>
+//           );
+//         })}
+//       </Box>
+
+//       {/* Logout */}
+//       <Box className="p-2 border-t border-sidebar-border">
+//         <Button
+//           onClick={handleLogout}
+//           className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-destructive hover:bg-destructive/10 w-full transition-colors"
+//         >
+//           <LogOut className="h-5 w-5" />
+//           Logout
+//         </Button>
+//       </Box>
+//     </Box>
+//   );
+// };
+
+
 import { Link, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import {
   LayoutDashboard,
   Plus,
@@ -15,39 +125,63 @@ import {
   Sliders,
   GraduationCap,
   Contact,
+  Menu,
+  X,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { logout } from "@/utils/checkauth";
 import useIsLoginStore from "@/store/IsLoginStore";
-import { Box, Button } from "@mui/material";
+import { Box, Button, IconButton } from "@mui/material";
+import { brandColors } from "@/theme";
+
+const BRAND   = brandColors.primary;      // #049F99
+const HOVER   = brandColors.hoverBg;      // rgba(4,159,153,0.08)
+const LIGHT   = brandColors.lightBg;      // rgba(4,159,153,0.1)
+const BORDER  = "#e5e7eb";
+const SIDEBAR_BG = "#ffffff";
+const TEXT    = "#1a1a1a";
+const TEXT_MUTED = "#6b7280";
 
 const menuItems = [
-  { icon: LayoutDashboard, label: "Dashboard", path: "/admindashboard" },
-  { icon: Plus, label: "Add Plan", path: "/add-plan" },
-  { icon: Ticket, label: "Add Coupon", path: "/add-coupon" },
-  { icon: Brain, label: "AI Pricing", path: "/ai-pricing" },
-  { icon: Building2, label: "Check Institutes", path: "/institutes" },
-  { icon: FileText, label: "Manage Exams", path: "/exams" },
-  { icon: Users, label: "Manage Users", path: "/users" },
-  { icon: BarChart3, label: "Reports", path: "/reports" },
-  { icon: Sliders, label: "Feature Control", path: "/feature-control" },
-  { icon: Settings, label: "Settings", path: "/settings" },
-  { icon: Contact, label: "Contact info", path: "/Contact-info" },
+  { icon: LayoutDashboard, label: "Dashboard",       path: "/admindashboard"  },
+  { icon: Plus,            label: "Add Plan",         path: "/add-plan"        },
+  { icon: Ticket,          label: "Add Coupon",       path: "/add-coupon"      },
+  { icon: Brain,           label: "AI Pricing",       path: "/ai-pricing"      },
+  { icon: Building2,       label: "Check Institutes", path: "/institutes"      },
+  { icon: FileText,        label: "Manage Exams",     path: "/exams"           },
+  { icon: Users,           label: "Manage Users",     path: "/users"           },
+  { icon: BarChart3,       label: "Reports",          path: "/reports"         },
+  { icon: Sliders,         label: "Feature Control",  path: "/feature-control" },
+  { icon: Settings,        label: "Settings",         path: "/settings"        },
+  { icon: Contact,         label: "Contact info",     path: "/Contact-info"    },
 ];
 
 export const AdminSidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { startLoading, stopLoading } = useIsLoginStore();
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
+
+  useEffect(() => {
+    const onResize = () => setIsDesktop(window.innerWidth >= 1024);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  // Close on route change
+  useEffect(() => { setIsMobileOpen(false); }, [location.pathname]);
+
+  // Lock body scroll on mobile open
+  useEffect(() => {
+    document.body.style.overflow = isMobileOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [isMobileOpen]);
 
   const handleLogout = async () => {
     startLoading("Logging out...");
     try {
       const success = await logout();
-      if (success) {
-        sessionStorage.clear();
-        navigate("/login");
-      }
+      if (success) { sessionStorage.clear(); navigate("/login"); }
     } catch (error) {
       console.error("Error logging out:", error);
     } finally {
@@ -55,55 +189,177 @@ export const AdminSidebar = () => {
     }
   };
 
-  return (
-    <Box className="w-64 max-h-[100vh] bg-sidebar border-r border-sidebar-border flex flex-col">
-      {/* Logo */}
-      <Box className="p-6 border-b border-sidebar-border">
-        <Box className="flex items-center gap-2">
-          <GraduationCap className="h-8 w-8 text-primary" />
-          <span className="text-2xl font-bold">
-            Exami<span className="text-primary">fy</span>
+  const SidebarContent = ({ showClose = false }: { showClose?: boolean }) => (
+    <Box
+      sx={{
+        width:           256,
+        height:          "100%",
+        backgroundColor: SIDEBAR_BG,
+        borderRight:     `1px solid ${BORDER}`,
+        display:         "flex",
+        flexDirection:   "column",
+        boxShadow:       showClose ? "2px 0 12px rgba(0,0,0,0.1)" : "none",
+      }}
+    >
+      {/* ── Logo ── */}
+      <Box
+        sx={{
+          px:             3,
+          py:             2.5,
+          borderBottom:   `1px solid ${BORDER}`,
+          display:        "flex",
+          alignItems:     "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <GraduationCap style={{ width: 30, height: 30, color: BRAND }} />
+          <span style={{ fontSize: "1.375rem", fontWeight: 700, color: TEXT }}>
+            Exami<span style={{ color: BRAND }}>fy</span>
           </span>
         </Box>
+
+        {showClose && (
+          <IconButton onClick={() => setIsMobileOpen(false)} size="small">
+            <X style={{ width: 18, height: 18, color: TEXT_MUTED }} />
+          </IconButton>
+        )}
       </Box>
 
-      {/* Admin Info */}
-      <Box className="p-4 border-b border-sidebar-border">
-        <p className="text-sm font-medium text-sidebar-foreground">Admin Shubham</p>
+      {/* ── Admin Info ── */}
+      <Box sx={{ px: 3, py: 1.5, borderBottom: `1px solid ${BORDER}` }}>
+        <span style={{ fontSize: "0.8125rem", fontWeight: 500, color: TEXT_MUTED }}>
+          Admin Shubham
+        </span>
       </Box>
 
-      {/* Navigation */}
-      <Box component="nav" className="flex-1 p-3 space-y-1">
+      {/* ── Navigation ── */}
+      <Box
+        component="nav"
+        sx={{ flex: 1, p: 1.5, overflowY: "auto", display: "flex", flexDirection: "column", gap: 0.5 }}
+      >
         {menuItems.map((item) => {
           const isActive = location.pathname === item.path;
           return (
             <Link
               key={item.path}
               to={item.path}
-              className={cn(
-                "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200",
-                isActive
-                  ? "bg-primary text-primary-foreground shadow-md"
-                  : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-              )}
+              style={{
+                display:         "flex",
+                alignItems:      "center",
+                gap:             10,
+                padding:         "10px 14px",
+                borderRadius:    8,
+                fontSize:        "0.875rem",
+                fontWeight:      500,
+                textDecoration:  "none",
+                transition:      "all 0.18s ease",
+                backgroundColor: isActive ? BRAND       : "transparent",
+                color:           isActive ? "#ffffff"   : TEXT,
+                boxShadow:       isActive ? "0 2px 8px rgba(4,159,153,0.25)" : "none",
+              }}
+              onMouseEnter={(e) => {
+                if (!isActive) {
+                  (e.currentTarget as HTMLElement).style.backgroundColor = LIGHT;
+                  (e.currentTarget as HTMLElement).style.color = BRAND;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive) {
+                  (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
+                  (e.currentTarget as HTMLElement).style.color = TEXT;
+                }
+              }}
             >
-              <item.icon className="h-5 w-5" />
+              <item.icon style={{ width: 18, height: 18, flexShrink: 0 }} />
               {item.label}
             </Link>
           );
         })}
       </Box>
 
-      {/* Logout */}
-      <Box className="p-2 border-t border-sidebar-border">
+      {/* ── Logout ── */}
+      <Box sx={{ p: 1.5, borderTop: `1px solid ${BORDER}` }}>
         <Button
           onClick={handleLogout}
-          className="flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-destructive hover:bg-destructive/10 w-full transition-colors"
+          fullWidth
+          startIcon={<LogOut style={{ width: 18, height: 18 }} />}
+          sx={{
+            justifyContent:  "flex-start",
+            textTransform:   "none",
+            fontWeight:      500,
+            fontSize:        "0.875rem",
+            color:           "#f60f0f",
+            borderRadius:    "8px",
+            px:              1.75,
+            py:              1.25,
+            "&:hover":       { backgroundColor: "rgba(153, 148, 148, 0.08)" },
+          }}
         >
-          <LogOut className="h-5 w-5" />
           Logout
         </Button>
       </Box>
     </Box>
+  );
+
+  return (
+    <>
+      {/* ── Hamburger — top-left, only when sidebar is closed ── */}
+      {!isDesktop && !isMobileOpen && (
+        <IconButton
+          onClick={() => setIsMobileOpen(true)}
+          size="medium"
+          sx={{
+            position:        "fixed",
+            top:             12,
+            left:            12,
+            zIndex:          1300,
+            backgroundColor: SIDEBAR_BG,
+            border:          `1px solid ${BORDER}`,
+            boxShadow:       "0 2px 8px rgba(0,0,0,0.12)",
+            "&:hover":       { backgroundColor: LIGHT },
+          }}
+        >
+          <Menu style={{ width: 20, height: 20, color: TEXT }} />
+        </IconButton>
+      )}
+
+      {/* ── Desktop sidebar — always visible ── */}
+      {isDesktop && (
+        <Box sx={{ maxHeight: "100vh", position: "sticky", top: 0, display: "flex" }}>
+          <SidebarContent />
+        </Box>
+      )}
+
+      {/* ── Mobile backdrop ── */}
+      {!isDesktop && isMobileOpen && (
+        <Box
+          onClick={() => setIsMobileOpen(false)}
+          sx={{
+            position:        "fixed",
+            inset:           0,
+            zIndex:          1200,
+            backgroundColor: "rgba(0,0,0,0.45)",
+          }}
+        />
+      )}
+
+      {/* ── Mobile drawer ── */}
+      {!isDesktop && (
+        <Box
+          sx={{
+            position:   "fixed",
+            top:        0,
+            left:       0,
+            zIndex:     1250,
+            height:     "100%",
+            transform:  isMobileOpen ? "translateX(0)" : "translateX(-100%)",
+            transition: "transform 0.3s ease-in-out",
+          }}
+        >
+          <SidebarContent showClose />
+        </Box>
+      )}
+    </>
   );
 };
