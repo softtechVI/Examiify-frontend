@@ -208,7 +208,6 @@ export const AdminSidebar = () => {
             zIndex:          1300,
             backgroundColor: SIDEBAR_BG,
             border:          `1px solid ${BORDER}`,
-            boxShadow:       "0 2px 8px rgba(0,0,0,0.12)",
             "&:hover":       { backgroundColor: LIGHT },
           }}
         >

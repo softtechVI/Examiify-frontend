@@ -1,38 +1,37 @@
     import { useEffect, useState } from "react";
-    import { AdminLayout } from "@/components/layout/AdminLayout";
+    import { AdminLayout } from "@/Components/layout/AdminLayout";
     import {
+    Box,
+    Card,
+    CardContent,
+    Typography,
     Table,
     TableBody,
     TableCell,
+    TableContainer,
     TableHead,
-    TableHeader,
     TableRow,
-    } from "@/components/ui/table";
-    import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-    CardDescription,
-    } from "@/components/ui/card";
-    import { Badge } from "@/components/ui/badge";
-    import { useToast } from "@/hooks/use-toast";
-    import { GetAllContacts} from "@/services/api";
+    Chip,
+    CircularProgress,
+    } from "@mui/material";
+    import { pageWrapperSx, loadingWrapperSx } from "@/theme";
+    import { GetAllContacts } from "@/services/api";
+    import useAlertStore from "@/store/useAlertStore";
+    import { ContactItem } from "@/types";
 
     const ContactMessages = () => {
     const [contacts, setContacts] = useState<ContactItem[]>([]);
-    const { toast } = useToast();
+    const [loading, setLoading] = useState(true);
+    const { showAlert } = useAlertStore();
 
     const fetchContacts = async () => {
         try {
         const data = await GetAllContacts();
         setContacts(data);
-        } catch (err: any) {
-        toast({
-            title: "Error",
-            description: "Failed to load contact messages",
-            variant: "destructive",
-        });
+        } catch {
+        showAlert("error", "Failed to load contact messages");
+        } finally {
+        setLoading(false);
         }
     };
 
@@ -40,65 +39,94 @@
         fetchContacts();
     }, []);
 
-    return (
+return (
         <AdminLayout>
-        <div className="p-6 lg:p-8 space-y-6">
-            <div>
-            <h1 className="text-2xl lg:text-3xl font-bold">
-                Contact Messages
-            </h1>
-            <p className="text-muted-foreground">
+        <Box sx={pageWrapperSx}>
+            {/* Page Header */}
+            <Box>
+            <Typography variant="h4" sx={{ml : 5}}>Contact Messages</Typography>
+            <Typography variant="body2" sx={{ mt: 0.5, ml : 5 }}>
                 Messages submitted from Contact page
-            </p>
-            </div>
+            </Typography>
+            </Box>
 
+            {/* Table Card */}
             <Card>
-            <CardHeader>
-                <CardTitle>All Messages</CardTitle>
-                <CardDescription>
-                User inquiries and support requests
-                </CardDescription>
-            </CardHeader>
+            <CardContent sx={{ p: 0, "&:last-child": { pb: 0 } }}>
+                {/* Card Header */}
+                <Box sx={{ px: 3, py: 2, borderBottom: "1px solid", borderColor: "divider" }}>
+                <Typography variant="h6">All Messages</Typography>
+                <Typography variant="body2">
+                    User inquiries and support requests
+                </Typography>
+                </Box>
 
-            <CardContent>
-                <Table>
-                <TableHeader>
-                    <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Phone No.</TableHead>
-                        <TableHead>Institute</TableHead>
-                        <TableHead>Message</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Date</TableHead>
-                    </TableRow>
-                    </TableHeader>
-
-
-                <TableBody>
-                    {contacts.map((c) => (
-                        <TableRow key={c._id}>
-                        <TableCell className="font-medium">{c.name}</TableCell>
-                        <TableCell>{c.email}</TableCell>
-                        <TableCell>{c.phone}</TableCell>
-                        <TableCell>{c.company || "-"}</TableCell>
-                        <TableCell className="max-w-xs truncate">{c.message}</TableCell>
-                        <TableCell>
-                            <Badge variant="secondary">{c.status}</Badge>
-                        </TableCell>
-                        <TableCell>
-                            {new Date(c.createdAt).toLocaleDateString()}
-                        </TableCell>
+                {/* Loading State */}
+                {loading ? (
+                <Box sx={loadingWrapperSx}>
+                    <CircularProgress />
+                </Box>
+                ) : contacts.length === 0 ? (
+                <Box sx={{ py: 8, textAlign: "center" }}>
+                    <Typography variant="body2">No messages found.</Typography>
+                </Box>
+                ) : (
+                <TableContainer>
+                    <Table>
+                    <TableHead>
+                        <TableRow>
+                        {["Name", "Email", "Phone No.", "Institute", "Message", "Status", "Date"].map(
+                            (col) => (
+                            <TableCell key={col}>{col}</TableCell>
+                            )
+                        )}
                         </TableRow>
-                    ))}
-                    </TableBody>
+                    </TableHead>
 
-                </Table>
+                    <TableBody>
+                        {contacts.map((c) => (
+                        <TableRow key={c._id}>
+                            <TableCell sx={{ fontWeight: 600 }}>{c.name}</TableCell>
+                            <TableCell>{c.email}</TableCell>
+                            <TableCell>{c.phone}</TableCell>
+                            <TableCell>{c.company || "—"}</TableCell>
+                            <TableCell
+                            sx={{
+                                maxWidth: 260,
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                            }}
+                            >
+                            {c.message}
+                            </TableCell>
+                            <TableCell>
+                            <Chip
+                                label={c.status}
+                                size="small"
+                                color={
+                                c.status === "resolved"
+                                    ? "success"
+                                    : c.status === "rejected"
+                                    ? "error"
+                                    : "default"
+                                }
+                            />
+                            </TableCell>
+                            <TableCell>
+                            {new Date(c.createdAt).toLocaleDateString()}
+                            </TableCell>
+                        </TableRow>
+                        ))}
+                    </TableBody>
+                    </Table>
+                </TableContainer>
+                )}
             </CardContent>
             </Card>
-        </div>
+        </Box>
         </AdminLayout>
     );
-    };
+};
 
-    export default ContactMessages;
+export default ContactMessages;
