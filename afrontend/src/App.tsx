@@ -45,8 +45,8 @@ const LoginRoute: React.FC = () => {
 
   if (loading) {
     return (
-      <div
-        style={{
+      <Box
+        sx={{
           height: "100vh",
           display: "flex",
           alignItems: "center",
@@ -57,7 +57,7 @@ const LoginRoute: React.FC = () => {
   <CircularProgress size={60} />
   <Typography>Checking session...</Typography>
 </Box>
-      </div>
+      </Box>
     );
   }
 

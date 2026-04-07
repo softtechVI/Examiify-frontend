@@ -1,4 +1,4 @@
-import { AdminLayout } from "@/components/layout/AdminLayout";
+import { AdminLayout } from "@/Components/layout/AdminLayout";
 import { Building2, Plus, FileText } from "lucide-react";
 
 const StatCard = ({

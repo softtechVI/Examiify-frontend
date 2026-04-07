@@ -1,3 +1,454 @@
+// import { createTheme } from "@mui/material/styles";
+// import type { SxProps, Theme } from "@mui/material/styles";
+// import EinaRegular from "./fonts/Eina01-Regular.ttf";
+// import EinaSemiBold from "./fonts/Eina01-SemiBold.ttf";
+// import EinaBold from "./fonts/Eina01-Bold.ttf";
+// import DinBold from "./fonts/DIN Alternate Bold.ttf";
+
+// // ─────────────────────────────────────────────────────────────
+// //  Brand tokens  (change here → changes everywhere)
+// // ─────────────────────────────────────────────────────────────
+// const BRAND_PRIMARY      = "#049F99";
+// const BRAND_PRIMARY_DARK = "#038a85";
+// const BRAND_HOVER_BG     = "rgba(4,159,153,0.08)";
+// const BRAND_LIGHT_BG     = "rgba(4,159,153,0.1)";
+// const BRAND_WHITE        = "#fafafa";
+
+
+
+// // ─────────────────────────────────────────────────────────────
+// //  MUI Theme
+// // ─────────────────────────────────────────────────────────────
+// const theme = createTheme({
+//   palette: {
+//     primary: {
+//       main:         BRAND_PRIMARY,
+//       dark:         BRAND_PRIMARY_DARK,
+//       contrastText: "#ffffff",
+//     },
+//     error:   { main: "#d32f2f", contrastText: "#ffffff" },
+//     success: { main: "#2e7d32", contrastText: "#ffffff" },
+//     text: {
+//       primary:   "#1a1a1a",
+//       secondary: "#6b7280",
+//     },
+//     background: {
+//       default: "#f9fafb",
+//       paper:   "#ffffff",
+//     },
+//     action:  { hover: "#f3f4f6" },
+//     divider: "#e5e7eb",
+//   },
+
+//   typography: {
+//     fontFamily: "Eina, sans-serif",
+//     h1:        { fontFamily: "DIN", fontWeight: 700, fontSize: "2.25rem" },
+//     h2:        { fontFamily: "DIN", fontWeight: 700, fontSize: "2rem" },
+//     h3:        { fontFamily: "DIN", fontWeight: 700, fontSize: "1.875rem" },
+//     h4:        { fontFamily: "DIN", fontWeight: 700, fontSize: "1.75rem" },
+//     h6:        { fontFamily: "DIN", fontWeight: 600, fontSize: "1.125rem" },
+//     subtitle2: { fontFamily: "DIN", fontWeight: 600, fontSize: "0.875rem" },
+//     body2:     { fontFamily: "DIN", fontSize: "0.975rem", color: "#6b7280" },
+//     caption:   { fontFamily: "DIN", fontSize: "0.75rem",  color: "#6b7280" },
+//   },
+
+//     components: {
+//     MuiCssBaseline:{
+//       styleOverrides: `
+//       @font-dace EinaRegular {
+//         font-family: 'Eina';
+//         src: url(${EinaRegular}) format('truetype');
+//         font-weight: 400;
+//         font-style: normal;}
+
+//         @font-dace EinaSemiBold { 
+//         font-family: 'Eina';
+//         src: url(${EinaSemiBold}) format('truetype');
+//         font-weight: 600;
+//         font-style: normal;}
+
+//         @font-dace EinaBold {
+//         font-family: 'Eina';
+//         src: url(${EinaBold}) format('truetype');
+//         font-weight: 700;
+//         font-style: normal;}
+//         `,
+//     },
+
+//       MuiButton: {
+//       styleOverrides: {
+//         root: { textTransform: "none", fontWeight: 500, borderRadius: 8, fontFamily: "Eina, sans-serif", },
+//         containedPrimary: {
+//           backgroundColor: BRAND_PRIMARY,
+//           color: "#ffffff",
+//           "&:hover": { backgroundColor: BRAND_PRIMARY_DARK },
+//         },
+//         outlinedPrimary: {
+//           borderColor: BRAND_PRIMARY,
+//           color:       BRAND_PRIMARY,
+//           "&:hover": { borderColor: BRAND_PRIMARY, backgroundColor: BRAND_HOVER_BG },
+//         },
+//       },
+//     },
+
+//     // ── Card ────────────────────────────────────────
+//     MuiCard: {
+//       styleOverrides: {
+//         root: {
+//           borderRadius: 10,
+//           boxShadow: "0px 1px 3px rgba(0,0,0,0.08),0px 1px 2px rgba(0,0,0,0.06)",
+//           overflow: "hidden",
+//         },
+//       },
+//     },
+//     MuiCardContent: {
+//       styleOverrides: {
+//         root: { padding: 24, "&:last-child": { paddingBottom: 24 } },
+//       },
+//     },
+
+//     // ── Dialog ──────────────────────────────────────
+//     MuiDialog: {
+//       styleOverrides: { paper: { borderRadius: 12 } },
+//     },
+//     MuiDialogTitle: {
+//       styleOverrides: {
+//         root: { fontWeight: 600, fontSize: "1.125rem", padding: "20px 24px 8px" },
+//       },
+//     },
+//     MuiDialogContent: {
+//       styleOverrides: { root: { padding: "8px 24px 16px" } },
+//     },
+//     MuiDialogActions: {
+//       styleOverrides: { root: { padding: "8px 16px 16px", gap: 8 } },
+//     },
+
+//     // ── Chip ────────────────────────────────────────
+//     MuiChip: {
+//       styleOverrides: {
+//         root:         { fontWeight: 500, fontSize: "0.75rem", height: 24, borderRadius: 6 },
+//         colorSuccess: { backgroundColor: "#dcfce7", color: "#15803d" },
+//         colorError:   { backgroundColor: "#fee2e2", color: "#b91c1c" },
+//       },
+//     },
+
+//     // ── TextField ───────────────────────────────────
+//     MuiTextField: {
+//       defaultProps: { variant: "outlined", size: "small", fullWidth: true, margin: "dense" },
+//       styleOverrides: {
+//         root: {
+//           "& .MuiOutlinedInput-root": {
+//             borderRadius: 8,
+//             "&:hover .MuiOutlinedInput-notchedOutline":  { borderColor: BRAND_PRIMARY },
+//             "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: BRAND_PRIMARY },
+//           },
+//           "& .MuiInputLabel-root.Mui-focused": { color: BRAND_PRIMARY },
+//         },
+//       },
+//     },
+
+//     // ── Select / OutlinedInput ───────────────────────
+//     MuiSelect: { styleOverrides: { root: { borderRadius: 8 } } },
+//     MuiOutlinedInput: {
+//       styleOverrides: {
+//         root: {
+//           borderRadius: 8,
+//           "&:hover .MuiOutlinedInput-notchedOutline":  { borderColor: BRAND_PRIMARY },
+//           "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: BRAND_PRIMARY },
+//         },
+//       },
+//     },
+//     MuiInputLabel: {
+//       styleOverrides: { root: { "&.Mui-focused": { color: BRAND_PRIMARY } } },
+//     },
+
+//     // ── Radio ───────────────────────────────────────
+//     MuiRadio: {
+//       styleOverrides: {
+//         root: { color: BRAND_PRIMARY, "&.Mui-checked": { color: BRAND_PRIMARY } },
+//       },
+//     },
+
+//     // ── CircularProgress ────────────────────────────
+//     MuiCircularProgress: {
+//       defaultProps:   { size: 32 },
+//       styleOverrides: { root: { color: BRAND_PRIMARY } },
+//     },
+
+//     // ── MenuItem ────────────────────────────────────
+//     MuiMenuItem: {
+//       styleOverrides: {
+//         root: {
+//           fontSize: "0.875rem",
+//           "&:hover":           { backgroundColor: BRAND_LIGHT_BG },
+//           "&.Mui-selected":    { backgroundColor: BRAND_LIGHT_BG },
+//           "&.Mui-selected:hover": { backgroundColor: BRAND_LIGHT_BG },
+//         },
+//       },
+//     },
+//   },
+
+//   spacing: 8,
+//   shape: { borderRadius: 4 },
+// });
+
+// export default theme;
+
+// // ─────────────────────────────────────────────────────────────
+// //  Brand color object — use instead of raw hex strings
+// // ─────────────────────────────────────────────────────────────
+// export const brandColors = {
+//   primary:     BRAND_PRIMARY,
+//   primaryDark: BRAND_PRIMARY_DARK,
+//   hoverBg:     BRAND_HOVER_BG,
+//   lightBg:     BRAND_LIGHT_BG,
+//   white:       BRAND_WHITE,
+// };
+
+// // ─────────────────────────────────────────────────────────────
+// //  Page layout sx
+// // ─────────────────────────────────────────────────────────────
+
+// /** Outer page wrapper — vertical stack with responsive padding */
+// export const pageWrapperSx: SxProps<Theme> = {
+//   p:             { xs: 3, lg: 4 },
+//   display:       "flex",
+//   flexDirection: "column",
+//   gap:           3,
+// };
+
+// /** Page header row — title on left, action button on right */
+// export const pageHeaderSx: SxProps<Theme> = {
+//   display:        "flex",
+//   flexDirection:  { xs: "column", sm: "row" },
+//   justifyContent: "space-between",
+//   alignItems:     { xs: "flex-start", sm: "center" },
+//   gap:            2,
+// };
+
+// /** Title + subtitle stack */
+// export const pageTitleStackSx: SxProps<Theme> = {
+//   display:       "flex",
+//   flexDirection: "column",
+//   gap:           0.5,
+// };
+
+// /** "Subscription Plans" page heading */
+// export const pageTitleSx: SxProps<Theme> = {
+//   fontSize:   { xs: "24px", lg: "30px" },
+//   fontWeight: "bold",
+//   color:      "text.primary",
+// };
+
+// // ─────────────────────────────────────────────────────────────
+// //  Header button
+// // ─────────────────────────────────────────────────────────────
+
+// /** "Add New Plan" button in page header */
+// export const addPlanBtnSx: SxProps<Theme> = {
+//   height:     "40px",
+//   width:      "150px",
+//   background: BRAND_PRIMARY,
+// };
+
+// // ─────────────────────────────────────────────────────────────
+// //  Filter buttons
+// // ─────────────────────────────────────────────────────────────
+
+// /** Wrapper for the filter button row */
+// export const filterRowSx: SxProps<Theme> = {
+//   display:  "flex",
+//   gap:      1,
+//   flexWrap: "wrap",
+//   mt:       2,
+// };
+
+// /**
+//  * Filter button sx factory — pass `true` when this filter is active.
+//  * @example
+//  *   <Button sx={filterButtonSx(planFilter === "active")}>Active</Button>
+//  */
+// export const filterButtonSx = (isActive: boolean): SxProps<Theme> => ({
+//   color:           isActive ? "#fff"        : BRAND_PRIMARY,
+//   backgroundColor: isActive ? BRAND_PRIMARY : "transparent",
+//   borderColor:     BRAND_PRIMARY,
+//   "&:hover": {
+//     backgroundColor: isActive ? BRAND_PRIMARY_DARK : BRAND_LIGHT_BG,
+//     borderColor:     BRAND_PRIMARY,
+//   },
+// });
+
+// // ─────────────────────────────────────────────────────────────
+// //  Stat cards
+// // ─────────────────────────────────────────────────────────────
+
+// /** Each stat card (Total / Active / Inactive / School / College) */
+// export const statCardSx: SxProps<Theme> = {
+//   width:        200,
+//   borderRadius: 3,
+//   boxShadow:    3,
+// };
+
+// /** CardContent padding inside stat card */
+// export const statCardContentSx: SxProps<Theme> = { pt: 3 };
+
+// // ─────────────────────────────────────────────────────────────
+// //  Plan list
+// // ─────────────────────────────────────────────────────────────
+
+// /** Vertical stack that wraps all plan cards */
+// export const planListSx: SxProps<Theme> = {
+//   display:       "flex",
+//   flexDirection: "column",
+//   gap:           3,
+// };
+
+// /** Individual plan card */
+// export const planCardSx: SxProps<Theme> = { overflow: "hidden" };
+
+// /** Inner flex row of a plan card (image | content) */
+// export const planCardRowSx: SxProps<Theme> = {
+//   display:       "flex",
+//   flexDirection: { xs: "column", lg: "row" },
+// };
+
+// // ── Image section ────────────────────────────────────────────
+
+// /** Grey panel that holds the thumbnail */
+// export const planImagePanelSx: SxProps<Theme> = {
+//   width:          { lg: 190 },
+//   bgcolor:        "action.hover",
+//   display:        "flex",
+//   alignItems:     "center",
+//   justifyContent: "center",
+//   p:              1,
+// };
+
+// /** White bordered thumbnail box */
+// export const planImageBoxSx: SxProps<Theme> = {
+//   width:          160,
+//   height:         130,
+//   borderRadius:   2,
+//   bgcolor:        "background.paper",
+//   border:         "1px solid #ddd",
+//   display:        "flex",
+//   alignItems:     "center",
+//   justifyContent: "center",
+//   overflow:       "hidden",
+// };
+
+// /** <img> element inside the thumbnail box */
+// export const planImgSx: SxProps<Theme> = {
+//   width:     "100%",
+//   height:    "100%",
+//   objectFit: "contain",
+// };
+
+// // ── Details section ──────────────────────────────────────────
+
+// /** CardContent on the right side of a plan card */
+// export const planContentSx: SxProps<Theme> = { flex: 1, p: 3 };
+
+// /** Row: plan details (left) + action buttons (right) */
+// export const planDetailsRowSx: SxProps<Theme> = {
+//   display:        "flex",
+//   flexDirection:  { xs: "column", lg: "row" },
+//   justifyContent: "space-between",
+//   gap:            2,
+// };
+
+// /** Plan name + status chip inline row */
+// export const planNameRowSx: SxProps<Theme> = {
+//   display:    "flex",
+//   alignItems: "center",
+//   gap:        1,
+//   flexWrap:   "wrap",
+// };
+
+// /** Meta info row — Clock / Price / Building / Calendar */
+// export const planMetaRowSx: SxProps<Theme> = {
+//   display:  "flex",
+//   flexWrap: "wrap",
+//   gap:      2,
+//   color:    "text.secondary",
+// };
+
+// /** Single meta item (icon + label) */
+// export const planMetaItemSx: SxProps<Theme> = {
+//   display:    "flex",
+//   alignItems: "center",
+//   gap:        0.5,
+// };
+
+// // ── Action buttons ───────────────────────────────────────────
+
+// /** Wrapper for View / Delete / Power buttons */
+// export const planActionsSx: SxProps<Theme> = { display: "flex", gap: 1 };
+
+// /** "View" button */
+// export const viewBtnSx: SxProps<Theme> = {
+//   height:     30,
+//   width:      60,
+//   color:      BRAND_WHITE,
+//   background: BRAND_PRIMARY,
+// };
+
+// /** "Delete" button — use with color="error" on the Button */
+// export const deleteBtnSx: SxProps<Theme> = { height: 30, width: 70 };
+
+// /** Power / toggle-status outlined button */
+// export const powerBtnSx: SxProps<Theme> = {
+//   height:      30,
+//   width:       60,
+//   color:       BRAND_PRIMARY,
+//   borderColor: BRAND_PRIMARY,
+//   "&:hover": {
+//     borderColor:     BRAND_PRIMARY,
+//     backgroundColor: BRAND_HOVER_BG,
+//   },
+// };
+
+// // ─────────────────────────────────────────────────────────────
+// //  Dialog / Modal buttons
+// // ─────────────────────────────────────────────────────────────
+
+// /** Brand-colored contained button inside any dialog (Cancel / Submit / Close) */
+// export const dialogBtnSx: SxProps<Theme> = { background: BRAND_PRIMARY };
+
+// // ─────────────────────────────────────────────────────────────
+// //  View-plan dialog
+// // ─────────────────────────────────────────────────────────────
+
+// /** Full-width plan image in the view dialog */
+// export const viewPlanImageSx: SxProps<Theme> = {
+//   width:        "80%",
+//   height:       "240px",
+//   objectFit:    "contain",
+//   border:       "1px solid #ddd",
+//   borderRadius: "8px",
+//   mb:           2,
+// };
+
+// /** Chip row (status / price / duration / category) */
+// export const viewPlanChipRowSx: SxProps<Theme> = {
+//     display:  "flex",
+//     gap:      "10px",
+//     flexWrap: "wrap",
+//     mb:       2,
+// };
+
+// // ─────────────────────────────────────────────────────────────
+// //  Loading spinner
+// // ─────────────────────────────────────────────────────────────
+
+// /** Centered loading spinner wrapper */
+// export const loadingWrapperSx: SxProps<Theme> = {
+//     display:        "flex",
+//     justifyContent: "center",
+//     py:             10,
+// };
+
+
 import { createTheme } from "@mui/material/styles";
 import type { SxProps, Theme } from "@mui/material/styles";
 import EinaRegular from "./fonts/Eina01-Regular.ttf";
@@ -13,8 +464,6 @@ const BRAND_PRIMARY_DARK = "#038a85";
 const BRAND_HOVER_BG     = "rgba(4,159,153,0.08)";
 const BRAND_LIGHT_BG     = "rgba(4,159,153,0.1)";
 const BRAND_WHITE        = "#fafafa";
-
-
 
 // ─────────────────────────────────────────────────────────────
 //  MUI Theme
@@ -52,32 +501,39 @@ const theme = createTheme({
     caption:   { fontFamily: "DIN", fontSize: "0.75rem",  color: "#6b7280" },
   },
 
-    components: {
-    MuiCssBaseline:{
+  components: {
+    MuiCssBaseline: {
       styleOverrides: `
-      @font-dace EinaRegular {
-        font-family: 'Eina';
-        src: url(${EinaRegular}) format('truetype');
-        font-weight: 400;
-        font-style: normal;}
-
-        @font-dace EinaSemiBold { 
-        font-family: 'Eina';
-        src: url(${EinaSemiBold}) format('truetype');
-        font-weight: 600;
-        font-style: normal;}
-
-        @font-dace EinaBold {
-        font-family: 'Eina';
-        src: url(${EinaBold}) format('truetype');
-        font-weight: 700;
-        font-style: normal;}
-        `,
+        @font-face {
+          font-family: 'Eina';
+          src: url(${EinaRegular}) format('truetype');
+          font-weight: 400;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: 'Eina';
+          src: url(${EinaSemiBold}) format('truetype');
+          font-weight: 600;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: 'Eina';
+          src: url(${EinaBold}) format('truetype');
+          font-weight: 700;
+          font-style: normal;
+        }
+        @font-face {
+          font-family: 'DIN';
+          src: url(${DinBold}) format('truetype');
+          font-weight: 700;
+          font-style: normal;
+        }
+      `,
     },
 
-      MuiButton: {
+    MuiButton: {
       styleOverrides: {
-        root: { textTransform: "none", fontWeight: 500, borderRadius: 8, fontFamily: "Eina, sans-serif", },
+        root: { textTransform: "none", fontWeight: 500, borderRadius: 8, fontFamily: "Eina, sans-serif" },
         containedPrimary: {
           backgroundColor: BRAND_PRIMARY,
           color: "#ffffff",
@@ -91,7 +547,6 @@ const theme = createTheme({
       },
     },
 
-    // ── Card ────────────────────────────────────────
     MuiCard: {
       styleOverrides: {
         root: {
@@ -107,7 +562,6 @@ const theme = createTheme({
       },
     },
 
-    // ── Dialog ──────────────────────────────────────
     MuiDialog: {
       styleOverrides: { paper: { borderRadius: 12 } },
     },
@@ -123,7 +577,6 @@ const theme = createTheme({
       styleOverrides: { root: { padding: "8px 16px 16px", gap: 8 } },
     },
 
-    // ── Chip ────────────────────────────────────────
     MuiChip: {
       styleOverrides: {
         root:         { fontWeight: 500, fontSize: "0.75rem", height: 24, borderRadius: 6 },
@@ -132,14 +585,13 @@ const theme = createTheme({
       },
     },
 
-    // ── TextField ───────────────────────────────────
     MuiTextField: {
       defaultProps: { variant: "outlined", size: "small", fullWidth: true, margin: "dense" },
       styleOverrides: {
         root: {
           "& .MuiOutlinedInput-root": {
             borderRadius: 8,
-            "&:hover .MuiOutlinedInput-notchedOutline":  { borderColor: BRAND_PRIMARY },
+            "&:hover .MuiOutlinedInput-notchedOutline":       { borderColor: BRAND_PRIMARY },
             "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: BRAND_PRIMARY },
           },
           "& .MuiInputLabel-root.Mui-focused": { color: BRAND_PRIMARY },
@@ -147,13 +599,12 @@ const theme = createTheme({
       },
     },
 
-    // ── Select / OutlinedInput ───────────────────────
-    MuiSelect: { styleOverrides: { root: { borderRadius: 8 } } },
+    MuiSelect:        { styleOverrides: { root: { borderRadius: 8 } } },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
           borderRadius: 8,
-          "&:hover .MuiOutlinedInput-notchedOutline":  { borderColor: BRAND_PRIMARY },
+          "&:hover .MuiOutlinedInput-notchedOutline":       { borderColor: BRAND_PRIMARY },
           "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: BRAND_PRIMARY },
         },
       },
@@ -162,28 +613,52 @@ const theme = createTheme({
       styleOverrides: { root: { "&.Mui-focused": { color: BRAND_PRIMARY } } },
     },
 
-    // ── Radio ───────────────────────────────────────
     MuiRadio: {
       styleOverrides: {
         root: { color: BRAND_PRIMARY, "&.Mui-checked": { color: BRAND_PRIMARY } },
       },
     },
 
-    // ── CircularProgress ────────────────────────────
+    // ── Checkbox — brand color ───────────────────────
+    MuiCheckbox: {
+      styleOverrides: {
+        root: { color: BRAND_PRIMARY, "&.Mui-checked": { color: BRAND_PRIMARY } },
+      },
+    },
+
     MuiCircularProgress: {
       defaultProps:   { size: 32 },
       styleOverrides: { root: { color: BRAND_PRIMARY } },
     },
 
-    // ── MenuItem ────────────────────────────────────
     MuiMenuItem: {
       styleOverrides: {
         root: {
           fontSize: "0.875rem",
-          "&:hover":           { backgroundColor: BRAND_LIGHT_BG },
-          "&.Mui-selected":    { backgroundColor: BRAND_LIGHT_BG },
+          "&:hover":              { backgroundColor: BRAND_LIGHT_BG },
+          "&.Mui-selected":       { backgroundColor: BRAND_LIGHT_BG },
           "&.Mui-selected:hover": { backgroundColor: BRAND_LIGHT_BG },
         },
+      },
+    },
+
+    // ── Table ────────────────────────────────────────
+    MuiTableCell: {
+      styleOverrides: {
+        root: { fontSize: "0.875rem", borderColor: "#e5e7eb" },
+        head: { fontWeight: 600, color: "#1a1a1a", backgroundColor: "#f9fafb" },
+      },
+    },
+    MuiTableRow: {
+      styleOverrides: {
+        root: { "&:hover": { backgroundColor: "rgba(4,159,153,0.03)" } },
+      },
+    },
+
+    // ── IconButton ──────────────────────────────────
+    MuiIconButton: {
+      styleOverrides: {
+        root: { borderRadius: 8, "&:hover": { backgroundColor: BRAND_HOVER_BG } },
       },
     },
   },
@@ -209,15 +684,13 @@ export const brandColors = {
 //  Page layout sx
 // ─────────────────────────────────────────────────────────────
 
-/** Outer page wrapper — vertical stack with responsive padding */
 export const pageWrapperSx: SxProps<Theme> = {
-  p:             { xs: 3, lg: 4 },
+  p:             { xs: 2, sm: 3, lg: 4 },
   display:       "flex",
   flexDirection: "column",
   gap:           3,
 };
 
-/** Page header row — title on left, action button on right */
 export const pageHeaderSx: SxProps<Theme> = {
   display:        "flex",
   flexDirection:  { xs: "column", sm: "row" },
@@ -226,52 +699,47 @@ export const pageHeaderSx: SxProps<Theme> = {
   gap:            2,
 };
 
-/** Title + subtitle stack */
 export const pageTitleStackSx: SxProps<Theme> = {
   display:       "flex",
   flexDirection: "column",
   gap:           0.5,
 };
 
-/** "Subscription Plans" page heading */
 export const pageTitleSx: SxProps<Theme> = {
-  fontSize:   { xs: "24px", lg: "30px" },
+  fontSize:   { xs: "20px", sm: "24px", lg: "30px" },
   fontWeight: "bold",
   color:      "text.primary",
+  ml:        5, // slight left shift to visually align with content below
 };
 
 // ─────────────────────────────────────────────────────────────
 //  Header button
 // ─────────────────────────────────────────────────────────────
 
-/** "Add New Plan" button in page header */
 export const addPlanBtnSx: SxProps<Theme> = {
   height:     "40px",
-  width:      "150px",
+  minWidth:   "130px",
   background: BRAND_PRIMARY,
+  color:      "#fff",
+  "&:hover":  { background: BRAND_PRIMARY_DARK },
 };
 
 // ─────────────────────────────────────────────────────────────
 //  Filter buttons
 // ─────────────────────────────────────────────────────────────
 
-/** Wrapper for the filter button row */
 export const filterRowSx: SxProps<Theme> = {
   display:  "flex",
   gap:      1,
   flexWrap: "wrap",
-  mt:       2,
 };
 
-/**
- * Filter button sx factory — pass `true` when this filter is active.
- * @example
- *   <Button sx={filterButtonSx(planFilter === "active")}>Active</Button>
- */
 export const filterButtonSx = (isActive: boolean): SxProps<Theme> => ({
   color:           isActive ? "#fff"        : BRAND_PRIMARY,
   backgroundColor: isActive ? BRAND_PRIMARY : "transparent",
   borderColor:     BRAND_PRIMARY,
+  borderWidth:     1,
+  borderStyle:     "solid",
   "&:hover": {
     backgroundColor: isActive ? BRAND_PRIMARY_DARK : BRAND_LIGHT_BG,
     borderColor:     BRAND_PRIMARY,
@@ -282,39 +750,31 @@ export const filterButtonSx = (isActive: boolean): SxProps<Theme> => ({
 //  Stat cards
 // ─────────────────────────────────────────────────────────────
 
-/** Each stat card (Total / Active / Inactive / School / College) */
 export const statCardSx: SxProps<Theme> = {
   width:        200,
   borderRadius: 3,
   boxShadow:    3,
 };
 
-/** CardContent padding inside stat card */
 export const statCardContentSx: SxProps<Theme> = { pt: 3 };
 
 // ─────────────────────────────────────────────────────────────
 //  Plan list
 // ─────────────────────────────────────────────────────────────
 
-/** Vertical stack that wraps all plan cards */
 export const planListSx: SxProps<Theme> = {
   display:       "flex",
   flexDirection: "column",
   gap:           3,
 };
 
-/** Individual plan card */
 export const planCardSx: SxProps<Theme> = { overflow: "hidden" };
 
-/** Inner flex row of a plan card (image | content) */
 export const planCardRowSx: SxProps<Theme> = {
   display:       "flex",
   flexDirection: { xs: "column", lg: "row" },
 };
 
-// ── Image section ────────────────────────────────────────────
-
-/** Grey panel that holds the thumbnail */
 export const planImagePanelSx: SxProps<Theme> = {
   width:          { lg: 190 },
   bgcolor:        "action.hover",
@@ -324,7 +784,6 @@ export const planImagePanelSx: SxProps<Theme> = {
   p:              1,
 };
 
-/** White bordered thumbnail box */
 export const planImageBoxSx: SxProps<Theme> = {
   width:          160,
   height:         130,
@@ -337,19 +796,14 @@ export const planImageBoxSx: SxProps<Theme> = {
   overflow:       "hidden",
 };
 
-/** <img> element inside the thumbnail box */
 export const planImgSx: SxProps<Theme> = {
   width:     "100%",
   height:    "100%",
   objectFit: "contain",
 };
 
-// ── Details section ──────────────────────────────────────────
-
-/** CardContent on the right side of a plan card */
 export const planContentSx: SxProps<Theme> = { flex: 1, p: 3 };
 
-/** Row: plan details (left) + action buttons (right) */
 export const planDetailsRowSx: SxProps<Theme> = {
   display:        "flex",
   flexDirection:  { xs: "column", lg: "row" },
@@ -357,7 +811,6 @@ export const planDetailsRowSx: SxProps<Theme> = {
   gap:            2,
 };
 
-/** Plan name + status chip inline row */
 export const planNameRowSx: SxProps<Theme> = {
   display:    "flex",
   alignItems: "center",
@@ -365,7 +818,6 @@ export const planNameRowSx: SxProps<Theme> = {
   flexWrap:   "wrap",
 };
 
-/** Meta info row — Clock / Price / Building / Calendar */
 export const planMetaRowSx: SxProps<Theme> = {
   display:  "flex",
   flexWrap: "wrap",
@@ -373,19 +825,14 @@ export const planMetaRowSx: SxProps<Theme> = {
   color:    "text.secondary",
 };
 
-/** Single meta item (icon + label) */
 export const planMetaItemSx: SxProps<Theme> = {
   display:    "flex",
   alignItems: "center",
   gap:        0.5,
 };
 
-// ── Action buttons ───────────────────────────────────────────
-
-/** Wrapper for View / Delete / Power buttons */
 export const planActionsSx: SxProps<Theme> = { display: "flex", gap: 1 };
 
-/** "View" button */
 export const viewBtnSx: SxProps<Theme> = {
   height:     30,
   width:      60,
@@ -393,10 +840,8 @@ export const viewBtnSx: SxProps<Theme> = {
   background: BRAND_PRIMARY,
 };
 
-/** "Delete" button — use with color="error" on the Button */
 export const deleteBtnSx: SxProps<Theme> = { height: 30, width: 70 };
 
-/** Power / toggle-status outlined button */
 export const powerBtnSx: SxProps<Theme> = {
   height:      30,
   width:       60,
@@ -409,17 +854,19 @@ export const powerBtnSx: SxProps<Theme> = {
 };
 
 // ─────────────────────────────────────────────────────────────
-//  Dialog / Modal buttons
+//  Dialog buttons
 // ─────────────────────────────────────────────────────────────
 
-/** Brand-colored contained button inside any dialog (Cancel / Submit / Close) */
-export const dialogBtnSx: SxProps<Theme> = { background: BRAND_PRIMARY };
+export const dialogBtnSx: SxProps<Theme> = {
+  background: BRAND_PRIMARY,
+  color:      "#fff",
+  "&:hover":  { background: BRAND_PRIMARY_DARK },
+};
 
 // ─────────────────────────────────────────────────────────────
 //  View-plan dialog
 // ─────────────────────────────────────────────────────────────
 
-/** Full-width plan image in the view dialog */
 export const viewPlanImageSx: SxProps<Theme> = {
   width:        "80%",
   height:       "240px",
@@ -429,21 +876,19 @@ export const viewPlanImageSx: SxProps<Theme> = {
   mb:           2,
 };
 
-/** Chip row (status / price / duration / category) */
 export const viewPlanChipRowSx: SxProps<Theme> = {
-    display:  "flex",
-    gap:      "10px",
-    flexWrap: "wrap",
-    mb:       2,
+  display:  "flex",
+  gap:      "10px",
+  flexWrap: "wrap",
+  mb:       2,
 };
 
 // ─────────────────────────────────────────────────────────────
 //  Loading spinner
 // ─────────────────────────────────────────────────────────────
 
-/** Centered loading spinner wrapper */
 export const loadingWrapperSx: SxProps<Theme> = {
-    display:        "flex",
-    justifyContent: "center",
-    py:             10,
+  display:        "flex",
+  justifyContent: "center",
+  py:             10,
 };

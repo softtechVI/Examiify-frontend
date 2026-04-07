@@ -1,8 +1,15 @@
 import { useState } from "react";
-import { AdminLayout } from "@/components/layout/AdminLayout";
-import { FeatureCard } from "@/components/features/FeatureCard";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { AdminLayout } from "@/Components/layout/AdminLayout";
+import { FeatureCard } from "@/Components/features/FeatureCard";
+import {
+  Box,
+  Typography,
+  Button,
+  Card,
+  CardContent,
+  TextField,
+  InputAdornment,
+} from "@mui/material";
 import {
   KeyRound,
   Brain,
@@ -19,6 +26,14 @@ import {
   Save,
 } from "lucide-react";
 import { toast } from "sonner";
+import {
+  pageWrapperSx,
+  pageHeaderSx,
+  pageTitleSx,
+  filterRowSx,
+  filterButtonSx,
+  brandColors,
+} from "@/theme";
 
 interface Feature {
   id: string;
@@ -163,104 +178,141 @@ const FeatureControl = () => {
 
   return (
     <AdminLayout>
-      <div className="p-8 space-y-8">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">Feature Control</h1>
-            <p className="text-muted-foreground mt-1">
+      <Box sx={pageWrapperSx}>
+
+        {/* HEADER */}
+        <Box sx={pageHeaderSx}>
+          <Box>
+            <Typography sx={pageTitleSx}>Feature Control</Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, ml: 5 }}>
               Manage features for admin and user roles across your platform
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
+            </Typography>
+          </Box>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
             <Button
-              variant="outline"
+              variant="outlined"
               onClick={handleReset}
-              className="gap-2"
+              startIcon={<RefreshCw size={16} />}
             >
-              <RefreshCw className="h-4 w-4" />
               Reset
             </Button>
             <Button
+              variant="contained"
               onClick={handleSave}
               disabled={!hasChanges}
-              className="gap-2 bg-primary hover:bg-primary/90"
+              startIcon={<Save size={16} />}
+              sx={{
+                background: brandColors.primary,
+                "&:hover": { background: brandColors.primaryDark },
+              }}
             >
-              <Save className="h-4 w-4" />
               Save Changes
             </Button>
-          </div>
-        </div>
+          </Box>
+        </Box>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-card rounded-xl p-5 border border-border shadow-sm">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-primary/10 rounded-lg">
-                <Shield className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-card-foreground">{features.length}</p>
-                <p className="text-sm text-muted-foreground">Total Features</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-card rounded-xl p-5 border border-border shadow-sm">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-success/10 rounded-lg">
-                <Shield className="h-5 w-5 text-success" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-card-foreground">{enabledCount}</p>
-                <p className="text-sm text-muted-foreground">Enabled</p>
-              </div>
-            </div>
-          </div>
-          <div className="bg-card rounded-xl p-5 border border-border shadow-sm">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-muted rounded-lg">
-                <Shield className="h-5 w-5 text-muted-foreground" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-card-foreground">{disabledCount}</p>
-                <p className="text-sm text-muted-foreground">Disabled</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* STATS */}
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", sm: "repeat(3, 1fr)" },
+            gap: 2,
+          }}
+        >
+          {/* Total Features */}
+          <Card>
+            <CardContent sx={{ pt: 2.5, display: "flex", alignItems: "center", gap: 1.5, "&:last-child": { pb: 2.5 } }}>
+              <Box sx={{ p: 1, borderRadius: 2, bgcolor: "rgba(4,159,153,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Shield size={20} color={brandColors.primary} />
+              </Box>
+              <Box>
+                <Typography sx={{ fontSize: "1.5rem", fontWeight: 700, lineHeight: 1 }}>
+                  {features.length}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">Total Features</Typography>
+              </Box>
+            </CardContent>
+          </Card>
 
-        {/* Filters */}
-        <div className="flex flex-col md:flex-row gap-4">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search features..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-          <div className="flex flex-wrap gap-2">
+          {/* Enabled */}
+          <Card>
+            <CardContent sx={{ pt: 2.5, display: "flex", alignItems: "center", gap: 1.5, "&:last-child": { pb: 2.5 } }}>
+              <Box sx={{ p: 1, borderRadius: 2, bgcolor: "rgba(46,125,50,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Shield size={20} color="#2e7d32" />
+              </Box>
+              <Box>
+                <Typography sx={{ fontSize: "1.5rem", fontWeight: 700, lineHeight: 1 }}>
+                  {enabledCount}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">Enabled</Typography>
+              </Box>
+            </CardContent>
+          </Card>
+
+          {/* Disabled */}
+          <Card>
+            <CardContent sx={{ pt: 2.5, display: "flex", alignItems: "center", gap: 1.5, "&:last-child": { pb: 2.5 } }}>
+              <Box sx={{ p: 1, borderRadius: 2, bgcolor: "#f3f4f6", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Shield size={20} color="#6b7280" />
+              </Box>
+              <Box>
+                <Typography sx={{ fontSize: "1.5rem", fontWeight: 700, lineHeight: 1 }}>
+                  {disabledCount}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">Disabled</Typography>
+              </Box>
+            </CardContent>
+          </Card>
+        </Box>
+
+        {/* FILTERS */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            gap: 2,
+          }}
+        >
+          {/* Search */}
+          <TextField
+            placeholder="Search features..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            size="small"
+            sx={{ flex: 1, maxWidth: { md: 400 } }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Search size={16} color="#6b7280" />
+                </InputAdornment>
+              ),
+            }}
+          />
+
+          {/* Category Filter */}
+          <Box sx={filterRowSx}>
             {categories.map((category) => (
               <Button
                 key={category}
-                variant={selectedCategory === category ? "default" : "outline"}
-                size="sm"
+                variant="outlined"
+                size="small"
+                sx={filterButtonSx(selectedCategory === category)}
                 onClick={() => setSelectedCategory(category)}
-                className={
-                  selectedCategory === category
-                    ? "bg-primary hover:bg-primary/90"
-                    : ""
-                }
               >
                 {category}
               </Button>
             ))}
-          </div>
-        </div>
+          </Box>
+        </Box>
 
-        {/* Feature Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* FEATURE CARDS */}
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: { xs: "1fr", lg: "repeat(2, 1fr)" },
+            gap: 2,
+          }}
+        >
           {filteredFeatures.map((feature) => (
             <FeatureCard
               key={feature.id}
@@ -273,14 +325,18 @@ const FeatureControl = () => {
               category={feature.category}
             />
           ))}
-        </div>
+        </Box>
 
+        {/* EMPTY STATE */}
         {filteredFeatures.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">No features found matching your criteria.</p>
-          </div>
+          <Box sx={{ textAlign: "center", py: 6 }}>
+            <Typography color="text.secondary">
+              No features found matching your criteria.
+            </Typography>
+          </Box>
         )}
-      </div>
+
+      </Box>
     </AdminLayout>
   );
 };

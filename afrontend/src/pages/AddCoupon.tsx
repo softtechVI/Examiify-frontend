@@ -1,36 +1,52 @@
 import { useEffect, useState } from "react";
-import { AdminLayout } from "@/components/layout/AdminLayout";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { AdminLayout } from "@/Components/layout/AdminLayout";
 import {
   Dialog,
-  DialogContent,
-  DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import {
+  DialogContent,
+  DialogActions,
+  Typography,
+  Chip,
+  Button,
+  TextField,
+  Grid,
+  Card,
+  CardContent,
+  Box,
+  CircularProgress,
   Table,
   TableBody,
   TableCell,
   TableHead,
-  TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+  Checkbox,
+  FormGroup,
+  FormControlLabel,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
+
 import {
-  Plus,
-  Trash2,
+  pageWrapperSx,
+  pageHeaderSx,
+  pageTitleSx,
+  addPlanBtnSx,
+  filterRowSx,
+  filterButtonSx,
+  dialogBtnSx,
+  loadingWrapperSx,
+  brandColors,
+} from "@/theme";
+
+import {
   Power,
+  Eye,
+  Trash2,
+  Ticket,
   Calendar,
   Percent,
-  IndianRupee,
-  Eye,
-  Ticket,
-  Loader2,
 } from "lucide-react";
+
 import { useToast } from "@/hooks/use-toast";
 
 import {
@@ -59,7 +75,7 @@ type Coupon = {
   coupanUsed?: number;
   perUserLimit: number;
   status: "1" | "0";
-  applicablePlanId?: string[]; 
+  applicablePlanId?: string[];
 };
 
 type Plan = {
@@ -80,11 +96,10 @@ export default function CouponManager() {
   const [openForm, setOpenForm] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [filterStatus, setFilterStatus] = useState<
-  "all" | "active" | "inactive" | "expired"
->("all");
+    "all" | "active" | "inactive" | "expired"
+  >("all");
 
-
-  /* ================= FORM STATE (EXACT CODE-1 MATCH) ================= */
+  /* ================= FORM STATE ================= */
 
   const initialFormState = {
     couponCode: "",
@@ -100,7 +115,7 @@ export default function CouponManager() {
     usageLimit: "",
     perUserLimit: "",
     status: "1",
-    planId: [] as string[], // ✅ IMPORTANT
+    planId: [] as string[],
   };
 
   const [formData, setFormData] = useState(initialFormState);
@@ -126,7 +141,7 @@ export default function CouponManager() {
     loadData();
   }, []);
 
-  /* ================= PLAN TOGGLE (MULTI SELECT) ================= */
+  /* ================= PLAN TOGGLE ================= */
 
   const togglePlanSelection = (planId: string) => {
     setFormData((prev) => ({
@@ -137,12 +152,11 @@ export default function CouponManager() {
     }));
   };
 
-  /* ================= SUBMIT (SAME AS CODE-1) ================= */
+  /* ================= SUBMIT ================= */
 
   const handleSubmit = async () => {
     try {
       const fd = new FormData();
-
       fd.append("couponCode", formData.couponCode);
       fd.append("isVisible", formData.isVisible);
       fd.append("discountType", formData.discountType);
@@ -154,12 +168,9 @@ export default function CouponManager() {
       fd.append("usageLimit", formData.usageLimit);
       fd.append("perUserLimit", formData.perUserLimit);
       fd.append("status", formData.status);
-
       if (formData.maxDiscount) fd.append("maxDiscount", formData.maxDiscount);
       if (formData.minOrderAmount)
         fd.append("minOrderAmount", formData.minOrderAmount);
-
-      // ✅ EXACT CODE-1 LOGIC
       formData.planId.forEach((id) => fd.append("planId", id));
 
       if (editingId) {
@@ -168,10 +179,7 @@ export default function CouponManager() {
         await AddCoupon(fd);
       }
 
-      toast({
-        title: editingId ? "Coupon Updated" : "Coupon Added",
-      });
-
+      toast({ title: editingId ? "Coupon Updated" : "Coupon Added" });
       setOpenForm(false);
       setEditingId(null);
       setFormData(initialFormState);
@@ -210,7 +218,7 @@ export default function CouponManager() {
       usageLimit: String(c.usageLimit),
       perUserLimit: String(c.perUserLimit),
       status: c.status,
-      planId: c.applicablePlanId || [], // ✅ PREFILL
+      planId: c.applicablePlanId || [],
     });
     setOpenForm(true);
   };
@@ -218,10 +226,8 @@ export default function CouponManager() {
   /* ================= STATS ================= */
 
   const inactiveCount = coupons.filter(
-  (c) => c.status === "0" && new Date(c.endDate) >= new Date()
+    (c) => c.status === "0" && new Date(c.endDate) >= new Date()
   ).length;
-
-
   const activeCount = coupons.filter((c) => c.status === "1").length;
   const expiredCount = coupons.filter(
     (c) => new Date(c.endDate) < new Date()
@@ -232,512 +238,465 @@ export default function CouponManager() {
     setSelectedCoupon(c);
     setOpenView(true);
   };
-  const getStatusBadge = (coupon: Coupon) => {
+
+  const getStatusChip = (coupon: Coupon) => {
     if (new Date(coupon.endDate) < new Date()) {
-      return <Badge variant="destructive">Expired</Badge>;
+      return <Chip label="Expired" color="error" size="small" />;
     }
     if (coupon.status === "1") {
-      return <Badge className="bg-success text-success-foreground">Active</Badge>;
+      return <Chip label="Active" color="success" size="small" />;
     }
-    return <Badge variant="destructive">Inactive</Badge>;
+    return <Chip label="Inactive" color="error" size="small" />;
   };
 
-
   const filteredCoupons = coupons.filter((c) => {
-  const isExpired = new Date(c.endDate) < new Date();
-
-  if (filterStatus === "active") {
-    return c.status === "1" && !isExpired;
-  }
-
-  if (filterStatus === "inactive") {
-    return c.status === "0" && !isExpired;
-  }
-
-  if (filterStatus === "expired") {
-    return isExpired;
-  }
-
-  return true; // all
-});
+    const isExpired = new Date(c.endDate) < new Date();
+    if (filterStatus === "active") return c.status === "1" && !isExpired;
+    if (filterStatus === "inactive") return c.status === "0" && !isExpired;
+    if (filterStatus === "expired") return isExpired;
+    return true;
+  });
 
   /* ================= UI ================= */
 
   return (
     <AdminLayout>
-      <div className="p-6 space-y-6">
+      <Box sx={pageWrapperSx}>
+
         {/* HEADER */}
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold">Coupons & Discounts</h1>
-          <Button onClick={() => setOpenForm(true)}>
+        <Box sx={pageHeaderSx}>
+          <Typography sx={pageTitleSx}>Coupons & Discounts</Typography>
+          <Button variant="contained" sx={addPlanBtnSx} onClick={() => setOpenForm(true)}>
             Add Coupon
           </Button>
-        </div>
+        </Box>
 
         {/* STATS */}
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: {
+              xs: "repeat(2, 1fr)",
+              sm: "repeat(3, 1fr)",
+              md: "repeat(5, 1fr)",
+            },
+            gap: 2,
+          }}
+        >
           <StatCard title="Total Coupons" value={coupons.length} icon={Ticket} />
           <StatCard title="Active" value={activeCount} icon={Power} />
           <StatCard title="Inactive" value={inactiveCount} icon={Power} />
           <StatCard title="Expired" value={expiredCount} icon={Calendar} />
           <StatCard title="Used" value={usedCount} icon={Percent} />
-      </div>
+        </Box>
 
-      {/* FILTER BAR */}
-<div className="flex flex-wrap gap-2">
-  <Button
-    variant={filterStatus === "all" ? "default" : "outline"}
-    onClick={() => setFilterStatus("all")}
-  >
-    All
-  </Button>
+        {/* FILTER BAR */}
+        <Box sx={filterRowSx}>
+          {(["all", "active", "inactive", "expired"] as const).map((f) => (
+            <Button
+              key={f}
+              variant="outlined"
+              sx={filterButtonSx(filterStatus === f)}
+              onClick={() => setFilterStatus(f)}
+            >
+              {f.charAt(0).toUpperCase() + f.slice(1)}
+            </Button>
+          ))}
+        </Box>
 
-  <Button
-    variant={filterStatus === "active" ? "default" : "outline"}
-    onClick={() => setFilterStatus("active")}
-  >
-    Active
-  </Button>
-
-  <Button
-    variant={filterStatus === "inactive" ? "default" : "outline"}
-    onClick={() => setFilterStatus("inactive")}
-  >
-    Inactive
-  </Button>
-
-  <Button
-    variant={filterStatus === "expired" ? "destructive" : "outline"}
-    onClick={() => setFilterStatus("expired")}
-  >
-    Expired
-  </Button>
-</div>
-
-        {/* TABLE */}
+        {/* TABLE CARD */}
         <Card>
-          <CardHeader>
-            <CardTitle>All Coupons</CardTitle>
-          </CardHeader>
           <CardContent>
+            <Typography variant="h6" sx={{ mb: 2 }}>
+              All Coupons
+            </Typography>
+
             {loading ? (
-              <div className="flex justify-center py-10">
-                <Loader2 className="animate-spin" />
-              </div>
+              <Box sx={loadingWrapperSx}>
+                <CircularProgress />
+              </Box>
             ) : (
-              // <Table>
-              //   <TableHeader>
-              //     <TableRow>
-              //       <TableHead>Code</TableHead>
-              //       <TableHead>Discount</TableHead>
-              //       <TableHead>Status</TableHead>
-              //       <TableHead className="text-right">Actions</TableHead>
-              //     </TableRow>
-              //   </TableHeader>
-              //   <TableBody>
-              //     {filteredCoupons.map((c) => (
-              //       <TableRow key={c._id}>
-              //         <TableCell className="font-mono">
-              //           {c.couponCode}
-              //         </TableCell>
-              //         <TableCell>
-              //           {c.discountType === "percentage"
-              //             ? `${c.discountValue}%`
-              //             : `₹${c.discountValue}`}
-              //         </TableCell>
-              //         <TableCell>
-              //           {getStatusBadge(c)}
-              //         </TableCell>
-              //         <TableCell className="text-right flex justify-end gap-2">
-              //           <Button
-              //             size="icon"
-              //             variant="ghost"
-              //             onClick={() => viewCoupon(c)}
-              //           >
-              //             <Eye />
-              //           </Button>
+              <Box sx={{ overflowX: "auto" }}>
+                <Table size="small" sx={{ minWidth: 600 }}>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Code</TableCell>
+                      <TableCell>Discount</TableCell>
+                      <TableCell>Associated Plans</TableCell>
+                      <TableCell>Status</TableCell>
+                      <TableCell align="right">Actions</TableCell>
+                    </TableRow>
+                  </TableHead>
 
-              //           <Button
-              //             size="icon"
-              //             variant="ghost"
-              //             onClick={() => editCoupon(c)}
-              //           >
-              //             ✏️
-              //           </Button>
-              //           {/* <Button
-              //             size="icon"
-              //             variant="ghost"
-              //             onClick={() => toggleStatus(c._id, c.status)}
-              //           >
-              //             <Power />
-              //           </Button> */}
-              //           <Button
-              //             size="icon"
-              //             variant="ghost"
-              //             disabled={new Date(c.endDate) < new Date()}
-              //             onClick={() => toggleStatus(c._id, c.status)}
-              //             title={
-              //               new Date(c.endDate) < new Date()
-              //                 ? "Expired coupon cannot be activated"
-              //                 : "Toggle Status"
-              //             }
-              //           >
-              //             <Power
-              //               className={
-              //                 new Date(c.endDate) < new Date()
-              //                   ? "opacity-40 cursor-not-allowed"
-              //                   : ""
-              //               }
-              //             />
-              //           </Button>
+                  <TableBody>
+                    {filteredCoupons.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={5} align="center" sx={{ py: 4, color: "text.secondary" }}>
+                          No coupons found
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      filteredCoupons.map((c) => (
+                        <TableRow key={c._id}>
 
-              //           <Button
-              //             size="icon"
-              //             variant="ghost"
-              //             className="text-destructive"
-              //             onClick={() => deleteCoupon(c._id)}
-              //           >
-              //             <Trash2 />
-              //           </Button>
-              //         </TableCell>
-              //       </TableRow>
-              //     ))}
-              //   </TableBody>
-              // </Table>
-              <Table>
-  <TableHeader>
-    <TableRow>
-      <TableHead>Code</TableHead>
-      <TableHead>Discount</TableHead>
-      <TableHead>Associated Plans</TableHead>
-      <TableHead>Status</TableHead>
-      <TableHead className="text-right">Actions</TableHead>
-    </TableRow>
-  </TableHeader>
+                          <TableCell>
+                            <Typography sx={{ fontFamily: "monospace", fontWeight: 600, fontSize: "0.875rem" }}>
+                              {c.couponCode}
+                            </Typography>
+                          </TableCell>
 
-  <TableBody>
-    {filteredCoupons.length === 0 ? (
-      <TableRow>
-        <TableCell
-          colSpan={4}
-          className="text-center text-muted-foreground py-6"
-        >
-          No coupons found
-        </TableCell>
-      </TableRow>
-    ) : (
-      filteredCoupons.map((c) => (
-        <TableRow key={c._id}>
-          <TableCell className="font-mono">
-            {c.couponCode}
-          </TableCell>
+                          <TableCell>
+                            {c.discountType === "percentage"
+                              ? `${c.discountValue}%`
+                              : `₹${c.discountValue}`}
+                          </TableCell>
 
-          <TableCell>
-            {c.discountType === "percentage"
-              ? `${c.discountValue}%`
-              : `₹${c.discountValue}`}
-          </TableCell>
+                          <TableCell>
+                            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                              {c.applicablePlanId && c.applicablePlanId.length > 0 ? (
+                                c.applicablePlanId.map((id) => {
+                                  const plan = plans.find((p) => p._id === id);
+                                  return plan ? (
+                                    <Chip
+                                      key={id}
+                                      label={plan.planName}
+                                      size="small"
+                                      variant="outlined"
+                                      sx={{ fontSize: "0.7rem" }}
+                                    />
+                                  ) : null;
+                                })
+                              ) : (
+                                <Typography variant="caption" color="text.secondary">
+                                  —
+                                </Typography>
+                              )}
+                            </Box>
+                          </TableCell>
 
-          <TableCell>
-  <div className="flex flex-wrap gap-1">
-    {c.applicablePlanId && c.applicablePlanId.length > 0 ? (
-      c.applicablePlanId.map((id) => {
-        const plan = plans.find((p) => p._id === id);
-        return plan ? (
-          <Badge
-            key={id}
-            variant="secondary"
-            className="text-xs"
-          >
-            {plan.planName}
-          </Badge>
-        ) : null;
-      })
-    ) : (
-      <span className="text-muted-foreground text-xs">—</span>
-    )}
-  </div>
-</TableCell>
+                          <TableCell>{getStatusChip(c)}</TableCell>
 
-          
+                          <TableCell align="right">
+                            <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 0.5 }}>
 
-          <TableCell>
-            {getStatusBadge(c)}
-          </TableCell>
+                              {/* VIEW */}
+                              <IconButton size="small" onClick={() => viewCoupon(c)}>
+                                <Eye size={16} />
+                              </IconButton>
 
-          <TableCell className="text-right flex justify-end gap-2">
-            {/* VIEW */}
-            <Button
-              size="icon"
-              variant="ghost"
-              onClick={() => viewCoupon(c)}
-            >
-              <Eye />
-            </Button>
+                              {/* EDIT */}
+                              <IconButton size="small" onClick={() => editCoupon(c)}>
+                                ✏️
+                              </IconButton>
 
-            {/* EDIT */}
-            <Button
-              size="icon"
-              variant="ghost"
-              onClick={() => editCoupon(c)}
-            >
-              ✏️
-            </Button>
+                              {/* TOGGLE STATUS */}
+                              <Tooltip
+                                title={
+                                  new Date(c.endDate) < new Date()
+                                    ? "Expired coupon cannot be activated"
+                                    : "Toggle Status"
+                                }
+                              >
+                                <span>
+                                  <IconButton
+                                    size="small"
+                                    disabled={new Date(c.endDate) < new Date()}
+                                    onClick={() => toggleStatus(c._id, c.status)}
+                                    sx={{
+                                      opacity: new Date(c.endDate) < new Date() ? 0.4 : 1,
+                                    }}
+                                  >
+                                    <Power size={16} />
+                                  </IconButton>
+                                </span>
+                              </Tooltip>
 
-            {/* TOGGLE STATUS (LOCKED IF EXPIRED) */}
-            <Button
-              size="icon"
-              variant="ghost"
-              disabled={new Date(c.endDate) < new Date()}
-              onClick={() => toggleStatus(c._id, c.status)}
-              title={
-                new Date(c.endDate) < new Date()
-                  ? "Expired coupon cannot be activated"
-                  : "Toggle Status"
-              }
-            >
-              <Power
-                className={
-                  new Date(c.endDate) < new Date()
-                    ? "opacity-40 cursor-not-allowed"
-                    : ""
-                }
-              />
-            </Button>
+                              {/* DELETE */}
+                              <IconButton
+                                size="small"
+                                sx={{ color: "error.main" }}
+                                onClick={() => deleteCoupon(c._id)}
+                              >
+                                <Trash2 size={16} />
+                              </IconButton>
 
-            {/* DELETE */}
-            <Button
-              size="icon"
-              variant="ghost"
-              className="text-destructive"
-              onClick={() => deleteCoupon(c._id)}
-            >
-              <Trash2 />
-            </Button>
-          </TableCell>
-        </TableRow>
-      ))
-    )}
-  </TableBody>
-</Table>
-
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
+              </Box>
             )}
           </CardContent>
         </Card>
 
         {/* ADD / EDIT DIALOG */}
-        <Dialog open={openForm} onOpenChange={setOpenForm}>
-          <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
-            <DialogHeader>
-              <DialogTitle>
-                {editingId ? "Edit Coupon" : "Add New Coupon"}
-              </DialogTitle>
-            </DialogHeader>
+        <Dialog
+          open={openForm}
+          onClose={() => setOpenForm(false)}
+          maxWidth="md"
+          fullWidth
+          PaperProps={{ sx: { maxHeight: "90vh" } }}
+        >
+          <DialogTitle>
+            {editingId ? "Edit Coupon" : "Add New Coupon"}
+          </DialogTitle>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Field
-                label="Coupon Code"
-                value={formData.couponCode}
-                onChange={(v) => setFormData({ ...formData, couponCode: v })}
-              />
-              <Field
-                label="Discount Value"
-                type="number"
-                value={formData.discountValue}
-                onChange={(v) => setFormData({ ...formData, discountValue: v })}
-              />
-              <Field
-                label="Max Discount"
-                type="number"
-                value={formData.maxDiscount}
-                onChange={(v) => setFormData({ ...formData, maxDiscount: v })}
-              />
-              <Field
-                label="Min Order Amount"
-                type="number"
-                value={formData.minOrderAmount}
-                onChange={(v) =>
-                  setFormData({ ...formData, minOrderAmount: v })
-                }
-              />
-              <Field
-                label="Start Date"
-                type="date"
-                value={formData.startDate}
-                onChange={(v) => setFormData({ ...formData, startDate: v })}
-              />
-              <Field
-                label="End Date"
-                type="date"
-                value={formData.endDate}
-                onChange={(v) => setFormData({ ...formData, endDate: v })}
-              />
-              <Field
-                label="Usage Limit"
-                type="number"
-                value={formData.usageLimit}
-                onChange={(v) => setFormData({ ...formData, usageLimit: v })}
-              />
-              <Field
-                label="Per User Limit"
-                type="number"
-                value={formData.perUserLimit}
-                onChange={(v) => setFormData({ ...formData, perUserLimit: v })}
-              />
+          <DialogContent dividers>
+            <Grid container spacing={2} sx={{ mt: 0.5 }}>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  label="Coupon Code"
+                  fullWidth
+                  size="small"
+                  value={formData.couponCode}
+                  onChange={(e) => setFormData({ ...formData, couponCode: e.target.value })}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  label="Discount Value"
+                  type="number"
+                  fullWidth
+                  size="small"
+                  value={formData.discountValue}
+                  onChange={(e) => setFormData({ ...formData, discountValue: e.target.value })}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  label="Max Discount"
+                  type="number"
+                  fullWidth
+                  size="small"
+                  value={formData.maxDiscount}
+                  onChange={(e) => setFormData({ ...formData, maxDiscount: e.target.value })}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  label="Min Order Amount"
+                  type="number"
+                  fullWidth
+                  size="small"
+                  value={formData.minOrderAmount}
+                  onChange={(e) => setFormData({ ...formData, minOrderAmount: e.target.value })}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  label="Start Date"
+                  type="date"
+                  fullWidth
+                  size="small"
+                  InputLabelProps={{ shrink: true }}
+                  value={formData.startDate}
+                  onChange={(e) => setFormData({ ...formData, startDate: e.target.value })}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  label="End Date"
+                  type="date"
+                  fullWidth
+                  size="small"
+                  InputLabelProps={{ shrink: true }}
+                  value={formData.endDate}
+                  onChange={(e) => setFormData({ ...formData, endDate: e.target.value })}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  label="Usage Limit"
+                  type="number"
+                  fullWidth
+                  size="small"
+                  value={formData.usageLimit}
+                  onChange={(e) => setFormData({ ...formData, usageLimit: e.target.value })}
+                />
+              </Grid>
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <TextField
+                  label="Per User Limit"
+                  type="number"
+                  fullWidth
+                  size="small"
+                  value={formData.perUserLimit}
+                  onChange={(e) => setFormData({ ...formData, perUserLimit: e.target.value })}
+                />
+              </Grid>
 
               {/* DESCRIPTION */}
-              <div className="md:col-span-2">
-                <Label>Description</Label>
-                <Textarea
+              <Grid size={12}>
+                <TextField
+                  label="Description"
+                  fullWidth
+                  multiline
+                  rows={3}
                   value={formData.description}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 />
-              </div>
+              </Grid>
 
               {/* PLANS */}
-              <div className="md:col-span-2">
-                <Label>Associated Plans</Label>
-                <div className="border rounded-md p-3 max-h-40 overflow-y-auto space-y-2">
-                  {plans.map((p) => (
-                    <label key={p._id} className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={formData.planId.includes(p._id)}
-                        onChange={() => togglePlanSelection(p._id)}
+              <Grid size={12}>
+                <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
+                  Associated Plans
+                </Typography>
+                <Box
+                  sx={{
+                    border: "1px solid",
+                    borderColor: "divider",
+                    borderRadius: 2,
+                    p: 1.5,
+                    maxHeight: 160,
+                    overflowY: "auto",
+                  }}
+                >
+                  <FormGroup>
+                    {plans.map((p) => (
+                      <FormControlLabel
+                        key={p._id}
+                        control={
+                          <Checkbox
+                            size="small"
+                            checked={formData.planId.includes(p._id)}
+                            onChange={() => togglePlanSelection(p._id)}
+                          />
+                        }
+                        label={<Typography variant="body2">{p.planName}</Typography>}
                       />
-                      {p.planName}
-                    </label>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="flex justify-end gap-3 pt-4">
-              <Button variant="outline" onClick={() => setOpenForm(false)}>
-                Cancel
-              </Button>
-              <Button onClick={handleSubmit}>
-                {editingId ? "Update Coupon" : "Add Coupon"}
-              </Button>
-            </div>
+                    ))}
+                  </FormGroup>
+                </Box>
+              </Grid>
+            </Grid>
           </DialogContent>
-        </Dialog>
-        {/* Details Modal */}
-        <Dialog open={openView} onOpenChange={setOpenView}>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>Coupon Details</DialogTitle>
-            </DialogHeader>
 
+          <DialogActions>
+            <Button
+              variant="outlined"
+              onClick={() => {
+                setOpenForm(false);
+                setEditingId(null);
+                setFormData(initialFormState);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button variant="contained" sx={dialogBtnSx} onClick={handleSubmit}>
+              {editingId ? "Update Coupon" : "Add Coupon"}
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        {/* VIEW DETAILS DIALOG */}
+        <Dialog
+          open={openView}
+          onClose={() => setOpenView(false)}
+          maxWidth="sm"
+          fullWidth
+        >
+          <DialogTitle>Coupon Details</DialogTitle>
+          <DialogContent dividers>
             {selectedCoupon && (
-              <div className="space-y-4">
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
+
                 {/* Coupon Code */}
-                <div className="flex justify-center">
-                  <code className="bg-primary/10 text-primary px-4 py-2 rounded-lg text-xl font-mono font-bold">
+                <Box sx={{ display: "flex", justifyContent: "center" }}>
+                  <Box
+                    component="code"
+                    sx={{
+                      bgcolor: "rgba(4,159,153,0.1)",
+                      color: brandColors.primary,
+                      px: 3,
+                      py: 1.5,
+                      borderRadius: 2,
+                      fontSize: "1.25rem",
+                      fontFamily: "monospace",
+                      fontWeight: 700,
+                    }}
+                  >
                     {selectedCoupon.couponCode}
-                  </code>
-                </div>
+                  </Box>
+                </Box>
 
                 {/* Description */}
-                <p className="text-center text-muted-foreground">
+                <Typography variant="body2" color="text.secondary" align="center">
                   {selectedCoupon.description}
-                </p>
+                </Typography>
 
                 {/* Details Grid */}
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div className="space-y-1">
-                    <p className="text-muted-foreground">Discount</p>
-                    <p className="font-medium">
-                      {selectedCoupon.discountType === "percentage"
-                        ? `${selectedCoupon.discountValue}%`
-                        : `₹${selectedCoupon.discountValue}`}
-                      {selectedCoupon.maxDiscount &&
-                        ` (Max ₹${selectedCoupon.maxDiscount})`}
-                    </p>
-                  </div>
-
-                  <div className="space-y-1">
-                    <p className="text-muted-foreground">Min Order</p>
-                    <p className="font-medium">
-                      ₹{selectedCoupon.minOrderAmount || 0}
-                    </p>
-                  </div>
-
-                  <div className="space-y-1">
-                    <p className="text-muted-foreground">Usage</p>
-                    <p className="font-medium">
-                      {selectedCoupon.coupanUsed || 0} /{" "}
-                      {selectedCoupon.usageLimit}
-                    </p>
-                  </div>
-
-                  <div className="space-y-1">
-                    <p className="text-muted-foreground">Per User</p>
-                    <p className="font-medium">{selectedCoupon.perUserLimit}</p>
-                  </div>
-
-                  <div className="space-y-1">
-                    <p className="text-muted-foreground">Start Date</p>
-                    <p className="font-medium">
-                      {new Date(selectedCoupon.startDate).toLocaleDateString()}
-                    </p>
-                  </div>
-
-                  <div className="space-y-1">
-                    <p className="text-muted-foreground">End Date</p>
-                    <p className="font-medium">
-                      {new Date(selectedCoupon.endDate).toLocaleDateString()}
-                    </p>
-                  </div>
-
-                  <div className="space-y-1">
-                    <p className="text-muted-foreground">Category</p>
-                    <p className="font-medium capitalize">
-                      {selectedCoupon.instituteType || "-"}
-                    </p>
-                  </div>
-
-                  <div className="space-y-1">
-                    <p className="text-muted-foreground">Visible to Users</p>
-                    <p className="font-medium">
-                      {/* {selectedCoupon.isVisible === "1" ? "Yes" : "No"} */}
-                    </p>
-                  </div>
-                </div>
+                <Grid container spacing={2}>
+                  {[
+                    {
+                      label: "Discount",
+                      value:
+                        selectedCoupon.discountType === "percentage"
+                          ? `${selectedCoupon.discountValue}%${selectedCoupon.maxDiscount ? ` (Max ₹${selectedCoupon.maxDiscount})` : ""}`
+                          : `₹${selectedCoupon.discountValue}`,
+                    },
+                    { label: "Min Order", value: `₹${selectedCoupon.minOrderAmount || 0}` },
+                    { label: "Usage", value: `${selectedCoupon.coupanUsed || 0} / ${selectedCoupon.usageLimit}` },
+                    { label: "Per User", value: String(selectedCoupon.perUserLimit) },
+                    { label: "Start Date", value: new Date(selectedCoupon.startDate).toLocaleDateString() },
+                    { label: "End Date", value: new Date(selectedCoupon.endDate).toLocaleDateString() },
+                    { label: "Category", value: selectedCoupon.instituteType || "-" },
+                    { label: "Visible to Users", value: "" },
+                  ].map(({ label, value }) => (
+                    <Grid size={6} key={label}>
+                      <Typography variant="caption" color="text.secondary">
+                        {label}
+                      </Typography>
+                      <Typography variant="body2" sx={{ fontWeight: 500, mt: 0.25, textTransform: "capitalize" }}>
+                        {value}
+                      </Typography>
+                    </Grid>
+                  ))}
+                </Grid>
 
                 {/* Associated Plans */}
-                {selectedCoupon.applicablePlanId && selectedCoupon.applicablePlanId.length > 0 && (
-                  <div>
-                    <p className="text-muted-foreground text-sm mb-1">
-                      Associated Plans
-                    </p>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedCoupon.applicablePlanId.map((id, idx) => {
-                        const plan = plans.find((p) => p._id === id);
-                        return plan ? (
-                          <span
-                            key={idx}
-                            className="bg-primary/10 text-primary px-2 py-1 rounded text-xs"
-                          >
-                            {plan.planName}
-                          </span>
-                        ) : null;
-                      })}
-                    </div>
-                  </div>
-                )}
+                {selectedCoupon.applicablePlanId &&
+                  selectedCoupon.applicablePlanId.length > 0 && (
+                    <Box>
+                      <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: "block" }}>
+                        Associated Plans
+                      </Typography>
+                      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                        {selectedCoupon.applicablePlanId.map((id, idx) => {
+                          const plan = plans.find((p) => p._id === id);
+                          return plan ? (
+                            <Box
+                              key={idx}
+                              sx={{
+                                bgcolor: "rgba(4,159,153,0.1)",
+                                color: brandColors.primary,
+                                px: 1.5,
+                                py: 0.5,
+                                borderRadius: 1,
+                                fontSize: "0.75rem",
+                              }}
+                            >
+                              {plan.planName}
+                            </Box>
+                          ) : null;
+                        })}
+                      </Box>
+                    </Box>
+                  )}
 
                 {/* Status */}
-                <div className="flex justify-center pt-2">
-                  {selectedCoupon && getStatusBadge(selectedCoupon)}
-                </div>
-              </div>
+                <Box sx={{ display: "flex", justifyContent: "center", pt: 1 }}>
+                  {getStatusChip(selectedCoupon)}
+                </Box>
+              </Box>
             )}
           </DialogContent>
         </Dialog>
-      </div>
+
+      </Box>
     </AdminLayout>
   );
 }
@@ -747,28 +706,36 @@ export default function CouponManager() {
 function StatCard({ title, value, icon: Icon }: any) {
   return (
     <Card>
-      <CardContent className="pt-6 flex items-center gap-3">
-        <div className="p-2 rounded bg-primary/10">
-          <Icon className="h-5 w-5 text-primary" />
-        </div>
-        <div>
-          <div className="text-2xl font-bold">{value}</div>
-          <p className="text-xs text-muted-foreground">{title}</p>
-        </div>
+      <CardContent
+        sx={{
+          pt: 3,
+          display: "flex",
+          alignItems: "center",
+          gap: 1.5,
+          "&:last-child": { pb: 3 },
+        }}
+      >
+        <Box
+          sx={{
+            p: 1,
+            borderRadius: 2,
+            bgcolor: "rgba(4,159,153,0.1)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Icon size={20} color={brandColors.primary} />
+        </Box>
+        <Box>
+          <Typography sx={{ fontSize: "1.5rem", fontWeight: 700, lineHeight: 1 }}>
+            {value}
+          </Typography>
+          <Typography variant="caption" color="text.secondary">
+            {title}
+          </Typography>
+        </Box>
       </CardContent>
     </Card>
-  );
-}
-
-function Field({ label, value, onChange, type = "text" }: any) {
-  return (
-    <div>
-      <Label>{label}</Label>
-      <Input
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-      />
-    </div>
   );
 }

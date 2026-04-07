@@ -152,8 +152,10 @@ const AddPlanPage = () => {
         {/* ── Header ───────────────────────────── */}
         <Box sx={pageHeaderSx}>
           <Box sx={pageTitleStackSx}>
-            <Typography sx={pageTitleSx}>Subscription Plans</Typography>
-            <Typography sx={{ color: "text.secondary" }}>
+            <Typography sx={pageTitleSx}>
+              Subscription Plans
+            </Typography>
+            <Typography sx={{ color: "text.secondary", ml: 5 }}>
               Manage your subscription plans and pricing
             </Typography>
           </Box>
