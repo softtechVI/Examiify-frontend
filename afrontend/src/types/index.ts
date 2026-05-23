@@ -73,6 +73,32 @@ export interface User {
   name?: string;
 }
 
+export interface RoleRecord {
+  _id: string;
+  code: number;
+  key: string;
+  name: string;
+  description?: string;
+  permissions: string[];
+  isSystem: boolean;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt?: string;
+}
+
+export interface RoleCatalogResponse {
+  roles: RoleRecord[];
+  permissionCatalog: string[];
+  defaultRoleTemplates: Array<{
+    code: number;
+    key: string;
+    name: string;
+    description: string;
+    permissions: string[];
+    isSystem: boolean;
+  }>;
+}
+
 export type ContactStatus = "new" | "read" | "replied" | "resolved" | "rejected";
 
 export interface ContactItem {

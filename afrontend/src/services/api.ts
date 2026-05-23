@@ -1,4 +1,5 @@
 import axios, { AxiosError } from "axios";
+import type { RoleCatalogResponse, RoleRecord } from "@/types";
 const API_URL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
 export const AddCoupon = async (formData: FormData) => {
@@ -59,7 +60,7 @@ export const EmailOtpVerify = async (otp: number, email: string) => {
         const user = response.data?.user;
         const role = user?.role;
 
-    if (String(role) === "1") {
+    if (["1"].includes(String(role))) {
       return {
         success: true,
         user,
@@ -81,6 +82,40 @@ export const EmailOtpVerify = async (otp: number, email: string) => {
       throw new Error("Something went wrong during OTP verification.");
     }
   }
+};
+
+export const getRoles = async (): Promise<RoleCatalogResponse> => {
+  const { data } = await axios.get<RoleCatalogResponse>(`${API_URL}/api/admin/roles`, {
+    withCredentials: true,
+  });
+  return data;
+};
+
+export const createRole = async (payload: {
+  name: string;
+  key?: string;
+  description?: string;
+  permissions: string[];
+  isActive?: boolean;
+}) => {
+  const { data } = await axios.post(`${API_URL}/api/admin/roles`, payload, {
+    withCredentials: true,
+  });
+  return data as { role: RoleRecord };
+};
+
+export const updateRole = async (id: string, payload: Partial<Pick<RoleRecord, "name" | "key" | "description" | "permissions" | "isActive">>) => {
+  const { data } = await axios.put(`${API_URL}/api/admin/roles/${id}`, payload, {
+    withCredentials: true,
+  });
+  return data as { role: RoleRecord };
+};
+
+export const deleteRole = async (id: string) => {
+  const { data } = await axios.delete(`${API_URL}/api/admin/roles/${id}`, {
+    withCredentials: true,
+  });
+  return data;
 };
 
 export const loginAdmin = async (email: string, password: string) => {
