@@ -1,46 +1,11 @@
-
-// import { Toaster } from "@/components/ui/toaster";
-// import { Toaster as Sonner } from "@/components/ui/sonner";
-// import { TooltipProvider } from "@/components/ui/tooltip";
-// import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-// import { BrowserRouter, Routes, Route } from "react-router-dom";
-// import Dashboard from "./pages/Dashboard";
-// import AddPlan from "./pages/AddPlan";
-// import AddCoupon from "./pages/AddCoupon";
-// import AiPricing from "./pages/AiPricing";
-// import FeatureControl from "./pages/FeatureControl";
-// import NotFound from "./pages/NotFound";
-
-// const queryClient = new QueryClient();
-
-// const App = () => (
-//   <QueryClientProvider client={queryClient}>
-//     <TooltipProvider>
-//       <Toaster />
-//       <Sonner />
-//       <BrowserRouter>
-//         <Routes>
-//           <Route path="/" element={<Dashboard />} />
-//           <Route path="/add-plan" element={<AddPlan />} />
-//           <Route path="/add-coupon" element={<AddCoupon />} />
-//           <Route path="/ai-pricing" element={<AiPricing />} />
-//           <Route path="/feature-control" element={<FeatureControl />} />
-//           <Route path="*" element={<NotFound />} />
-//         </Routes>
-//       </BrowserRouter>
-//     </TooltipProvider>
-//   </QueryClientProvider>
-// );
-
-// export default App;
 import React, { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Spin } from "antd";
+import { Box, CircularProgress, Typography } from "@mui/material";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { TooltipProvider } from "./Components/ui/tooltip";
-import { Toaster } from "./Components/ui/toaster";
-import { Toaster as Sonner } from "./Components/ui/sonner";
+import { TooltipProvider } from "@/Components/ui/tooltip";
+import { Toaster } from "@/Components/ui/toaster";
+import { Toaster as Sonner } from "@/Components/ui/sonner";
 
 import ProtectedRoute from "./Components/ProtectedRoute";
 import GlobalAlert from "./Components/GlobalAlert";
@@ -80,16 +45,19 @@ const LoginRoute: React.FC = () => {
 
   if (loading) {
     return (
-      <div
-        style={{
+      <Box
+        sx={{
           height: "100vh",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
         }}
       >
-        <Spin size="large" tip="Checking session..." />
-      </div>
+        <Box display="flex" flexDirection="column" alignItems="center" gap={1}>
+  <CircularProgress size={60} />
+  <Typography>Checking session...</Typography>
+</Box>
+      </Box>
     );
   }
 

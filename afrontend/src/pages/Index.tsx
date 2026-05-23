@@ -1,46 +1,77 @@
-import { AdminLayout } from "@/components/layout/AdminLayout";
-import { Building2, Plus, FileText } from "lucide-react";
+// import { AdminLayout } from "@/Components/layout/AdminLayout";
+// import { Box, Card, CardContent, Grid as Grid, Typography } from "@mui/material";
+// import BusinessIcon from "@mui/icons-material/Business";
+// import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+// import ArticleOutlinedIcon from "@mui/icons-material/ArticleOutlined";
+// import { pageWrapperSx } from "@/theme";
+// import { brandColors } from "@/theme";
 
-const StatCard = ({
-  icon: Icon,
-  value,
-  label,
-}: {
-  icon: any;
-  value: number;
-  label: string;
-}) => (
-  <div className="bg-card rounded-xl p-6 border border-border shadow-sm hover:shadow-md transition-shadow">
-    <div className="flex items-center gap-4">
-      <div className="p-3 bg-primary/10 rounded-lg">
-        <Icon className="h-8 w-8 text-primary" />
-      </div>
-      <div>
-        <p className="text-3xl font-bold text-card-foreground">{value}</p>
-        <p className="text-sm font-medium text-primary">{label}</p>
-      </div>
-    </div>
-  </div>
-);
+// // ─── Stat Card ───────────────────────────────────────────────
+// interface StatCardProps {
+//   icon: React.ElementType;
+//   value: number;
+//   label: string;
+// }
 
-const Index = () => {
-  return (
-    <AdminLayout>
-      <div className="p-8 space-y-8">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground italic">
-            Welcome to the Dashboard
-          </h1>
-        </div>
+// const StatCard = ({ icon: Icon, value, label }: StatCardProps) => (
+//   <Card>
+//     <CardContent>
+//       <Box display="flex" alignItems="center" gap={2}>
+//         {/* Icon bubble */}
+//         <Box
+//           sx={{
+//             p: 1.5,
+//             borderRadius: 2,
+//             backgroundColor: brandColors.lightBg,
+//             display: "flex",
+//             alignItems: "center",
+//             justifyContent: "center",
+//           }}
+//         >
+//           <Icon sx={{ fontSize: 36, color: brandColors.primary }} />
+//         </Box>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <StatCard icon={Building2} value={25} label="Total Institute" />
-          <StatCard icon={Plus} value={25} label="Add Plan" />
-          <StatCard icon={FileText} value={25} label="Exams Conduct" />
-        </div>
-      </div>
-    </AdminLayout>
-  );
-};
+//         {/* Text */}
+//         <Box>
+//           <Typography variant="h4" fontWeight={700} color="text.primary">
+//             {value}
+//           </Typography>
+//           <Typography variant="subtitle2" color="primary">
+//             {label}
+//           </Typography>
+//         </Box>
+//       </Box>
+//     </CardContent>
+//   </Card>
+// );
 
-export default Index;
+// // ─── Dashboard Page ───────────────────────────────────────────
+// const Index = () => {
+//   return (
+//     <AdminLayout>
+//       <Box sx={pageWrapperSx}>
+//         {/* Header */}
+//         <Box>
+//           <Typography variant="h4" fontStyle="italic">
+//             Welcome to the Dashboard
+//           </Typography>
+//         </Box>
+
+//         {/* Stat Cards */}
+//         <Grid container spacing={3}>
+//           <Grid item xs={12} md={4}>
+//             <StatCard icon={BusinessIcon} value={25} label="Total Institute" />
+//           </Grid>
+//           <Grid item xs={12} md={4}>
+//             <StatCard icon={AddCircleOutlineIcon} value={25} label="Add Plan" />
+//           </Grid>
+//           <Grid item xs={12} md={4}>
+//             <StatCard icon={ArticleOutlinedIcon} value={25} label="Exams Conduct" />
+//           </Grid>
+//         </Grid>
+//       </Box>
+//     </AdminLayout>
+//   );
+// };
+
+// export default Index;

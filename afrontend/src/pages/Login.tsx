@@ -1,15 +1,13 @@
 import React, { useState } from "react";
-import { Form, Input, Button } from "antd";
+import { TextField, Button, Box, Typography } from "@mui/material";
 import { loginAdmin } from "../services/api"
 import useAlertStore from "../store/useAlertStore";
-import EmailOTPVerify from "../components/OTPModel";
+import EmailOTPVerify from "../Components/OTPModel/index";
 import { EmailOtpVerify } from "../services/api";
 import useSessionStore from "../store/userSession";
 import useIsLoginStore from "../store/IsLoginStore";
 import { useNavigate } from "react-router-dom";
 
-
-const { Password } = Input;
 
 const Login: React.FC = () => {
   const showAlert = useAlertStore.getState().showAlert;
@@ -17,40 +15,44 @@ const Login: React.FC = () => {
   const [showOtpScreen, setShowOtpScreen] = useState(false);
   const [emailForOtp, setEmailForOtp] = useState("");
   const navigate = useNavigate();
-const setUser = useSessionStore.getState().setUser;
-const { startLoading, stopLoading } = useIsLoginStore();
+  const setUser = useSessionStore.getState().setUser;
+  const { startLoading, stopLoading } = useIsLoginStore();
 
-const handleVerifyEmailOtp = async (otp: string) => {
-  startLoading("Verifying Email OTP...");
-  try {
-    const data = await EmailOtpVerify(Number(otp), emailForOtp);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
 
-    if (data.success) {
-      setUser(data.user);
-      showAlert("success", data.message);
-      navigate(data.nextRoute);
-      setShowOtpScreen(false);
-    } else {
-      showAlert("error", data.message);
-      throw new Error(data.message);
-    }
-  } finally {
-    stopLoading();
-  }
-};
-
-
-  const handleLogin = async (values: { email: string; password: string }) => {
+  const handleVerifyEmailOtp = async (otp: string) => {
+    startLoading("Verifying Email OTP...");
     try {
-      const data = await loginAdmin(values.email, values.password);
+      const data = await EmailOtpVerify(Number(otp), emailForOtp);
+
+      if (data.success) {
+        setUser(data.user);
+        showAlert("success", data.message);
+        navigate(data.nextRoute);
+        setShowOtpScreen(false);
+      } else {
+        showAlert("error", data.message);
+        throw new Error(data.message);
+      }
+    } finally {
+      stopLoading();
+    }
+  };
+
+  const handleLogin = async () => {
+    try {
+      const data = await loginAdmin(formData.email, formData.password);
 
       if (data?.success) {
         showAlert(
           "success",
           data.message || "OTP sent successfully for admin login"
         );
-        setEmailForOtp(values.email);
-        setShowOtpScreen(true); // move to OTP step
+        setEmailForOtp(formData.email);
+        setShowOtpScreen(true);
       } else {
         showAlert("error", data?.message || "Login failed");
       }
@@ -60,60 +62,118 @@ const handleVerifyEmailOtp = async (otp: string) => {
     }
   };
 
-
   return (
-  <div className="min-h-screen flex items-center justify-center bg-gray-100 relative">
+    <Box
+  sx={{
+    minHeight: "100vh",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#f3f4f6",
+    position: "relative",
+  }}
+>
+  {/* -------- LOGIN FORM -------- */}
+  <Box
+    sx={{
+      backgroundColor: "#fff",
+      boxShadow: 5,
+      borderRadius: 3,
+      p: { xs: 3, sm: 4 },
+      width: "90%",
+      maxWidth: "400px",
+      pointerEvents: showOtpScreen ? "none" : "auto",
+      filter: showOtpScreen ? "blur(1px)" : "none",
+    }}
+  >
+    <Box
+      component="img"
+      src="/logo5.png"
+      alt="logo"
+      sx={{
+        width: "100%",
+        height: 160,
+        objectFit: "contain",
+        mb: 1,
+      }}
+    />
 
-    {/* -------- LOGIN FORM -------- */}
-    <div
-      className={`bg-white shadow-lg rounded-xl p-6 sm:p-7 w-[90%] max-w-sm
-        ${showOtpScreen ? "pointer-events-none blur-[1px]" : ""}
-      `}
+    <Typography
+      sx={{
+        textAlign: "center",
+        fontSize: "16px",
+        color: "#6b7280",
+        mb: 2,
+      }}
     >
-      <img src="/logo5.png" className="w-90 h-40" alt="logo" />
-      <p className="text-center text-base text-gray-600 mb-3">
-        Login into your account
-      </p>
+      Login into your account
+    </Typography>
 
-      <Form requiredMark={false} layout="vertical" onFinish={handleLogin}>
-        <Form.Item label="Email" name="email" rules={[{ required: true }]}>
-          <Input type="email" placeholder="Enter your email" />
-        </Form.Item>
+    <Box component="form">
+      <TextField
+        label="Email"
+        type="email"
+        margin="normal"
+        fullWidth
+        value={formData.email}
+        onChange={(e) =>
+          setFormData({ ...formData, email: e.target.value })
+        }
+      />
 
-        <Form.Item label="Password" name="password" rules={[{ required: true }]}>
-          <Password placeholder="Enter your password" />
-        </Form.Item>
+      <TextField
+        label="Password"
+        type="password"
+        margin="normal"
+        fullWidth
+        value={formData.password}
+        onChange={(e) =>
+          setFormData({ ...formData, password: e.target.value })
+        }
+      />
 
-        <Form.Item className="mt-6">
-          <Button
-            type="primary"
-            htmlType="submit"
-            disabled={showOtpScreen}
-            className="w-full !bg-[#049F99] !border-none hover:!bg-[#337774]"
-          >
-            Login
-          </Button>
-        </Form.Item>
-      </Form>
-    </div>
+      <Box sx={{ mt: 2 }}>
+        <Button
+          variant="contained"
+          onClick={handleLogin}
+          disabled={showOtpScreen}
+          sx={{
+            width: "100%",
+            backgroundColor: "#049F99",
+            border: "none",
+            "&:hover": {
+              backgroundColor: "#337774",
+            },
+          }}
+        >
+          Login
+        </Button>
+      </Box>
+    </Box>
+  </Box>
 
-    {/* -------- OVERLAY -------- */}
-    {showOtpScreen && (
-      <div className="fixed inset-0 bg-black/40 z-40" />
-    )}
+  {/* -------- OVERLAY -------- */}
+  {showOtpScreen && (
+    <Box
+      sx={{
+        position: "fixed",
+        inset: 0,
+        backgroundColor: "rgba(0,0,0,0.4)",
+        zIndex: 40,
+      }}
+    />
+  )}
 
-    {/* -------- OTP MODAL -------- */}
-    {showOtpScreen && (
-      <EmailOTPVerify
-  label="OTP sent to admin mail id's"
-  onVerifyOtp={handleVerifyEmailOtp}
-  onClose={() => setShowOtpScreen(false)}
-/>
-
-    )}
-  </div>
-);
-
+  {/* -------- OTP MODAL -------- */}
+  {showOtpScreen && (
+    <EmailOTPVerify
+      label="OTP sent to admin mail id's"
+      onVerifyOtp={handleVerifyEmailOtp}
+      onClose={() => setShowOtpScreen(false)}
+    />
+  )}
+</Box>
+  );
 };
 
 export default Login;

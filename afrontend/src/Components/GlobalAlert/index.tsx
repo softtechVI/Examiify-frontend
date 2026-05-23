@@ -1,35 +1,51 @@
-import { useEffect } from "react";
-import { Alert } from "antd";
+import { useEffect, useState } from "react";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert, { AlertProps } from "@mui/material/Alert";
+import { forwardRef } from "react";
+
 import useAlertStore from "../../store/useAlertStore";
+
+// MUI docs ke mutabiq, Alert ko forwardRef mein wrap karna zaroori hai
+const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const GlobalAlert = () => {
   const { type, message, clearAlert } = useAlertStore();
+  const [open, setOpen] = useState(false);
 
+  // Jab bhi naya message aaye, Snackbar open karo
   useEffect(() => {
     if (message && type) {
-      const timer = setTimeout(() => {
-        clearAlert();
-      }, 3000); // auto close after 3s
-
-      return () => clearTimeout(timer);
+      setOpen(true);
     }
-  }, [message, type, clearAlert]);
+  }, [message, type]);
+
+  const handleClose = (
+    _event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") return; // Clickaway pe close nahi hoga
+    setOpen(false);
+    clearAlert();
+  };
 
   return (
-  <div className="fixed top-5 left-1/2 -translate-x-1/2 z-[9999] w-full flex justify-center">
-    {message && type && (
+    <Snackbar
+      open={open}
+      autoHideDuration={3000}
+      onClose={handleClose}
+      anchorOrigin={{ vertical: "top", horizontal: "center" }}
+    >
       <Alert
-        message={message}
-        type={type}
-        showIcon
-        className="mb-4 w-auto"
-        closable
-        onClose={clearAlert}
-      />
-    )}
-  </div>
-);
-
+        onClose={handleClose}
+        severity={type ?? "info"}
+        sx={{ width: "100%" }}
+      >
+        {message}
+      </Alert>
+    </Snackbar>
+  );
 };
 
 export default GlobalAlert;

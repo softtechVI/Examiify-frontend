@@ -1,611 +1,382 @@
 import { useEffect, useState } from "react";
-import { AdminLayout } from "@/components/layout/AdminLayout";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-
+import { AdminLayout } from "@/Components/layout/AdminLayout";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import {
-  Plus,
-  Image,
-  Trash2,
-  Power,
-  Calendar,
-  IndianRupee,
-  Clock,
-  Building2,
-  Loader2,
-} from "lucide-react";
+  Dialog, DialogTitle, DialogContent, DialogActions,
+  Typography, Chip, Button, TextField,
+  FormControl, InputLabel, Select, MenuItem,
+  RadioGroup, FormControlLabel, Radio,
+  Grid, Card, CardContent, Box, CircularProgress,
+} from "@mui/material";
+import { Image, Trash2, Power, Calendar, IndianRupee, Clock, Building2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-
 import { AddPlan, GetAllPlan, DeletePlan, UpdatePlanStatus } from "@/services/api";
 import type { Plan } from "@/types";
 
-const AddPlanPage = () => {
-  const [plans, setPlans] = useState<Plan[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [fetching, setFetching] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [viewPlan, setViewPlan] = useState<Plan | null>(null);
-  const [planFilter, setPlanFilter] =
-  useState<"all" | "active" | "inactive" | "school" | "college">("all");
+// ── theme sx imports ──────────────────────────────────────────
+import {
+  pageWrapperSx,
+  pageHeaderSx,
+  pageTitleStackSx,
+  pageTitleSx,
+  addPlanBtnSx,
+  filterRowSx,
+  filterButtonSx,
+  statCardSx,
+  statCardContentSx,
+  planListSx,
+  planCardSx,
+  planCardRowSx,
+  planImagePanelSx,
+  planImageBoxSx,
+  planImgSx,
+  planContentSx,
+  planDetailsRowSx,
+  planNameRowSx,
+  planMetaRowSx,
+  planMetaItemSx,
+  planActionsSx,
+  viewBtnSx,
+  deleteBtnSx,
+  powerBtnSx,
+  dialogBtnSx,
+  viewPlanImageSx,
+  viewPlanChipRowSx,
+  loadingWrapperSx,
+} from "@/theme";
 
+// ─────────────────────────────────────────────────────────────
+
+const AddPlanPage = () => {
+  const [plans, setPlans]           = useState<Plan[]>([]);
+  const [loading, setLoading]       = useState(false);
+  const [fetching, setFetching]     = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [viewPlan, setViewPlan]     = useState<Plan | null>(null);
+  const [planFilter, setPlanFilter] =
+    useState<"all" | "active" | "inactive" | "school" | "college">("all");
 
   const filteredPlans = plans.filter((plan) => {
-  if (planFilter === "active") return plan.status === 1;
-  if (planFilter === "inactive") return plan.status === 0;
-  if (planFilter === "school") return plan.instituteType === 1;
-  if (planFilter === "college") return plan.instituteType === 2;
-  return true; // all
-});
-
-
-
+    if (planFilter === "active")   return plan.status === 1;
+    if (planFilter === "inactive") return plan.status === 0;
+    if (planFilter === "school")   return plan.instituteType === 1;
+    if (planFilter === "college")  return plan.instituteType === 2;
+    return true;
+  });
 
   const { toast } = useToast();
 
-  /* ================= FETCH PLANS ================= */
+  /* ── Fetch plans ─────────────────────────────── */
   const fetchPlans = async () => {
     setFetching(true);
     try {
       const res = await GetAllPlan();
       setPlans(res);
     } catch {
-      toast({
-        title: "Error",
-        description: "Failed to fetch plans",
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: "Failed to fetch plans", variant: "destructive" });
     } finally {
       setFetching(false);
     }
   };
 
-  useEffect(() => {
-    fetchPlans();
-  }, []);
+  useEffect(() => { fetchPlans(); }, []);
 
-  /* ================= Toggle plan ================= */
-
+  /* ── Toggle plan status ──────────────────────── */
   const togglePlanStatus = async (id: string, status: number) => {
-  const newStatus = status === 1 ? 0 : 1;
+    const newStatus = status === 1 ? 0 : 1;
+    setPlans((prev) => prev.map((p) => (p._id === id ? { ...p, status: newStatus } : p)));
+    try {
+      await UpdatePlanStatus(id, newStatus);
+      toast({ title: "Success", description: `Plan ${newStatus === 1 ? "activated" : "deactivated"} successfully` });
+    } catch {
+      setPlans((prev) => prev.map((p) => (p._id === id ? { ...p, status } : p)));
+      toast({ title: "Error", description: "Failed to update plan status", variant: "destructive" });
+    }
+  };
 
-  // 🔥 OPTIMISTIC UI UPDATE
-  setPlans((prev) =>
-    prev.map((plan) =>
-      plan._id === id ? { ...plan, status: newStatus } : plan
-    )
-  );
-
-  try {
-    await UpdatePlanStatus(id, newStatus);
-
-    toast({
-      title: "Success",
-      description: `Plan ${newStatus === 1 ? "activated" : "deactivated"} successfully`,
-    });
-  } catch {
-    // ❌ rollback if API fails
-    setPlans((prev) =>
-      prev.map((plan) =>
-        plan._id === id ? { ...plan, status } : plan
-      )
-    );
-
-    toast({
-      title: "Error",
-      description: "Failed to update plan status",
-      variant: "destructive",
-    });
-  }
-};
-
-
-  /* ================= DELETE PLAN ================= */
-
+  /* ── Delete plan ─────────────────────────────── */
   const deletePlan = async (id: string) => {
-  // 🔥 remove from UI immediately
-  const previousPlans = plans;
+    const previousPlans = plans;
+    setPlans((prev) => prev.filter((p) => p._id !== id));
+    try {
+      await DeletePlan(id);
+      toast({ title: "Deleted", description: "Plan deleted successfully" });
+    } catch {
+      setPlans(previousPlans);
+      toast({ title: "Error", description: "Failed to delete plan", variant: "destructive" });
+    }
+  };
 
-  setPlans((prev) => prev.filter((p) => p._id !== id));
-
-  try {
-    await DeletePlan(id);
-
-    toast({
-      title: "Deleted",
-      description: "Plan deleted successfully",
-    });
-  } catch {
-    // ❌ rollback if API fails
-    setPlans(previousPlans);
-
-    toast({
-      title: "Error",
-      description: "Failed to delete plan",
-      variant: "destructive",
-    });
-  }
-};
-
-
-
-
-  /* ================= FORM STATE (UNCHANGED UI) ================= */
+  /* ── Form state ──────────────────────────────── */
   const [formData, setFormData] = useState({
-    planName: "",
-    duration: "",
-    instituteType: "1",
-    price: "",
-    description: "",
-    image: null as File | null,
+    planName: "", duration: "", instituteType: "1",
+    price: "", description: "", image: null as File | null,
   });
 
-  /* ================= ADD PLAN ================= */
+  /* ── Add plan ────────────────────────────────── */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
     try {
       const form = new FormData();
-      form.append("planName", formData.planName);
-      form.append("duration", formData.duration);
+      form.append("planName",      formData.planName);
+      form.append("duration",      formData.duration);
       form.append("instituteType", formData.instituteType);
-      form.append("price", formData.price);
-      form.append("description", formData.description);
-
-      if (formData.image) {
-        form.append("plan_image", formData.image);
-      }
+      form.append("price",         formData.price);
+      form.append("description",   formData.description);
+      if (formData.image) form.append("plan_image", formData.image);
 
       const res = await AddPlan(form);
-
-      toast({
-        title: "Plan Created",
-        description: res.message || "Plan added successfully",
-      });
-
+      toast({ title: "Plan Created", description: res.message || "Plan added successfully" });
       setIsModalOpen(false);
-      setFormData({
-        planName: "",
-        duration: "",
-        instituteType: "1",
-        price: "",
-        description: "",
-        image: null,
-      });
-
+      setFormData({ planName: "", duration: "", instituteType: "1", price: "", description: "", image: null });
       fetchPlans();
     } catch (err: any) {
-      toast({
-        title: "Error",
-        description: err?.message || "Failed to create plan",
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: err?.message || "Failed to create plan", variant: "destructive" });
     } finally {
       setLoading(false);
     }
   };
 
-  /* ================= HELPERS (UNCHANGED UI) ================= */
+  /* ── Helpers ─────────────────────────────────── */
   const getDurationLabel = (months: number) =>
-    ({ 1: "Monthly", 3: "Quarterly", 6: "Half-Yearly", 12: "Yearly" }[months] ||
-    `${months} Month(s)`);
+    ({ 1: "Monthly", 3: "Quarterly", 6: "Half-Yearly", 12: "Yearly" }[months] || `${months} Month(s)`);
 
   const getCategoryLabel = (type: number) =>
     type === 1 ? "School" : "College & University";
 
-  /* ================= UI (100% SAME AS CODE 2) ================= */
+  /* ── UI ──────────────────────────────────────── */
   return (
     <AdminLayout>
-      <div className="p-6 lg:p-8 space-y-6">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div className="space-y-1">
-            <h1 className="text-2xl lg:text-3xl font-bold text-foreground">
+      <Box sx={pageWrapperSx}>
+
+        {/* ── Header ───────────────────────────── */}
+        <Box sx={pageHeaderSx}>
+          <Box sx={pageTitleStackSx}>
+            <Typography sx={pageTitleSx}>
               Subscription Plans
-            </h1>
-            <p className="text-muted-foreground">
+            </Typography>
+            <Typography sx={{ color: "text.secondary", ml: 5 }}>
               Manage your subscription plans and pricing
-            </p>
-          </div>
+            </Typography>
+          </Box>
 
-          <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-            <DialogTrigger asChild>
-              <Button className="gap-2">
-                Add New Plan
-              </Button>
-            </DialogTrigger>
+          <Button variant="contained" sx={addPlanBtnSx} onClick={() => setIsModalOpen(true)}>
+            Add New Plan
+          </Button>
 
-            {/* ===== MODAL (UNCHANGED) ===== */}
-            <DialogContent className="sm:max-w-lg">
-              <DialogHeader>
-                <DialogTitle>Create New Plan</DialogTitle>
-                <DialogDescription>
-                  Add a new subscription plan for your users.
-                </DialogDescription>
-              </DialogHeader>
+          {/* ── Add Plan Dialog ───────────────── */}
+          <Dialog open={isModalOpen} onClose={() => setIsModalOpen(false)} maxWidth="sm" fullWidth>
+            <DialogTitle>Create New Plan</DialogTitle>
+            <DialogContent>
+              <Typography variant="body2" sx={{ mb: 2 }}>
+                Add a new subscription plan for your users.
+              </Typography>
 
-              <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-                {/* Plan Name */}
-                <div className="space-y-2">
-                  <Label>Plan Name</Label>
-                  <Input
-                    value={formData.planName}
-                    onChange={(e) =>
-                      setFormData({ ...formData, planName: e.target.value })
-                    }
-                    required
-                  />
-                </div>
+              <form onSubmit={handleSubmit}>
+                <TextField
+                  fullWidth label="Plan Name" value={formData.planName} required
+                  onChange={(e) => setFormData({ ...formData, planName: e.target.value })}
+                />
 
-                {/* Duration */}
-                <div className="space-y-2">
-                  <Label>Duration</Label>
+                <FormControl fullWidth>
+                  <InputLabel>Duration</InputLabel>
                   <Select
-                    value={formData.duration}
-                    onValueChange={(v) =>
-                      setFormData({ ...formData, duration: v })
-                    }
-                    required
+                    value={formData.duration} label="Duration"
+                    onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
                   >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select duration" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="1">Monthly (1 Month)</SelectItem>
-                      <SelectItem value="3">Quarterly (3 Months)</SelectItem>
-                      <SelectItem value="6">Half-Yearly (6 Months)</SelectItem>
-                      <SelectItem value="12">Yearly (12 Months)</SelectItem>
-                    </SelectContent>
+                    <MenuItem value="1">Monthly (1 Month)</MenuItem>
+                    <MenuItem value="3">Quarterly (3 Months)</MenuItem>
+                    <MenuItem value="6">Half-Yearly (6 Months)</MenuItem>
+                    <MenuItem value="12">Yearly (12 Months)</MenuItem>
                   </Select>
-                </div>
+                </FormControl>
 
-                {/* Category */}
-                <div className="space-y-2">
-                  <Label>Category</Label>
+                <FormControl>
+                  <Typography>Category</Typography>
                   <RadioGroup
-                    value={formData.instituteType}
-                    onValueChange={(v) =>
-                      setFormData({ ...formData, instituteType: v })
-                    }
-                    className="flex gap-4"
+                    row value={formData.instituteType}
+                    onChange={(e) => setFormData({ ...formData, instituteType: e.target.value })}
                   >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="1" />
-                      <Label>School</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="2" />
-                      <Label>College & University</Label>
-                    </div>
+                    <FormControlLabel value="1" control={<Radio />} label="School" />
+                    <FormControlLabel value="2" control={<Radio />} label="College & University" />
                   </RadioGroup>
-                </div>
+                </FormControl>
 
-                {/* Price */}
-                <div className="space-y-2">
-                  <Label>Price (₹)</Label>
-                  <Input
-                    type="number"
-                    value={formData.price}
-                    onChange={(e) =>
-                      setFormData({ ...formData, price: e.target.value })
-                    }
-                    required
-                  />
-                </div>
+                <TextField
+                  fullWidth label="Price" type="number" value={formData.price} required
+                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                />
 
-                {/* Description */}
-                <div className="space-y-2">
-                  <Label>Description</Label>
-                  <Textarea
-                    rows={3}
-                    value={formData.description}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        description: e.target.value,
-                      })
-                    }
-                    required
-                  />
-                </div>
+                <TextField
+                  fullWidth label="Description" multiline rows={3}
+                  value={formData.description} required
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                />
 
-                {/* Image */}
-                <div className="space-y-2">
-                  <Label>Plan Image</Label>
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        image: e.target.files?.[0] || null,
-                      })
-                    }
-                  />
-                </div>
+                <TextField
+                  fullWidth type="file" inputProps={{ accept: "image/*" }}
+                  onChange={(e) => setFormData({ ...formData, image: e.target.files?.[0] || null })}
+                />
 
-                <div className="flex justify-end gap-3 pt-4">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setIsModalOpen(false)}
-                    disabled={loading}
-                  >
+                <DialogActions>
+                  <Button variant="contained" sx={dialogBtnSx} type="button"
+                    onClick={() => setIsModalOpen(false)} disabled={loading}>
                     Cancel
                   </Button>
-                  <Button type="submit" disabled={loading}>
-                    {loading && (
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    )}
-                    Create Plan
+                  <Button variant="contained" sx={dialogBtnSx} type="submit" disabled={loading}>
+                    {loading ? "Loading..." : "Create Plan"}
                   </Button>
-                </div>
+                </DialogActions>
               </form>
             </DialogContent>
           </Dialog>
 
-          <Dialog open={!!viewPlan} onOpenChange={() => setViewPlan(null)}>
-  <DialogContent className="max-w-2xl">
-    <DialogHeader>
-      <DialogTitle>{viewPlan?.planName}</DialogTitle>
-      <DialogDescription>
-        Complete plan details
-      </DialogDescription>
-    </DialogHeader>
+          {/* ── View Plan Dialog ──────────────── */}
+          <Dialog open={!!viewPlan} onClose={() => setViewPlan(null)} maxWidth="md" fullWidth>
+            <DialogTitle>{viewPlan?.planName}</DialogTitle>
+            <DialogContent>
+              {viewPlan && (
+                <Box sx={{ mt: 1 }}>
+                  {viewPlan.plan_image && (
+                    <Box component="img" src={viewPlan.plan_image}
+                      alt={viewPlan.planName} sx={viewPlanImageSx} />
+                  )}
+                  <Box sx={viewPlanChipRowSx}>
+                    <Chip
+                      label={viewPlan.status === 1 ? "Active" : "Inactive"}
+                      color={viewPlan.status === 1 ? "success" : "error"}
+                    />
+                    <Chip label={`₹ ${viewPlan.price}`} />
+                    <Chip label={getDurationLabel(viewPlan.duration)} />
+                    <Chip label={getCategoryLabel(viewPlan.instituteType)} />
+                  </Box>
+                  <Box>
+                    <Typography variant="subtitle2">Description</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {viewPlan.description}
+                    </Typography>
+                  </Box>
+                </Box>
+              )}
+            </DialogContent>
+            <DialogActions>
+              <Button variant="contained" sx={dialogBtnSx} onClick={() => setViewPlan(null)}>
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </Box>
 
-    {viewPlan && (
-      <div className="space-y-4">
-        {viewPlan.plan_image && (
-          <img
-            src={viewPlan.plan_image}
-            alt={viewPlan.planName}
-            className="w-full h-60 object-contain border rounded-lg"
-          />
-        )}
+        {/* ── Stat cards ───────────────────────── */}
+        <Grid container spacing={2}>
+          {[
+            { title: "Total Plans",    value: plans.length },
+            { title: "Active Plans",   value: plans.filter((p) => p.status === 1).length },
+            { title: "Inactive Plans", value: plans.filter((p) => p.status === 0).length },
+            { title: "School Plans",   value: plans.filter((p) => p.instituteType === 1).length },
+            { title: "College Plans",  value: plans.filter((p) => p.instituteType === 2).length },
+          ].map((item, index) => (
+            <Grid item xs={25} sm={6} md={4} lg={2.4} key={index}>
+              <Card sx={statCardSx}>
+                <CardContent sx={statCardContentSx}>
+                  <Typography variant="h4" fontSize={30} fontWeight="bold">{item.value}</Typography>
+                  <Typography variant="caption" fontSize={20} color="text.secondary">{item.title}</Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
 
-        <div className="flex gap-4 flex-wrap text-sm">
-          <Badge
-            className={
-              viewPlan.status === 1
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
-            }
-          >
-            {viewPlan.status === 1 ? "Active" : "Inactive"}
-          </Badge>
+        {/* ── Filter buttons ───────────────────── */}
+        <Box sx={filterRowSx}>
+          {(["all", "active", "inactive", "school", "college"] as const).map((f) => (
+            <Button
+              key={f}
+              variant={planFilter === f ? "contained" : "outlined"}
+              onClick={() => setPlanFilter(f)}
+              sx={filterButtonSx(planFilter === f)}
+            >
+              {f.charAt(0).toUpperCase() + f.slice(1)}
+            </Button>
+          ))}
+        </Box>
 
-          <span>₹ {viewPlan.price}</span>
-          <span>{getDurationLabel(viewPlan.duration)}</span>
-          <span>{getCategoryLabel(viewPlan.instituteType)}</span>
-        </div>
-
-        <div>
-          <Label>Description</Label>
-          <p className="text-sm text-muted-foreground whitespace-pre-line mt-1">
-            {viewPlan.description}
-          </p>
-        </div>
-      </div>
-    )}
-  </DialogContent>
-</Dialog>
-
-
-        </div>
-        <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-  <Card>
-    <CardContent className="pt-6">
-      <div className="text-2xl font-bold">{plans.length}</div>
-      <p className="text-xs text-muted-foreground">Total Plans</p>
-    </CardContent>
-  </Card>
-
-  <Card>
-    <CardContent className="pt-6">
-      <div className="text-2xl font-bold text-success">
-        {plans.filter((p) => p.status === 1).length}
-      </div>
-      <p className="text-xs text-muted-foreground">Active Plans</p>
-    </CardContent>
-  </Card>
-
-  <Card>
-    <CardContent className="pt-6">
-      <div className="text-2xl font-bold text-muted-foreground">
-        {plans.filter((p) => p.status === 0).length}
-      </div>
-      <p className="text-xs text-muted-foreground">Inactive Plans</p>
-    </CardContent>
-  </Card>
-
-  <Card>
-    <CardContent className="pt-6">
-      <div className="text-2xl font-bold">
-        {plans.filter((p) => p.instituteType === 1).length}
-      </div>
-      <p className="text-xs text-muted-foreground">School Plans</p>
-    </CardContent>
-  </Card>
-
-  {/* ✅ NEW COLLEGE CARD */}
-  <Card>
-    <CardContent className="pt-6">
-      <div className="text-2xl font-bold">
-        {plans.filter((p) => p.instituteType === 2).length}
-      </div>
-      <p className="text-xs text-muted-foreground">College Plans</p>
-    </CardContent>
-  </Card>
-</div>
-
-
-        <div className="flex flex-wrap gap-2">
-  <Button
-    variant={planFilter === "all" ? "default" : "outline"}
-    onClick={() => setPlanFilter("all")}
-  >
-    All
-  </Button>
-
-  <Button
-    variant={planFilter === "active" ? "default" : "outline"}
-    onClick={() => setPlanFilter("active")}
-  >
-    Active
-  </Button>
-
-  <Button
-    variant={planFilter === "inactive" ? "default" : "outline"}
-    onClick={() => setPlanFilter("inactive")}
-  >
-    Inactive
-  </Button>
-
-  <Button
-    variant={planFilter === "school" ? "default" : "outline"}
-    onClick={() => setPlanFilter("school")}
-  >
-    School
-  </Button>
-
-  <Button
-    variant={planFilter === "college" ? "default" : "outline"}
-    onClick={() => setPlanFilter("college")}
-  >
-    College
-  </Button>
-</div>
-
-        {/* ===== PLAN LIST (UNCHANGED UI) ===== */}
+        {/* ── Plan list ────────────────────────── */}
         {fetching ? (
-          <div className="flex justify-center py-20">
-            <Loader2 className="h-8 w-8 animate-spin" />
-          </div>
+          <Box sx={loadingWrapperSx}>
+            <CircularProgress size={32} />
+          </Box>
         ) : (
-          <div className="grid gap-6">
-
+          <Box sx={planListSx}>
             {filteredPlans.map((plan) => (
-              <Card key={plan._id} className="overflow-hidden">
-  <div className="flex flex-col lg:flex-row">
-    
-    {/* IMAGE SECTION (TOP / LEFT) */}
-    <div className="lg:w-48 bg-muted flex items-center justify-center p-2">
-  <div className="w-40 h-32 rounded-xl bg-background border flex items-center justify-center overflow-hidden">
+              <Card key={plan._id} sx={planCardSx}>
+                <Box sx={planCardRowSx}>
 
-        {plan.plan_image ? (
-          <img
-            src={plan.plan_image}
-            alt={plan.planName}
-            className="w-full h-full object-contain" // object fit contain property for image size 
-          />
-        ) : (
-          <Image className="h-10 w-10 text-muted-foreground" />
-        )}
-      </div>
-    </div>
+                  {/* Image */}
+                  <Box sx={planImagePanelSx}>
+                    <Box sx={planImageBoxSx}>
+                      {plan.plan_image ? (
+                        <Box component="img" src={plan.plan_image}
+                          alt={plan.planName} sx={planImgSx} />
+                      ) : (
+                        <Image className="h-10 w-10 text-muted-foreground" />
+                      )}
+                    </Box>
+                  </Box>
 
-    {/* CONTENT SECTION */}
-    <CardContent className="flex-1 p-6">
-      <div className="flex flex-col lg:flex-row justify-between gap-4">
+                  {/* Details */}
+                  <CardContent sx={planContentSx}>
+                    <Box sx={planDetailsRowSx}>
 
-        {/* DETAILS */}
-        <div className="space-y-3">
-          <div className="flex items-center gap-2 flex-wrap">
-            <h3 className="text-xl font-semibold">{plan.planName}</h3>
-<Badge
-  className={
-    plan.status === 1
-      ? "bg-green-100 text-green-700 border border-green-300"
-      : "bg-red-100 text-red-700 border border-red-300"
-  }
->
-  {plan.status === 1 ? "Active" : "Inactive"}
-</Badge>
+                      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                        <Box sx={planNameRowSx}>
+                          <Typography variant="h6" fontWeight={600}>{plan.planName}</Typography>
+                          <Chip
+                            label={plan.status === 1 ? "Active" : "Inactive"}
+                            color={plan.status === 1 ? "success" : "error"}
+                            size="small"
+                          />
+                        </Box>
 
-          </div>
+                        <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 600 }}>
+                          {plan.description}
+                        </Typography>
 
-          <p className="text-sm text-muted-foreground max-w-xl line-clamp-2">
-  {plan.description}
-</p>
+                        <Box sx={planMetaRowSx}>
+                          <Box sx={planMetaItemSx}><Clock size={16} />{getDurationLabel(plan.duration)}</Box>
+                          <Box sx={planMetaItemSx}><IndianRupee size={16} />₹{plan.price}</Box>
+                          <Box sx={planMetaItemSx}><Building2 size={16} />{getCategoryLabel(plan.instituteType)}</Box>
+                          <Box sx={planMetaItemSx}>
+                            <Calendar size={16} />
+                            {new Date(plan.createdAt).toLocaleDateString("en-IN")}
+                          </Box>
+                        </Box>
+                      </Box>
 
+                      {/* Actions */}
+                      <Box sx={planActionsSx}>
+                        <Button variant="contained" sx={viewBtnSx} onClick={() => setViewPlan(plan)}>
+                          View
+                        </Button>
+                        <Button variant="contained" color="error" sx={deleteBtnSx}
+                          onClick={() => deletePlan(plan._id)}>
+                          <Trash2 size={16} /> Delete
+                        </Button>
+                        <Button variant="outlined" sx={powerBtnSx}
+                          onClick={() => togglePlanStatus(plan._id, plan.status)}>
+                          <Power size={16} />
+                        </Button>
+                      </Box>
 
-          <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-            <div className="flex items-center gap-1">
-              <Clock className="h-4 w-4" />
-              {getDurationLabel(plan.duration)}
-            </div>
-            <div className="flex items-center gap-1">
-              <IndianRupee className="h-4 w-4" /> ₹{plan.price}
-            </div>
-            <div className="flex items-center gap-1">
-              <Building2 className="h-4 w-4" />
-              {getCategoryLabel(plan.instituteType)}
-            </div>
-            <div className="flex items-center gap-1">
-              <Calendar className="h-4 w-4" />
-              {new Date(plan.createdAt).toLocaleDateString("en-IN")}
-            </div>
-          </div>
-        </div>
-
-        {/* ACTIONS */}
-        <div className="flex gap-2">
-          <Button
-  size="sm"
-  variant="secondary"
-  onClick={() => setViewPlan(plan)}
->
-  View
-</Button>
-
-          <Button
-  size="sm"
-  variant="outline"
-  onClick={() => togglePlanStatus(plan._id, plan.status)}
->
-  <Power className="h-4 w-4 mr-1" />
-</Button>
-
-<Button
-  size="sm"
-  variant="destructive"
-  onClick={() => deletePlan(plan._id)}
->
-  <Trash2 className="h-4 w-4 mr-1" />
-  Delete
-</Button>
-
-        </div>
-
-      </div>
-    </CardContent>
-  </div>
-</Card>
-
+                    </Box>
+                  </CardContent>
+                </Box>
+              </Card>
             ))}
-          </div>
+          </Box>
         )}
-      </div>
+
+      </Box>
     </AdminLayout>
   );
 };

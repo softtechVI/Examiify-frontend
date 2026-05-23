@@ -73,6 +73,8 @@ export interface User {
   name?: string;
 }
 
+export type ContactStatus = "new" | "read" | "replied" | "resolved" | "rejected";
+
 export interface ContactItem {
   _id: string;
   name: string;
@@ -80,7 +82,7 @@ export interface ContactItem {
   phone: string;
   company?: string;
   message: string;
-  status: "new" | "read" | "replied";
+  status: ContactStatus;
   createdAt: string;
   updatedAt: string;
 }
