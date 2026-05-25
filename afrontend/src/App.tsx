@@ -20,6 +20,7 @@ import NotFound from "./pages/NotFound";
 import ContactMessages from "./pages/ContactMessage";
 import Roles from "./pages/Roles";
 import RoleEdit from "./pages/RoleEdit";
+import Unauthorized from "./pages/Unauthorized";
 
 import { checkAuth } from "./utils/checkauth";
 
@@ -87,7 +88,7 @@ const App: React.FC = () => {
             <Route path="/not-found" element={<NotFound />} />
 
             {/* Protected Admin Routes */}
-            <Route element={<ProtectedRoute expectedRole={1} />}>
+            <Route element={<ProtectedRoute expectedRoles={[1]} />}>
               <Route path="/admindashboard" element={<Dashboard />} />
               <Route path="/add-plan" element={<AddPlan />} />
               <Route path="/add-coupon" element={<AddCoupon />} />
@@ -97,6 +98,8 @@ const App: React.FC = () => {
               <Route path="/roles" element={<Roles />} />
               <Route path="/roles/:roleId" element={<RoleEdit />} />
             </Route>
+
+            <Route path="/unauthorized" element={<Unauthorized />} />
 
             {/* Default & Catch-all */}
             <Route path="/" element={<Navigate to="/login" replace />} />

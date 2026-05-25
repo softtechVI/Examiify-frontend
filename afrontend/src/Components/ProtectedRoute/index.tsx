@@ -6,7 +6,7 @@ import { Box, CircularProgress, Typography } from "@mui/material";
 const API_URL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
 interface User {
-  role: "1" | "2" | string;
+  role: string | number;
 }
 
 interface ResponseData {
@@ -14,10 +14,10 @@ interface ResponseData {
 }
 
 interface ProtectedRouteProps {
-  expectedRole: number;
+  expectedRoles: number[];
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ expectedRole }) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ expectedRoles }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [userRole, setUserRole] = useState<number | null>(null);
 
@@ -65,7 +65,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ expectedRole }) => {
 
   if (!isAuthenticated) return <Navigate to="/login" />;
 
-  if (userRole !== expectedRole) return <Navigate to="/unauthorized" />;
+  if (userRole === null || !expectedRoles.includes(userRole)) return <Navigate to="/unauthorized" />;
 
   return <Outlet />;
 };

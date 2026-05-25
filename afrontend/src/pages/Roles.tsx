@@ -1,225 +1,3 @@
-// import { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import { AdminLayout } from "@/Components/layout/AdminLayout";
-// import { Card, CardContent } from "@/Components/ui/card";
-// import { Button } from "@/Components/ui/button";
-// import { Input } from "@/Components/ui/input";
-// import { Label } from "@/Components/ui/label";
-// import {
-//   Dialog,
-//   DialogContent,
-//   DialogHeader,
-//   DialogTitle,
-//   DialogFooter,
-//   DialogDescription,
-// } from "@/Components/ui/dialog";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "@/Components/ui/select";
-// import { Shield, Plus, Pencil, Search, Users } from "lucide-react";
-// import { defaultRoles, Role } from "@/data/roleData";
-
-// const roleColors = [
-//   "hsl(174, 72%, 40%)",
-//   "hsl(220, 70%, 50%)",
-//   "hsl(38, 92%, 50%)",
-//   "hsl(142, 76%, 36%)",
-//   "hsl(0, 84%, 60%)",
-//   "hsl(280, 60%, 50%)",
-// ];
-
-// const Roles = () => {
-//   const navigate = useNavigate();
-//   const [roles, setRoles] = useState<Role[]>(defaultRoles);
-//   const [search, setSearch] = useState("");
-//   const [dialogOpen, setDialogOpen] = useState(false);
-//   const [newRoleName, setNewRoleName] = useState("");
-//   const [newRoleColor, setNewRoleColor] = useState(roleColors[0]);
-
-//   const filtered = roles.filter((r) =>
-//     r.name.toLowerCase().includes(search.toLowerCase())
-//   );
-
-//   const handleCreate = () => {
-//     if (!newRoleName.trim()) return;
-//     const newRole: Role = {
-//       _id: Date.now().toString(),
-//       name: newRoleName.trim(),
-//       color: newRoleColor,
-//       defaultRoute: "/admindashboard",
-//       canCreateRoles: [],
-//       permissions: {},
-//       createdAt: new Date().toISOString().split("T")[0],
-//     };
-//     setRoles([...roles, newRole]);
-//     setNewRoleName("");
-//     setDialogOpen(false);
-//     navigate(`/roles/${newRole._id}`);
-//   };
-
-//   return (
-//     <AdminLayout>
-//       <div className="p-6 lg:p-8 space-y-6">
-//         {/* Header */}
-//         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-//           <div className="space-y-1">
-//             <h1 className="text-3xl font-bold text-foreground flex items-center gap-2">
-//               <Shield className="h-8 w-8 text-primary" />
-//               Roles & Permissions
-//             </h1>
-//             <p className="text-muted-foreground">
-//               Manage user roles and their access permissions
-//             </p>
-//           </div>
-//           <Button onClick={() => setDialogOpen(true)} className="gap-2">
-//             <Plus className="h-4 w-4" />
-//             Add New Role
-//           </Button>
-//         </div>
-
-//         {/* Search */}
-//         <div className="relative max-w-sm">
-//           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-//           <Input
-//             placeholder="Search roles..."
-//             value={search}
-//             onChange={(e) => setSearch(e.target.value)}
-//             className="pl-9"
-//           />
-//         </div>
-
-//         {/* Roles Grid */}
-//         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-//           {filtered.map((role) => {
-//             const permCount = Object.values(role.permissions).flat().length;
-//             return (
-//               <Card
-//                 key={role._id}
-//                 className="group hover:shadow-lg transition-all duration-200 cursor-pointer border-l-4"
-//                 style={{ borderLeftColor: role.color }}
-//                 onClick={() => navigate(`/roles/${role._id}`)}
-//               >
-//                 <CardContent className="p-5 space-y-4">
-//                   <div className="flex items-start justify-between">
-//                     <div
-//                       className="h-11 w-11 rounded-full flex items-center justify-center text-white font-bold text-lg"
-//                       style={{ backgroundColor: role.color }}
-//                     >
-//                       {role.name.charAt(0)}
-//                     </div>
-//                     <Button
-//                       size="icon"
-//                       variant="ghost"
-//                       className="opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8"
-//                       onClick={(e) => {
-//                         e.stopPropagation();
-//                         navigate(`/roles/${role._id}`);
-//                       }}
-//                     >
-//                       <Pencil className="h-4 w-4" />
-//                     </Button>
-//                   </div>
-
-//                   <div>
-//                     <h3 className="font-semibold text-foreground text-lg">
-//                       {role.name}
-//                     </h3>
-//                     <p className="text-sm text-muted-foreground mt-1">
-//                       {permCount} permissions assigned
-//                     </p>
-//                   </div>
-
-//                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
-//                     <Users className="h-3.5 w-3.5" />
-//                     <span>
-//                       Can create:{" "}
-//                       {role.canCreateRoles.length > 0
-//                         ? role.canCreateRoles.join(", ")
-//                         : "None"}
-//                     </span>
-//                   </div>
-
-//                   <div className="pt-2 border-t border-border">
-//                     <span className="text-xs text-muted-foreground">
-//                       Created: {role.createdAt}
-//                     </span>
-//                   </div>
-//                 </CardContent>
-//               </Card>
-//             );
-//           })}
-
-//           {/* Add Role Card */}
-//           <Card
-//             className="border-dashed border-2 hover:border-primary/50 transition-colors cursor-pointer flex items-center justify-center min-h-[200px]"
-//             onClick={() => setDialogOpen(true)}
-//           >
-//             <CardContent className="flex flex-col items-center gap-2 text-muted-foreground">
-//               <Plus className="h-8 w-8" />
-//               <span className="font-medium">Add New Role</span>
-//             </CardContent>
-//           </Card>
-//         </div>
-
-//         {/* Create Role Dialog */}
-//         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-//           <DialogContent className="sm:max-w-md">
-//             <DialogHeader>
-//               <DialogTitle>Create New Role</DialogTitle>
-//               <DialogDescription>
-//                 Add a new role and configure its permissions
-//               </DialogDescription>
-//             </DialogHeader>
-//             <div className="space-y-4 py-4">
-//               <div className="space-y-2">
-//                 <Label htmlFor="roleName">Role Name</Label>
-//                 <Input
-//                   id="roleName"
-//                   placeholder="e.g. Manager, Editor..."
-//                   value={newRoleName}
-//                   onChange={(e) => setNewRoleName(e.target.value)}
-//                 />
-//               </div>
-//               <div className="space-y-2">
-//                 <Label>Role Color</Label>
-//                 <div className="flex gap-2 flex-wrap">
-//                   {roleColors.map((color) => (
-//                     <button
-//                       key={color}
-//                       className={`h-8 w-8 rounded-full border-2 transition-all ${
-//                         newRoleColor === color
-//                           ? "border-foreground scale-110"
-//                           : "border-transparent"
-//                       }`}
-//                       style={{ backgroundColor: color }}
-//                       onClick={() => setNewRoleColor(color)}
-//                     />
-//                   ))}
-//                 </div>
-//               </div>
-//             </div>
-//             <DialogFooter>
-//               <Button variant="outline" onClick={() => setDialogOpen(false)}>
-//                 Cancel
-//               </Button>
-//               <Button onClick={handleCreate} disabled={!newRoleName.trim()}>
-//                 Create & Configure
-//               </Button>
-//             </DialogFooter>
-//           </DialogContent>
-//         </Dialog>
-//       </div>
-//     </AdminLayout>
-//   );
-// };
-
-// export default Roles;
-
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AdminLayout } from "@/Components/layout/AdminLayout";
@@ -236,10 +14,16 @@ import {
   DialogContent,
   DialogContentText,
   DialogActions,
-  IconButton,
+  Checkbox,
+  FormControlLabel,
+  Chip,
+  Divider,
+  Stack,
 } from "@mui/material";
-import { Shield, Plus, Pencil, Search, Users } from "lucide-react";
-import { defaultRoles, Role } from "@/data/roleData";
+import { Plus, Search, Users, Lock, Sparkles } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { createRole, getRoles } from "@/services/api";
+import {useEffect, useMemo} from "react";
 import {
   brandColors,
   pageWrapperSx,
@@ -247,50 +31,115 @@ import {
   pageTitleSx,
   dialogBtnSx,
 } from "@/theme";
+import {
+  defaultRoleNames,
+  getPermissionLabel,
+  permissionGroups,
+  roleColorMap,
+} from "@/data/roleData";
+import type { RoleRecord } from "@/types";
 
-const roleColors = [
-  "hsl(174, 72%, 40%)",
-  "hsl(220, 70%, 50%)",
-  "hsl(38, 92%, 50%)",
-  "hsl(142, 76%, 36%)",
-  "hsl(0, 84%, 60%)",
-  "hsl(280, 60%, 50%)",
-];
+const getRoleColor = (role: RoleRecord, index: number) => {
+  if (role.name in roleColorMap) {
+    return roleColorMap[role.name];
+  }
+
+  const palette = [
+    "hsl(174, 72%, 40%)",
+    "hsl(220, 70%, 50%)",
+    "hsl(38, 92%, 50%)",
+    "hsl(142, 76%, 36%)",
+    "hsl(280, 60%, 50%)",
+  ];
+
+  return palette[index % palette.length];
+};
 
 const Roles = () => {
   const navigate = useNavigate();
-  const [roles, setRoles] = useState<Role[]>(defaultRoles);
+  const { toast } = useToast();
+  const [roles, setRoles] = useState<RoleRecord[]>([]);
+  const [permissionCatalog, setPermissionCatalog] = useState<string[]>([]);
   const [search, setSearch] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [newRoleName, setNewRoleName] = useState("");
-  const [newRoleColor, setNewRoleColor] = useState(roleColors[0]);
+  const [newRoleDescription, setNewRoleDescription] = useState("");
+  const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
 
-  const filtered = roles.filter((r) =>
-    r.name.toLowerCase().includes(search.toLowerCase())
+  const fetchRoles = async () => {
+    setLoading(true);
+    try {
+      const data = await getRoles();
+      setRoles(data.roles);
+      setPermissionCatalog(data.permissionCatalog);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to load roles";
+      toast({ title: "Error", description: message, variant: "destructive" });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchRoles();
+  }, []);
+
+  const filtered = useMemo(
+    () =>
+      roles.filter((role) =>
+        [role.name, role.key, role.description || ""]
+          .join(" ")
+          .toLowerCase()
+          .includes(search.toLowerCase())
+      ),
+    [roles, search]
   );
 
-  const handleCreate = () => {
-    if (!newRoleName.trim()) return;
-    const newRole: Role = {
-      _id: Date.now().toString(),
-      name: newRoleName.trim(),
-      color: newRoleColor,
-      defaultRoute: "/admindashboard",
-      canCreateRoles: [],
-      permissions: {},
-      createdAt: new Date().toISOString().split("T")[0],
-    };
-    setRoles([...roles, newRole]);
-    setNewRoleName("");
+  const resetDialog = () => {
     setDialogOpen(false);
-    navigate(`/roles/${newRole._id}`);
+    setNewRoleName("");
+    setNewRoleDescription("");
+    setSelectedPermissions([]);
+  };
+
+  const togglePermission = (permission: string) => {
+    setSelectedPermissions((prev) =>
+      prev.includes(permission)
+        ? prev.filter((item) => item !== permission)
+        : [...prev, permission]
+    );
+  };
+
+  const handleCreate = async () => {
+    if (!newRoleName.trim()) return;
+
+    setSaving(true);
+    try {
+      const response = await createRole({
+        name: newRoleName.trim(),
+        description: newRoleDescription.trim(),
+        permissions: selectedPermissions,
+      });
+      toast({
+        title: "Role created",
+        description: `${response.role.name} was created successfully.`,
+      });
+      resetDialog();
+      await fetchRoles();
+      navigate(`/roles/${response.role._id}`);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Failed to create role";
+      toast({ title: "Error", description: message, variant: "destructive" });
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
     <AdminLayout>
       <Box sx={pageWrapperSx}>
-
-        {/* HEADER */}
         <Box sx={pageHeaderSx}>
           <Box>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -299,7 +148,7 @@ const Roles = () => {
               </Typography>
             </Box>
             <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5, ml: 5 }}>
-              Manage user roles and their access permissions
+              Manage the system roles stored in the database
             </Typography>
           </Box>
 
@@ -313,13 +162,12 @@ const Roles = () => {
           </Button>
         </Box>
 
-        {/* SEARCH */}
         <TextField
           placeholder="Search roles..."
           value={search}
           size="small"
           onChange={(e) => setSearch(e.target.value)}
-          sx={{ maxWidth: 360 }}
+          sx={{ maxWidth: 420 }}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -329,200 +177,257 @@ const Roles = () => {
           }}
         />
 
-        {/* ROLES GRID */}
-        <Box
-          sx={{
-            display: "grid",
-            gap: 2,
-            gridTemplateColumns: {
-              xs: "1fr",
-              sm: "repeat(2, 1fr)",
-              lg: "repeat(3, 1fr)",
-              xl: "repeat(4, 1fr)",
-            },
-          }}
-        >
-          {filtered.map((role) => {
-            const permCount = Object.values(role.permissions).flat().length;
-            return (
-              <Card
-                key={role._id}
-                onClick={() => navigate(`/roles/${role._id}`)}
-                sx={{
-                  borderLeft: `4px solid ${role.color}`,
-                  cursor: "pointer",
-                  transition: "box-shadow 0.2s",
-                  "&:hover": {
-                    boxShadow: "0px 8px 24px rgba(0,0,0,0.12)",
-                    "& .edit-btn": { opacity: 1 },
-                  },
-                }}
-              >
-                <CardContent sx={{ p: 2.5, "&:last-child": { pb: 2.5 } }}>
-
-                  {/* Avatar + Edit */}
-                  <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", mb: 2 }}>
-                    <Box
-                      sx={{
-                        height: 44,
-                        width: 44,
-                        borderRadius: "50%",
-                        bgcolor: role.color,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "#fff",
-                        fontWeight: 700,
-                        fontSize: "1.125rem",
-                        fontFamily: "DIN, sans-serif",
-                      }}
-                    >
-                      {role.name.charAt(0)}
-                    </Box>
-                    <IconButton
-                      size="small"
-                      className="edit-btn"
-                      sx={{ opacity: 0, transition: "opacity 0.2s" }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/roles/${role._id}`);
-                      }}
-                    >
-                      <Pencil size={16} />
-                    </IconButton>
-                  </Box>
-
-                  {/* Name + Permissions */}
-                  <Box sx={{ mb: 1.5 }}>
-                    <Typography variant="h6" sx={{ color: "text.primary" }}>
-                      {role.name}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
-                      {permCount} permissions assigned
-                    </Typography>
-                  </Box>
-
-                  {/* Can Create */}
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1.5 }}>
-                    <Users size={14} color="#6b7280" />
-                    <Typography variant="caption" color="text.secondary">
-                      Can create:{" "}
-                      {role.canCreateRoles.length > 0
-                        ? role.canCreateRoles.join(", ")
-                        : "None"}
-                    </Typography>
-                  </Box>
-
-                  {/* Created At */}
-                  <Box sx={{ pt: 1.5, borderTop: "1px solid #e5e7eb" }}>
-                    <Typography variant="caption" color="text.secondary">
-                      Created: {role.createdAt}
-                    </Typography>
-                  </Box>
-
-                </CardContent>
-              </Card>
-            );
-          })}
-
-          {/* Add Role Card */}
-          <Card
-            onClick={() => setDialogOpen(true)}
-            sx={{
-              border: "2px dashed #e5e7eb",
-              boxShadow: "none",
-              cursor: "pointer",
-              minHeight: 200,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              transition: "border-color 0.2s",
-              "&:hover": { borderColor: brandColors.primary },
-            }}
-          >
-            <CardContent
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 1,
-                color: "text.secondary",
-                "&:last-child": { pb: 2 },
-              }}
-            >
-              <Plus size={32} />
-              <Typography variant="subtitle2" color="text.secondary">
-                Add New Role
-              </Typography>
+        {loading ? (
+          <Card>
+            <CardContent sx={{ p: 4, textAlign: "center" }}>
+              <Typography color="text.secondary">Loading roles...</Typography>
             </CardContent>
           </Card>
-        </Box>
+        ) : (
+          <Box
+            sx={{
+              display: "grid",
+              gap: 2,
+              gridTemplateColumns: {
+                xs: "1fr",
+                sm: "repeat(2, 1fr)",
+                lg: "repeat(3, 1fr)",
+              },
+            }}
+          >
+            {filtered.map((role, index) => {
+              const isSystem = role.code === 1 || role.key === "super-admin";
+              const permCount = role.permissions.length;
+              const color = getRoleColor(role, index);
 
-        {/* CREATE ROLE DIALOG */}
-        <Dialog
-          open={dialogOpen}
-          onClose={() => setDialogOpen(false)}
-          maxWidth="sm"
-          fullWidth
-        >
+              return (
+                <Card
+                  key={role._id}
+                  onClick={() => navigate(`/roles/${role._id}`)}
+                  sx={{
+                    borderLeft: `4px solid ${color}`,
+                    cursor: "pointer",
+                    transition: "transform 0.2s, box-shadow 0.2s",
+                    "&:hover": {
+                      transform: "translateY(-2px)",
+                      boxShadow: "0px 12px 28px rgba(0,0,0,0.10)",
+                    },
+                  }}
+                >
+                  <CardContent sx={{ p: 2.5, "&:last-child": { pb: 2.5 } }}>
+                    <Box sx={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", mb: 2 }}>
+                      <Box
+                        sx={{
+                          height: 44,
+                          width: 44,
+                          borderRadius: "50%",
+                          bgcolor: color,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          color: "#fff",
+                          fontWeight: 700,
+                          fontSize: "1.125rem",
+                        }}
+                      >
+                        {role.name.charAt(0)}
+                      </Box>
+                      {isSystem ? (
+                        <Chip
+                          size="small"
+                          icon={<Lock size={14} />}
+                          label="Protected"
+                          variant="outlined"
+                          sx={{ borderRadius: 999 }}
+                        />
+                      ) : (
+                        <Chip
+                          size="small"
+                          icon={<Sparkles size={14} />}
+                          label={role.isSystem ? "Seeded" : "Custom"}
+                          sx={{ borderRadius: 999 }}
+                        />
+                      )}
+                    </Box>
+
+                    <Box sx={{ mb: 1.5 }}>
+                      <Typography variant="h6" sx={{ color: "text.primary" }}>
+                        {role.name}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
+                        {role.description || "No description provided"}
+                      </Typography>
+                    </Box>
+
+                    <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap sx={{ mb: 1.5 }}>
+                      <Chip size="small" label={`${permCount} permissions`} />
+                      <Chip size="small" label={`Code ${role.code}`} />
+                      <Chip size="small" label={role.isActive ? "Active" : "Inactive"} />
+                    </Stack>
+
+                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1.5 }}>
+                      <Users size={14} color="#6b7280" />
+                      <Typography variant="caption" color="text.secondary">
+                        {role.permissions.slice(0, 3).map(getPermissionLabel).join(", ")}
+                        {role.permissions.length > 3 ? ` +${role.permissions.length - 3} more` : ""}
+                      </Typography>
+                    </Box>
+
+                    <Box sx={{ pt: 1.5, borderTop: "1px solid #e5e7eb" }}>
+                      <Typography variant="caption" color="text.secondary">
+                        Created: {new Date(role.createdAt).toLocaleDateString()}
+                      </Typography>
+                    </Box>
+                  </CardContent>
+                </Card>
+              );
+            })}
+
+            <Card
+              onClick={() => setDialogOpen(true)}
+              sx={{
+                border: "2px dashed #e5e7eb",
+                boxShadow: "none",
+                cursor: "pointer",
+                minHeight: 220,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                "&:hover": { borderColor: brandColors.primary },
+              }}
+            >
+              <CardContent
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 1,
+                  color: "text.secondary",
+                  "&:last-child": { pb: 2 },
+                }}
+              >
+                <Plus size={32} />
+                <Typography variant="subtitle2" color="text.secondary">
+                  Add New Role
+                </Typography>
+              </CardContent>
+            </Card>
+          </Box>
+        )}
+
+        <Dialog open={dialogOpen} onClose={resetDialog} maxWidth="md" fullWidth>
           <DialogTitle>Create New Role</DialogTitle>
           <DialogContent dividers>
             <DialogContentText sx={{ mb: 2 }}>
-              Add a new role and configure its permissions
+              Create a custom role and choose the permissions it should have.
             </DialogContentText>
 
-            {/* Role Name */}
             <Typography variant="body2" sx={{ mb: 0.5, fontWeight: 500 }}>
               Role Name
             </Typography>
             <TextField
               fullWidth
               size="small"
-              placeholder="e.g. Manager, Editor..."
+              placeholder="e.g. Branch Manager"
               value={newRoleName}
               onChange={(e) => setNewRoleName(e.target.value)}
-              sx={{ mb: 2.5 }}
+              sx={{ mb: 2 }}
             />
 
-            {/* Role Color */}
-            <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
-              Role Color
+            <Typography variant="body2" sx={{ mb: 0.5, fontWeight: 500 }}>
+              Description
             </Typography>
-            <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-              {roleColors.map((color) => (
-                <Box
-                  key={color}
-                  onClick={() => setNewRoleColor(color)}
-                  sx={{
-                    height: 32,
-                    width: 32,
-                    borderRadius: "50%",
-                    bgcolor: color,
-                    cursor: "pointer",
-                    border: newRoleColor === color ? "2px solid #1a1a1a" : "2px solid transparent",
-                    transform: newRoleColor === color ? "scale(1.15)" : "scale(1)",
-                    transition: "transform 0.15s, border 0.15s",
-                  }}
-                />
+            <TextField
+              fullWidth
+              multiline
+              minRows={2}
+              placeholder="What can this role do?"
+              value={newRoleDescription}
+              onChange={(e) => setNewRoleDescription(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+
+            <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
+              Permissions
+            </Typography>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}>
+              {permissionGroups.map((group) => (
+                <Card key={group.key} variant="outlined">
+                  <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
+                    <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                      {group.label}
+                    </Typography>
+                    <Box
+                      sx={{
+                        display: "grid",
+                        gridTemplateColumns: {
+                          xs: "repeat(1, 1fr)",
+                          sm: "repeat(2, 1fr)",
+                        },
+                        gap: 1,
+                      }}
+                    >
+                      {group.permissions.map((permission) => (
+                        <FormControlLabel
+                          key={permission.key}
+                          control={
+                            <Checkbox
+                              checked={selectedPermissions.includes(permission.key)}
+                              onChange={() => togglePermission(permission.key)}
+                            />
+                          }
+                          label={
+                            <Box>
+                              <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                                {permission.label}
+                              </Typography>
+                              <Typography variant="caption" color="text.secondary">
+                                {permission.description}
+                              </Typography>
+                            </Box>
+                          }
+                          sx={{
+                            alignItems: "flex-start",
+                            gap: 1,
+                            m: 0,
+                          }}
+                        />
+                      ))}
+                    </Box>
+                  </CardContent>
+                </Card>
               ))}
             </Box>
+
+            <Divider sx={{ my: 2 }} />
+            <Typography variant="caption" color="text.secondary">
+              Default roles are seeded in the database. Custom roles will be created as additional entries.
+            </Typography>
           </DialogContent>
 
           <DialogActions>
-            <Button variant="outlined" onClick={() => setDialogOpen(false)}>
-              Cancel
-            </Button>
+            <Button onClick={resetDialog}>Cancel</Button>
             <Button
               variant="contained"
               sx={dialogBtnSx}
               onClick={handleCreate}
-              disabled={!newRoleName.trim()}
+              disabled={!newRoleName.trim() || saving}
             >
-              Create & Configure
+              {saving ? "Creating..." : "Create Role"}
             </Button>
           </DialogActions>
         </Dialog>
 
+        <Box sx={{ mt: 3, display: "flex", flexWrap: "wrap", gap: 1 }}>
+          {defaultRoleNames.map((roleName) => (
+            <Chip key={roleName} label={roleName} variant="outlined" />
+          ))}
+          <Chip
+            label={`${permissionCatalog.length} backend permissions`}
+            color="primary"
+            variant="outlined"
+          />
+        </Box>
       </Box>
     </AdminLayout>
   );
