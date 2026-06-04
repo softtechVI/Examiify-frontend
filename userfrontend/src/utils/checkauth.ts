@@ -5,8 +5,7 @@ const API_URL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
 export const checkAuth = async (): Promise<boolean> => {
   try {
-    const response = await axios.post(
-  `${API_URL}/api/auth/check`,
+    const response = await axios.post(`${API_URL}/api/auth/check`,
   {}, // request body (empty in your case)
   { withCredentials: true } // config for axios
 );

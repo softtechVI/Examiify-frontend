@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { loginUser } from "../API/AllapiVerify";
 import { Eye, EyeOff } from "lucide-react";
 import DashboardButton from "../components/Dashboard/index";
+import { getAccess } from "../utils/getaccess";
 
 // Import the Zustand store
 import useIsLoginStore from "../store/IsLoginStore";
@@ -14,7 +15,7 @@ import Dashboard from "./InsideDashBoard";
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
-   const [ forgotPassword, setForgotPassword ] = useState(false);
+  const [ forgotPassword, setForgotPassword ] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const [showPassword, setShowPassword] = useState(false);
@@ -52,6 +53,8 @@ const Login: React.FC = () => {
         const result = await loginUser(formData.email, formData.password);
 
         if (!result.success || !result.nextRoute) return;
+
+        await getAccess();
 
         if (result.nextRoute === "/plan-renew" && result.extra) {
           const encodedEmail = encodeURIComponent(result.extra.email);
