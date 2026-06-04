@@ -1,31 +1,58 @@
+// store/userSession.ts
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { persist, createJSONStorage } from "zustand/middleware";
 import type { User } from "@/types/index";
 
 interface SessionState {
-  user: User | null;
-  setUser: (user: User) => void;
-  clearUser: () => void;
+  user:        User | null;
+  role:        number | null;
+  permissions: string[];
+
+  setUser:       (user: User) => void;
+  setSession:    (role: number, permissions: string[]) => void;
+  clearUser:     () => void;
+  clearSession:  () => void;
 }
 
 const useSessionStore = create<SessionState>()(
   persist(
     immer((set) => ({
-      user: null,
+      user:        null,
+      role:        null,
+      permissions: [],
+
+      // ✅ User set — same as pehle
       setUser: (user) =>
         set((state) => {
-          console.log("Setting user in store:", user);
           state.user = user;
         }),
+
+      // ✅ Role + permissions set — getAccess() se call hoga
+      setSession: (role, permissions) =>
+        set((state) => {
+          state.role        = role;
+          state.permissions = permissions;
+        }),
+
+      // ✅ Sirf user clear
       clearUser: () =>
         set((state) => {
           state.user = null;
         }),
+
+      // ✅ Sab clear — logout pe
+      clearSession: () =>
+        set((state) => {
+          state.user        = null;
+          state.role        = null;
+          state.permissions = [];
+        }),
     })),
     {
       name: "user-session",
-      storage: createJSONStorage(() => localStorage),
+      // ✅ sessionStorage — tab band = auto clear, localStorage se safer
+      storage: createJSONStorage(() => sessionStorage),
     }
   )
 );
