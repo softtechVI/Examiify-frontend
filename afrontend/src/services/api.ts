@@ -85,9 +85,11 @@ export const EmailOtpVerify = async (otp: number, email: string) => {
 };
 
 export const getRoles = async (): Promise<RoleCatalogResponse> => {
+  console.log("Get roles");
   const { data } = await axios.get<RoleCatalogResponse>(`${API_URL}/api/admin/roles`, {
     withCredentials: true,
   });
+  console.log("Roles fetched:", data);
   return data;
 };
 
@@ -132,7 +134,7 @@ export const loginAdmin = async (email: string, password: string) => {
     );
 
     if (response.status === 200) {
-     return { success: true, message: response.data.message};
+      return { success: true, message: response.data.message};
     }
 
   } catch (error: any) {
