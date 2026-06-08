@@ -17,20 +17,20 @@ export const checkAuth = async (): Promise<boolean> => {
     return false;
   }
 };
+  
+// export const logout = async (): Promise<boolean> => {
+//   try {
+//     const response = await axios.post(
+//       `${API_URL}/api/auth/logout`,
+//       {},
+//       {
+//         withCredentials: true, 
+//       }
+//     );
 
-export const logout = async (): Promise<boolean> => {
-  try {
-    const response = await axios.post(
-      `${API_URL}/api/auth/logout`,
-      {},
-      {
-        withCredentials: true, 
-      }
-    );
-
-    return response.status === 200;
-  } catch (error) {
-    console.error("Logout failed:", error);
-    return false;
-  }
-};
+//     return response.status === 200;
+//   } catch (error) {
+//     console.error("Logout failed:", error);
+//     return false;
+//   }
+// };

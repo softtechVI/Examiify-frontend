@@ -1,8 +1,9 @@
+
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Dropdown, Menu, Button } from "antd";
 import { User, Menu as MenuIcon, X, ChevronDown } from "lucide-react";
-import { logout } from "../../utils/checkauth";
+import { useAuth } from "../../hooks/useAuth";
 import NotificationPanel from "../Notification/index";
 import useSessionStore from "../../store/userSession";
 
@@ -42,19 +43,15 @@ const InsideHeader = () => {
     permissions.includes(item.permission)
   );
 
+  const { logout } = useAuth();   
+
   const handleLogout = async () => {
     setLoading(true);
     try {
-      const success = await logout();
-      if (success) {
-        sessionStorage.clear();
-        localStorage.removeItem("userRole");
-        localStorage.removeItem("userPermissions");
-        clearSession();
-        navigate("/login");
-      }
+      await logout();             
+      navigate("/login");
     } catch (error) {
-      console.error("Error logging out:", error);
+      console.error("Logout error:", error);
     } finally {
       setLoading(false);
     }

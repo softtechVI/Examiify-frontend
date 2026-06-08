@@ -1,9 +1,8 @@
 import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../API/AllapiVerify";
+import { useAuth } from "../hooks/useAuth";
 import { Eye, EyeOff } from "lucide-react";
 import DashboardButton from "../components/Dashboard/index";
-import { getAccess } from "../utils/getaccess";
 
 // Import the Zustand store
 import useIsLoginStore from "../store/IsLoginStore";
@@ -11,9 +10,9 @@ import ResetPasswordFlow from "../components/ForgotPassword";
 import { Modal } from "antd";
 import logo from "../assets/logo5.png";
 import homeimg from "../assets/homeimage-login.png";
-import Dashboard from "./InsideDashBoard";
 
 const Login: React.FC = () => {
+  const { login } = useAuth();
   const navigate = useNavigate();
   const [ forgotPassword, setForgotPassword ] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -42,40 +41,33 @@ const Login: React.FC = () => {
   };
 
   const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-      if (!validate()) return;
+  async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validate()) return;
 
-      // Show global spinner with dynamic tip
-      startLoading("Logging you in...");
+    startLoading("Logging you in...");
 
-      try {
-        const result = await loginUser(formData.email, formData.password);
+    try {
+      const result = await login(formData.email, formData.password);
 
-        if (!result.success || !result.nextRoute) return;
+      if (!result.success || !result.nextRoute) return;
 
-        await getAccess();
-
-        if (result.nextRoute === "/plan-renew" && result.extra) {
-          const encodedEmail = encodeURIComponent(result.extra.email);
-          const encodedToken = encodeURIComponent(result.extra.id);
-          const encodedType = encodeURIComponent(result.extra.institutionType);
-          navigate(`/plan-renew?email=${encodedEmail}&id=${encodedToken}&type=${encodedType}`);
-        } else {
-          navigate(result.nextRoute);
-        }
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          alert(err.message || "Something went wrong.");
-        } else {
-          alert("Something went wrong.");
-        }
-      } finally {
-        stopLoading();
+      if (result.nextRoute === "/plan-renew" && result.extra) {
+        const encodedEmail = encodeURIComponent(result.extra.email);
+        const encodedToken = encodeURIComponent(result.extra.id);
+        const encodedType  = encodeURIComponent(result.extra.institutionType);
+        navigate(`/plan-renew?email=${encodedEmail}&id=${encodedToken}&type=${encodedType}`);
+      } else {
+        navigate(result.nextRoute);
       }
-    },
-    [formData, navigate, startLoading, stopLoading]
-  );
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : "Something went wrong.");
+    } finally {
+      stopLoading();
+    }
+  },
+  [formData, navigate, login, startLoading, stopLoading]
+);
 
   return (
     <div className="flex min-h-screen bg-teal-500">
