@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { logout } from "@/utils/checkauth";
 import useIsLoginStore from "@/store/IsLoginStore";
+import useSessionStore from "@/store/userSession";
 import { Box, Button, IconButton } from "@mui/material";
 import { brandColors } from "@/theme";
 
@@ -51,6 +52,7 @@ export const AdminSidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { startLoading, stopLoading } = useIsLoginStore();
+  const clearUser = useSessionStore((state) => state.clearUser);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(window.innerWidth >= 1024);
 
@@ -73,7 +75,11 @@ export const AdminSidebar = () => {
     startLoading("Logging out...");
     try {
       const success = await logout();
-      if (success) { sessionStorage.clear(); navigate("/login"); }
+      if (success) {
+        clearUser();
+        sessionStorage.clear();
+        navigate("/login");
+      }
     } catch (error) {
       console.error("Error logging out:", error);
     } finally {

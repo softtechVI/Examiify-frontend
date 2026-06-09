@@ -22,29 +22,49 @@ import Roles from "./pages/Roles";
 import RoleEdit from "./pages/RoleEdit";
 import Unauthorized from "./pages/Unauthorized";
 
-import { checkAuth } from "./utils/checkauth";
+import useSessionStore from "./store/userSession";
 
 const queryClient = new QueryClient();
 
 /* ---------------- LOGIN ROUTE (FROM CODE 1) ---------------- */
 
 const LoginRoute: React.FC = () => {
-  const [loading, setLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const user = useSessionStore((state) => state.user);
+
+  return user ? (
+    <Navigate to="/admindashboard" replace />
+  ) : (
+    <Login />
+  );
+};
+
+/* ---------------- MAIN APP ---------------- */
+
+const App: React.FC = () => {
+  const restoreSession = useSessionStore((state) => state.restoreSession);
+  const [bootstrapping, setBootstrapping] = useState(true);
 
   useEffect(() => {
-    const verify = async () => {
+    let cancelled = false;
+
+    const bootstrapSession = async () => {
       try {
-        const authenticated = await checkAuth();
-        setIsLoggedIn(authenticated);
+        await restoreSession();
       } finally {
-        setLoading(false);
+        if (!cancelled) {
+          setBootstrapping(false);
+        }
       }
     };
-    verify();
-  }, []);
 
-  if (loading) {
+    bootstrapSession();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [restoreSession]);
+
+  if (bootstrapping) {
     return (
       <Box
         sx={{
@@ -55,23 +75,13 @@ const LoginRoute: React.FC = () => {
         }}
       >
         <Box display="flex" flexDirection="column" alignItems="center" gap={1}>
-  <CircularProgress size={60} />
-  <Typography>Checking session...</Typography>
-</Box>
+          <CircularProgress size={60} />
+          <Typography>Restoring session...</Typography>
+        </Box>
       </Box>
     );
   }
 
-  return isLoggedIn ? (
-    <Navigate to="/admindashboard" replace />
-  ) : (
-    <Login />
-  );
-};
-
-/* ---------------- MAIN APP ---------------- */
-
-const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
