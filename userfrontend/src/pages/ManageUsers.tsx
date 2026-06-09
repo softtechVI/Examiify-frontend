@@ -17,14 +17,15 @@ interface DisplayUser {
   status: string;
 }
 
-const getRoleColor = (role: string) => {
-  switch (role) {
-    case "admin":
-      return "bg-purple-100 text-purple-800 hover:bg-purple-200";
-    case "teacher":
-      return "bg-blue-100 text-blue-800 hover:bg-blue-200";
-    case "student":
-      return "bg-green-100 text-green-800 hover:bg-green-200";
+const getRoleColor = (role: string | number) => {
+  const r = Number(role);
+  switch (r) {
+    case 2:
+      return "bg-purple-100 text-purple-800 hover:bg-purple-200"; // admin
+    case 3:
+      return "bg-blue-100 text-blue-800 hover:bg-blue-200";       // teacher
+    case 4:
+      return "bg-green-100 text-green-800 hover:bg-green-200";    // student
     default:
       return "bg-gray-100 text-gray-800 hover:bg-gray-200";
   }
@@ -60,11 +61,10 @@ const ManageUsers: React.FC = () => {
     try {
       const data: User[] = await getUsers();
 
-      // Filter out super_admin
+      // Filter out super_admin (role === 1)
       const filtered = data.filter((u) => {
         const r = (u as unknown as Record<string, unknown>);
-        const role = typeof r.role === "string" ? r.role : "";
-        return role !== "super_admin";
+        return r.role !== 1;
       });
 
       const fd: DisplayUser[] = filtered.map((user) => {
