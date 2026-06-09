@@ -81,7 +81,6 @@ const Dashboard = () => {
     { title: "Manage Students", description: "Comprehensive student information and profile management.", icon: Users, buttonText: "Manage", gradient: "from-orange-500/20 via-red-500/20 to-pink-600/20", delay: 200, href: "/manage-students" },
     { title: "Seat Allocation", description: "Smart automated seat assignment for optimal arrangement.", icon: ClipboardList, buttonText: "Allocate Seats", gradient: "from-violet-500/20 via-purple-500/20 to-fuchsia-600/20", delay: 300, href: "/seat-allocation" },
     { title: "Generate Reports", description: "Comprehensive analytics and detailed examination reports.", icon: BarChart3, buttonText: "View Reports", gradient: "from-yellow-500/20 via-amber-500/20 to-orange-600/20", delay: 400, href: "/reports" },
-    { title: String(user.institutionType) === String(instituteTypeconstant.school) ? "Add Class" : "Add Degree" + " & Subject", description: "Organize academic programs and class configurations.", icon: GraduationCap, buttonText: "Add Details", gradient: "from-green-500/20 via-emerald-500/20 to-teal-600/20", delay: 500, href: "/addclass-degree" },
     { title: "Teacher Management", description: "Manage teacher profiles and their examination roles.", icon: BookOpen, buttonText: "Manage Teachers", gradient: "from-red-500/20 via-pink-500/20 to-rose-600/20", delay: 600, href: "/manage-teachers" },
   ];
 
