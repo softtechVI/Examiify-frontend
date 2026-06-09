@@ -118,6 +118,7 @@ const UserApp: React.FC = () => {
         <GlobalAlert />
         <Routes>
           <Route path="/login"      element={<Login />} />
+          <Route path="/"           element={<HomeRoute />} />
           <Route path="/register"   element={<Register />} />
           <Route path="/not-found"  element={<NotFound />} />
           <Route path="/plan-renew" element={<PlanRenew />} />
