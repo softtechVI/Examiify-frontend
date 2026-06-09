@@ -1,16 +1,16 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import { persist, createJSONStorage } from "zustand/middleware";
 import type { User } from "@/types/index";
+import { getCurrentUser } from "../API/AllapiVerify";
 
 interface SessionState {
   user: User | null;
-  setUser: (user: User) => void;
+  setUser: (user: User | null) => void;
   clearUser: () => void;
+  restoreSession: () => Promise<User | null>;
 }
 
 const useSessionStore = create<SessionState>()(
-  persist(
     immer((set) => ({
       user: null,
       setUser: (user) =>
@@ -22,12 +22,25 @@ const useSessionStore = create<SessionState>()(
         set((state) => {
           state.user = null;
         }),
-    })),
-    {
-      name: "user-session",
-      storage: createJSONStorage(() => localStorage),
-    }
-  )
-);
+      restoreSession: async () => {
+        try {
+          const data = await getCurrentUser();
+          const user = data.user ?? null;
+
+          set((state) => {
+            state.user = user;
+          });
+
+          return user;
+        } catch {
+          set((state) => {
+            state.user = null;
+          });
+
+          return null;
+        }
+      },
+    }))
+  );
 
 export default useSessionStore;

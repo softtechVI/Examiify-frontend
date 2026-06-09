@@ -10,6 +10,27 @@ const API_URL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 const Razorpay_key = import.meta.env.VITE_REACT_APP_RAZORPAY_KEY_ID;
 const showAlert = useAlertStore.getState().showAlert;
 
+export interface AuthMeResponse {
+  user: User | null;
+  success?: boolean;
+  message?: string;
+}
+
+export const getCurrentUser = async (): Promise<AuthMeResponse> => {
+  try {
+    const response = await axios.post<AuthMeResponse>(`${API_URL}/api/auth/current-user`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      console.error("Error fetching current user:", error.response?.data || error.message);
+    } else {
+      console.error("Unexpected error fetching current user:", error);
+    }
+}};
+
+
 export const EmailOtpVerify = async (otp: number, email: string) => {
   try {
     const response = await axios.post(
@@ -382,3 +403,4 @@ export const sendContactMessage = async (
     throw error;
   }
 };
+
