@@ -6,7 +6,6 @@ import useAlertStore from "../store/useAlertStore";
 
 const API_URL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 const Razorpay_key = import.meta.env.VITE_REACT_APP_RAZORPAY_KEY_ID;
-const showAlert = useAlertStore.getState().showAlert;
 
 export const EmailOtpVerify = async (otp: number, email: string) => {
   try {
@@ -337,3 +336,4 @@ export const sendContactMessage = async (
     throw error;
   }
 };
+

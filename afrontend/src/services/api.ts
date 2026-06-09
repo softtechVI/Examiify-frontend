@@ -1,6 +1,30 @@
 import axios, { AxiosError } from "axios";
-import type { RoleCatalogResponse, RoleRecord } from "@/types";
+import type { RoleCatalogResponse, RoleRecord, User } from "@/types";
 const API_URL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+export interface AuthMeResponse {
+  user: User | null;
+  success?: boolean;
+  message?: string;
+}
+
+export const getCurrentUser = async (): Promise<AuthMeResponse> => {
+  const { data } = await axios.post<AuthMeResponse>(
+    `${API_URL}/api/auth/checkadmin`,
+    {},
+    {
+      withCredentials: true,
+    }
+  );
+
+  if (data && typeof data === "object" && "user" in data) {
+    return data;
+  }
+
+  return {
+    user: (data as unknown as User) ?? null,
+  };
+};
 
 export const AddCoupon = async (formData: FormData) => {
   // Log each key-value pair in the FormData

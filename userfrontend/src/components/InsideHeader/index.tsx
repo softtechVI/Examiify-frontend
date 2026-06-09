@@ -15,13 +15,11 @@ const InsideHeader = () => {
 
   const { permissions, clearSession } = useSessionStore();
 
-  // ── Direct links — hamesha dikhenge (no dropdown) ──
   const directLinks = [
     { name: "Home",       href: "/dashboard", permission: "manage_profile" },
     { name: "Contact Us", href: "/contact",   permission: "manage_profile" },
   ];
 
-  // ── Dropdown links — permission filter hoga ──
   const allDropdownLinks = [
     { name: "Manage Exam",     href: "/manage-exam",     permission: "manage_exams"    },
     { name: "View Exam",       href: "/view-exam",       permission: "view_exam"       },
@@ -38,7 +36,6 @@ const InsideHeader = () => {
     { name: "Settings",        href: "/manage-settings", permission: "manage_settings" },
   ];
 
-  // Sirf allowed dropdown links
   const dropdownLinks = allDropdownLinks.filter((item) =>
     permissions.includes(item.permission)
   );
@@ -147,7 +144,6 @@ const InsideHeader = () => {
               </Link>
             ))}
 
-            {/* Pages Dropdown — sirf agar koi permission wala link hai */}
             {dropdownLinks.length > 0 && (
               <Dropdown
                 overlay={pagesMenu}

@@ -226,7 +226,6 @@ const Dashboard = () => {
     },
   ];
 
-  // ✅ Sirf wohi features filter karo jo permission mein hain
   const features = allFeatures.filter((f) => permissions.includes(f.permission));
 
   const stats = [

@@ -53,7 +53,6 @@ const PERMS = {
   MANAGE_SETTINGS: "manage_settings",
 };
 
-// ─── Pure function — hook nahi, loop nahi ─────────────────────────────────────
 const initApp = async () => {
   console.log("initApp called");
   const { setUser, setSession, clearSession } = useSessionStore.getState();
@@ -105,99 +104,113 @@ const LoginRoute: React.FC = () => {
 
 // ─── Main App ─────────────────────────────────────────────────────────────────
 const UserApp: React.FC = () => {
-  console.log("UserApp render");
-  const { role }       = useSessionStore();
-  const isLoginLoading = useIsLoginStore((s) => s.isLoginLoading);
-
-  console.log("UserApp render — role:", role, "isLoginLoading:", isLoginLoading);
-  console.log("UserApp role:", role);
-  console.log("type of role",typeof role);
-  console.log("role === 2:", role === 2);
+  const { role }          = useSessionStore();
+  const { user }          = useSessionStore();
+  const [ready, setReady] = React.useState(false);
 
   useEffect(() => {
-    initApp();
+    initApp().finally(() => setReady(true));
   }, []);
 
+  if (ready && !user) {
+    return (
+      <BrowserRouter>
+        <GlobalAlert />
+        <Routes>
+          <Route path="/login"      element={<Login />} />
+          <Route path="/register"   element={<Register />} />
+          <Route path="/not-found"  element={<NotFound />} />
+          <Route path="/plan-renew" element={<PlanRenew />} />
+          <Route path="*"           element={<Navigate to="/login" replace />} />
+        </Routes>
+      </BrowserRouter>
+    );
+  }
 
   return (
-  <BrowserRouter>
-    <GlobalAlert />
-    <GlobalLoader />
-      <Routes>
-        <Route path="/"           element={<HomeRoute />} />
-        <Route path="/login"      element={<LoginRoute />} />
-        <Route path="/register"   element={<Register />} />
-        <Route path="/not-found"  element={<NotFound />} />
-        <Route path="/plan-renew" element={<PlanRenew />} />
+    <BrowserRouter>
+      <GlobalAlert />
 
-        {role === 1 && (
-          <Route element={<ProtectedRoute expectedRole={1} />}>
-            <Route element={<UserLayout />}>
-              <Route path="/dashboard"       element={<Dashboard />} />
-              <Route path="/profile"         element={<Profile />} />
-              <Route path="/contact"         element={<Contact />} />
-              <Route path="/manage-users"    element={<PermRoute permId={PERMS.MANAGE_USERS}>   <ManageUsers />   </PermRoute>} />
-              <Route path="/manage-roles"    element={<PermRoute permId={PERMS.MANAGE_ROLES}>   <ManageRoles />   </PermRoute>} />
-              <Route path="/manage-plans"    element={<PermRoute permId={PERMS.MANAGE_PLANS}>   <ManagePlans />   </PermRoute>} />
-              <Route path="/manage-coupons"  element={<PermRoute permId={PERMS.MANAGE_COUPONS}> <ManageCoupons /> </PermRoute>} />
-              <Route path="/manage-ai"       element={<PermRoute permId={PERMS.MANAGE_AI}>      <ManageAI />      </PermRoute>} />
-              <Route path="/manage-settings" element={<PermRoute permId={PERMS.MANAGE_SETTINGS}><ManageSettings /></PermRoute>} />
+      {!ready && (
+        <GlobalLoader />
+      )}
+
+      {ready && (
+        <Routes>
+          <Route path="/"           element={<HomeRoute />} />
+          <Route path="/login"      element={<LoginRoute />} />
+          <Route path="/register"   element={<Register />} />
+          <Route path="/not-found"  element={<NotFound />} />
+          <Route path="/plan-renew" element={<PlanRenew />} />
+
+          {role === 1 && (
+            <Route element={<ProtectedRoute expectedRole={1} />}>
+              <Route element={<UserLayout />}>
+                <Route path="/dashboard"       element={<Dashboard />} />
+                <Route path="/profile"         element={<Profile />} />
+                <Route path="/contact"         element={<Contact />} />
+                <Route path="/manage-users"    element={<PermRoute permId={PERMS.MANAGE_USERS}>   <ManageUsers />   </PermRoute>} />
+                <Route path="/manage-roles"    element={<PermRoute permId={PERMS.MANAGE_ROLES}>   <ManageRoles />   </PermRoute>} />
+                <Route path="/manage-plans"    element={<PermRoute permId={PERMS.MANAGE_PLANS}>   <ManagePlans />   </PermRoute>} />
+                <Route path="/manage-coupons"  element={<PermRoute permId={PERMS.MANAGE_COUPONS}> <ManageCoupons /> </PermRoute>} />
+                <Route path="/manage-ai"       element={<PermRoute permId={PERMS.MANAGE_AI}>      <ManageAI />      </PermRoute>} />
+                <Route path="/manage-settings" element={<PermRoute permId={PERMS.MANAGE_SETTINGS}><ManageSettings /></PermRoute>} />
+              </Route>
             </Route>
-          </Route>
-        )}
+          )}
 
-        {role === 2 && (
-          <Route element={<ProtectedRoute expectedRole={2} />}>
-            <Route element={<UserLayout />}>
-              <Route path="/dashboard"       element={<Dashboard />} />
-              <Route path="/profile"         element={<Profile />} />
-              <Route path="/contact"         element={<Contact />} />
-              <Route path="/manage-users"    element={<PermRoute permId={PERMS.MANAGE_USERS}>   <ManageUsers />   </PermRoute>} />
-              <Route path="/manage-exam"     element={<PermRoute permId={PERMS.MANAGE_EXAMS}>   <ManageExam />    </PermRoute>} />
-              <Route path="/manage-students" element={<PermRoute permId={PERMS.MANAGE_STUDENTS}><ManageStudents /></PermRoute>} />
-              <Route path="/manage-rooms"    element={<PermRoute permId={PERMS.MANAGE_ROOMS}>   <ManageRooms />   </PermRoute>} />
-              <Route path="/view-exam"       element={<PermRoute permId={PERMS.VIEW_EXAM}>      <ViewExam />      </PermRoute>} />
-              <Route path="/view-results"    element={<PermRoute permId={PERMS.VIEW_RESULTS}>   <ViewResults />   </PermRoute>} />
-              <Route path="/view-reports"    element={<PermRoute permId={PERMS.VIEW_REPORTS}>   <ViewReports />   </PermRoute>} />
-              <Route path="/manage-settings" element={<PermRoute permId={PERMS.MANAGE_SETTINGS}><ManageSettings /></PermRoute>} />
+          {role === 2 && (
+            <Route element={<ProtectedRoute expectedRole={2} />}>
+              <Route element={<UserLayout />}>
+                <Route path="/dashboard"       element={<Dashboard />} />
+                <Route path="/profile"         element={<Profile />} />
+                <Route path="/contact"         element={<Contact />} />
+                <Route path="/manage-users"    element={<PermRoute permId={PERMS.MANAGE_USERS}>   <ManageUsers />   </PermRoute>} />
+                <Route path="/manage-exam"     element={<PermRoute permId={PERMS.MANAGE_EXAMS}>   <ManageExam />    </PermRoute>} />
+                <Route path="/manage-students" element={<PermRoute permId={PERMS.MANAGE_STUDENTS}><ManageStudents /></PermRoute>} />
+                <Route path="/manage-rooms"    element={<PermRoute permId={PERMS.MANAGE_ROOMS}>   <ManageRooms />   </PermRoute>} />
+                <Route path="/view-exam"       element={<PermRoute permId={PERMS.VIEW_EXAM}>      <ViewExam />      </PermRoute>} />
+                <Route path="/view-results"    element={<PermRoute permId={PERMS.VIEW_RESULTS}>   <ViewResults />   </PermRoute>} />
+                <Route path="/view-reports"    element={<PermRoute permId={PERMS.VIEW_REPORTS}>   <ViewReports />   </PermRoute>} />
+                <Route path="/manage-settings" element={<PermRoute permId={PERMS.MANAGE_SETTINGS}><ManageSettings /></PermRoute>} />
+              </Route>
             </Route>
-          </Route>
-        )}
+          )}
 
-        {role === 3 && (
-          <Route element={<ProtectedRoute expectedRole={3} />}>
-            <Route element={<UserLayout />}>
-              <Route path="/dashboard"       element={<Dashboard />} />
-              <Route path="/profile"         element={<Profile />} />
-              <Route path="/contact"         element={<Contact />} />
-              <Route path="/manage-exam"     element={<PermRoute permId={PERMS.MANAGE_EXAMS}>   <ManageExam />    </PermRoute>} />
-              <Route path="/manage-students" element={<PermRoute permId={PERMS.MANAGE_STUDENTS}><ManageStudents /></PermRoute>} />
-              <Route path="/manage-rooms"    element={<PermRoute permId={PERMS.MANAGE_ROOMS}>   <ManageRooms />   </PermRoute>} />
-              <Route path="/view-exam"       element={<PermRoute permId={PERMS.VIEW_EXAM}>      <ViewExam />      </PermRoute>} />
-              <Route path="/view-results"    element={<PermRoute permId={PERMS.VIEW_RESULTS}>   <ViewResults />   </PermRoute>} />
-              <Route path="/view-reports"    element={<PermRoute permId={PERMS.VIEW_REPORTS}>   <ViewReports />   </PermRoute>} />
+          {role === 3 && (
+            <Route element={<ProtectedRoute expectedRole={3} />}>
+              <Route element={<UserLayout />}>
+                <Route path="/dashboard"       element={<Dashboard />} />
+                <Route path="/profile"         element={<Profile />} />
+                <Route path="/contact"         element={<Contact />} />
+                <Route path="/manage-exam"     element={<PermRoute permId={PERMS.MANAGE_EXAMS}>   <ManageExam />    </PermRoute>} />
+                <Route path="/manage-students" element={<PermRoute permId={PERMS.MANAGE_STUDENTS}><ManageStudents /></PermRoute>} />
+                <Route path="/manage-rooms"    element={<PermRoute permId={PERMS.MANAGE_ROOMS}>   <ManageRooms />   </PermRoute>} />
+                <Route path="/view-exam"       element={<PermRoute permId={PERMS.VIEW_EXAM}>      <ViewExam />      </PermRoute>} />
+                <Route path="/view-results"    element={<PermRoute permId={PERMS.VIEW_RESULTS}>   <ViewResults />   </PermRoute>} />
+                <Route path="/view-reports"    element={<PermRoute permId={PERMS.VIEW_REPORTS}>   <ViewReports />   </PermRoute>} />
+              </Route>
             </Route>
-          </Route>
-        )}
+          )}
 
-        {role === 4 && (
-          <Route element={<ProtectedRoute expectedRole={4} />}>
-            <Route element={<UserLayout />}>
-              <Route path="/dashboard"    element={<Dashboard />} />
-              <Route path="/profile"      element={<Profile />} />
-              <Route path="/contact"      element={<Contact />} />
-              <Route path="/view-exam"    element={<PermRoute permId={PERMS.VIEW_EXAM}>    <ViewExam />    </PermRoute>} />
-              <Route path="/attempt-exam" element={<PermRoute permId={PERMS.ATTEMPT_EXAMS}><AttemptExam /> </PermRoute>} />
-              <Route path="/view-results" element={<PermRoute permId={PERMS.VIEW_RESULTS}> <ViewResults /> </PermRoute>} />
+          {role === 4 && (
+            <Route element={<ProtectedRoute expectedRole={4} />}>
+              <Route element={<UserLayout />}>
+                <Route path="/dashboard"    element={<Dashboard />} />
+                <Route path="/profile"      element={<Profile />} />
+                <Route path="/contact"      element={<Contact />} />
+                <Route path="/view-exam"    element={<PermRoute permId={PERMS.VIEW_EXAM}>    <ViewExam />    </PermRoute>} />
+                <Route path="/attempt-exam" element={<PermRoute permId={PERMS.ATTEMPT_EXAMS}><AttemptExam /> </PermRoute>} />
+                <Route path="/view-results" element={<PermRoute permId={PERMS.VIEW_RESULTS}> <ViewResults /> </PermRoute>} />
+              </Route>
             </Route>
-          </Route>
-        )}
+          )}
 
-        <Route path="*" element={<Navigate to="/not-found" replace />} />
-      </Routes>
-
-  </BrowserRouter>
-);
+          <Route path="*" element={<Navigate to="/not-found" replace />} />
+        </Routes>
+      )}
+    </BrowserRouter>
+  );
 };
 
 export default UserApp;

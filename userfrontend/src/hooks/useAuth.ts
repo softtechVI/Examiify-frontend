@@ -8,10 +8,7 @@ const showAlert = useAlertStore.getState().showAlert;
 const API_URL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 
 export const useAuth = () => {
-  // ✅ Sirf read ke liye hook — reactive
   const { user, role, permissions } = useSessionStore();
-
-  // ✅ Write ke liye getState() — stable, re-render nahi karega
   const { setUser, setSession, clearSession } = useSessionStore.getState();
 
   const fetchAccess = useCallback(async () => {
