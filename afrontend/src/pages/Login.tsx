@@ -29,7 +29,7 @@ const Login: React.FC = () => {
       const data = await EmailOtpVerify(Number(otp), emailForOtp);
 
       if (data.success) {
-        setUser(data.user);
+        setUser(data.user ?? null);
         showAlert("success", data.message);
         navigate(data.nextRoute);
         setShowOtpScreen(false);

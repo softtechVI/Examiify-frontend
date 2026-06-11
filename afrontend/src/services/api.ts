@@ -1,6 +1,30 @@
 import axios, { AxiosError } from "axios";
-import type { RoleCatalogResponse, RoleRecord } from "@/types";
+import type { RoleCatalogResponse, RoleRecord, User } from "@/types";
 const API_URL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+export interface AuthMeResponse {
+  user: User | null;
+  success?: boolean;
+  message?: string;
+}
+
+export const getCurrentUser = async (): Promise<AuthMeResponse> => {
+  const { data } = await axios.post<AuthMeResponse>(
+    `${API_URL}/api/auth/checkadmin`,
+    {},
+    {
+      withCredentials: true,
+    }
+  );
+
+  if (data && typeof data === "object" && "user" in data) {
+    return data;
+  }
+
+  return {
+    user: (data as unknown as User) ?? null,
+  };
+};
 
 export const AddCoupon = async (formData: FormData) => {
   // Log each key-value pair in the FormData
@@ -85,9 +109,11 @@ export const EmailOtpVerify = async (otp: number, email: string) => {
 };
 
 export const getRoles = async (): Promise<RoleCatalogResponse> => {
+  console.log("Get roles");
   const { data } = await axios.get<RoleCatalogResponse>(`${API_URL}/api/admin/roles`, {
     withCredentials: true,
   });
+  console.log("Roles fetched:", data);
   return data;
 };
 
@@ -132,7 +158,7 @@ export const loginAdmin = async (email: string, password: string) => {
     );
 
     if (response.status === 200) {
-     return { success: true, message: response.data.message};
+      return { success: true, message: response.data.message};
     }
 
   } catch (error: any) {
