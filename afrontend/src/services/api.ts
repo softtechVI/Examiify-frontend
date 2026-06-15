@@ -423,3 +423,39 @@ export const GetAllContacts = async () => {
     throw new Error("Something went wrong while fetching the contacts.");
   }
 };
+
+
+export const GetBlockedIps = async () => {
+  try {
+    const response = await axios.get(
+      `${API_URL}/api/admin/blocked-ip`,
+      {
+        withCredentials: true,
+      }
+    );
+
+    return response.data;
+  } catch (error: any) {
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch blocked IPs."
+    );
+  }
+};
+
+
+export const UnblockIp = async (ip: string) => {
+  try {
+    const response = await axios.delete(
+      `${API_URL}/api/admin/unblock-ip/${ip}`,
+      {
+        withCredentials: true,
+      }
+    );
+
+    return response.data;
+  } catch (error: any) {
+    throw new Error(
+      error.response?.data?.message || "Failed to unblock IP."
+    );
+  }
+};

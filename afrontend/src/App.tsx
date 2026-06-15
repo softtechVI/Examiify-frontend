@@ -21,6 +21,7 @@ import ContactMessages from "./pages/ContactMessage";
 import Roles from "./pages/Roles";
 import RoleEdit from "./pages/RoleEdit";
 import Unauthorized from "./pages/Unauthorized";
+import IpUnblock from "./pages/IpUnblock";
 
 import useSessionStore from "./store/userSession";
 
@@ -107,6 +108,7 @@ const App: React.FC = () => {
               <Route path="/contact-info" element={<ContactMessages />} />
               <Route path="/roles" element={<Roles />} />
               <Route path="/roles/:roleId" element={<RoleEdit />} />
+              <Route path="/IpUnblock" element={<IpUnblock/>}/>
             </Route>
 
             <Route path="/unauthorized" element={<Unauthorized />} />

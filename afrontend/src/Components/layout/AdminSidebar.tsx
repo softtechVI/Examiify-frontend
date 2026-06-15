@@ -18,12 +18,14 @@ import {
   Contact,
   Menu,
   X,
+  ShieldOff
 } from "lucide-react";
 import { logout } from "@/utils/checkauth";
 import useIsLoginStore from "@/store/IsLoginStore";
 import useSessionStore from "@/store/userSession";
 import { Box, Button, IconButton } from "@mui/material";
 import { brandColors } from "@/theme";
+import { Label } from "recharts";
 
 const BRAND   = brandColors.primary;      // #049F99
 const HOVER   = brandColors.hoverBg;      // rgba(4,159,153,0.08)
@@ -44,6 +46,7 @@ const menuItems = [
   { icon: BarChart3, label: "Reports", path: "/reports" },
   { icon: Sliders, label: "Feature Control", path: "/feature-control" },
   { icon: Shield, label: "Roles", path: "/roles" },
+  { icon: ShieldOff, label: "IP Unblock", path: "/IpUnblock" },
   { icon: Settings, label: "Settings", path: "/settings" },
   { icon: LogOut, label: "Contact info", path: "/Contact-info" },
 ];
