@@ -6,6 +6,7 @@ import useAlertStore from "@/store/useAlertStore";
 
 const showAlert = useAlertStore.getState().showAlert;
 const API_URL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+console.log(API_URL);
 
 export const useAuth = () => {
   const { user, role, permissions } = useSessionStore();
@@ -35,6 +36,7 @@ export const useAuth = () => {
 
   const login = useCallback(async (email: string, password: string) => {
     try {
+      
       const { data } = await axios.post(
         `${API_URL}/api/user/login`,
         { email, password },

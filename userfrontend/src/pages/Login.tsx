@@ -162,7 +162,7 @@ const Login: React.FC = () => {
   onCancel={() => setForgotPassword(false)}
   footer={null}
   centered
-  destroyOnClose
+  destroyOnHidden
 >
    <ResetPasswordFlow setForgotPassword={setForgotPassword} />
 </Modal>
