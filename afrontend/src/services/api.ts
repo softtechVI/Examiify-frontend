@@ -174,8 +174,6 @@ export const loginAdmin = async (email: string, password: string) => {
 };
 
 // Delete Coupon Varify
-
-
 export const DeleteCoupon = async (id: string) => {
   try {
     const response = await axios.delete(
