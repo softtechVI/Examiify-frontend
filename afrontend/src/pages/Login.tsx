@@ -42,25 +42,31 @@ const Login: React.FC = () => {
     }
   };
 
-  const handleLogin = async () => {
-    try {
-      const data = await loginAdmin(formData.email, formData.password);
+const handleLogin = async () => {
+  try {
+    const data = await loginAdmin(formData.email, formData.password);
 
-      if (data?.success) {
+    if (data?.success) {
+      if (data.otpRequired === false && data.user) {
+        setUser(data.user);
+        showAlert("success", data.message || "Login successful");
+        navigate("/admindashboard");
+      } else {
         showAlert(
           "success",
           data.message || "OTP sent successfully for admin login"
         );
         setEmailForOtp(formData.email);
         setShowOtpScreen(true);
-      } else {
-        showAlert("error", data?.message || "Login failed");
       }
-    } catch (err) {
-      console.error("Login error:", err);
-      showAlert("error", "An unexpected error occurred");
+    } else {
+      showAlert("error", data?.message || "Login failed");
     }
-  };
+  } catch (err) {
+    console.error("Login error:", err);
+    showAlert("error", "An unexpected error occurred");
+  }
+};
 
   return (
     <Box

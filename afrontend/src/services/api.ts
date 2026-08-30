@@ -150,24 +150,35 @@ export const loginAdmin = async (email: string, password: string) => {
       `${API_URL}/api/admin/login`,
       { email, password },
       {
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         withCredentials: true,
       }
     );
 
     if (response.status === 200) {
-      return { success: true, message: response.data.message};
+      if (response.data.user) {
+        return {
+          success: true,
+          otpRequired: false,
+          user: response.data.user,
+          message: "Login successful",
+        };
+      }
+      return {
+        success: true,
+        otpRequired: true,
+        message: response.data.message,
+      };
     }
 
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
       return {
-      success: false,
-      message: error.response?.data?.message || "Internal Server Error.",
-    };
-   } else {
+        success: false,
+        otpRequired: false,
+        message: error.response?.data?.message || "Internal Server Error.",
+      };
+    } else {
       throw new Error("Something went wrong during login.");
     }
   }
