@@ -4,7 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import successImg from "../assets/succefully3.png";
 import pendingImg from "../assets/pending3.png";
 import rejectedImg from "../assets/rejected2.png";
-import { loginUser } from "../API/AllapiVerify";
+import { useAuth } from "../hooks/useAuth";
+
 
 
 interface PaymentStatusProps {
@@ -16,9 +17,10 @@ const PaymentStatus: React.FC<PaymentStatusProps> = ({ status }) => {
  const query = new URLSearchParams(window.location.search);
   const email = query.get("email") || "";
   const [password, setPassword] = useState("");
-
+  const { login } = useAuth();
 
   const handleLogin = async () => {
+    
     if (!email) {
       alert("No email found in session. Please log in again.");
       navigate("/login");
@@ -30,7 +32,7 @@ const PaymentStatus: React.FC<PaymentStatusProps> = ({ status }) => {
     }
 
     try {
-      const res = await loginUser(email, password);
+      const res = await login(email, password);
       if (res?.success) {
         alert("Login successful!");
         navigate("/dashboard");

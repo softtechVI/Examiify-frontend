@@ -2,10 +2,10 @@
   "name": "multi-frontend-project",
   "private": true,
   "scripts": {
-   "dev": "concurrently \"npm run dev --prefix afrontend\" \"npm run dev --prefix userfrontend\"",
-   "build": "npm run build --prefix afrontend && npm run build --prefix userfrontend",
-   "preview": "npm run preview --prefix afrontend && npm run preview --prefix userfrontend",
-   "lint": "npm run lint --prefix afrontend && npm run lint --prefix userfrontend",
+    "dev": "concurrently \"npm run dev --prefix afrontend\" \"npm run dev --prefix userfrontend\"",
+    "build": "npm run build --prefix afrontend && npm run build --prefix userfrontend",
+    "preview": "npm run preview --prefix afrontend && npm run preview --prefix userfrontend",
+    "lint": "npm run lint --prefix afrontend && npm run lint --prefix userfrontend",
     "install-all": "npm install --prefix afrontend && npm install --prefix userfrontend"
   },
   "dependencies": {

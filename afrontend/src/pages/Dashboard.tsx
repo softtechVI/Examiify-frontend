@@ -15,6 +15,7 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Activity,
+  ShieldOff,
 } from "lucide-react";
 import { brandColors } from "@/theme"; // adjust path if needed
 
@@ -50,6 +51,14 @@ const stats = [
     trend: "up",
     icon: Brain,
     description: "Requests this month",
+  },
+  {
+    title: "IP Unblock",
+    value: "5",
+    change: "+2",
+    trend: "down",
+    icon: ShieldOff,
+    description: "IP Unblock by Admin",
   },
 ];
 
@@ -87,7 +96,7 @@ const Dashboard = () => {
             gridTemplateColumns: {
               xs: "1fr",
               sm: "1fr 1fr",
-              lg: "repeat(4, 1fr)",
+              lg: "repeat(5, 1fr)",
             },
           }}
         >
@@ -110,7 +119,7 @@ const Dashboard = () => {
                     sx={{
                       p: 1,
                       borderRadius: 2,
-                      backgroundColor: `${brandColors.primary}1A`, // ~10% opacity
+                      backgroundColor: `${brandColors.primary}1A`,
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -298,4 +307,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard; 
+export default Dashboard;

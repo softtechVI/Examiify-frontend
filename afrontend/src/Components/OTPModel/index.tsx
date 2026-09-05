@@ -1,9 +1,6 @@
 import React, { useState, useRef, ChangeEvent, KeyboardEvent } from "react";
-import { EmailOtpVerify } from "../../services/api";
-import { useNavigate } from "react-router-dom";
 import useIsLoginStore from "../../store/IsLoginStore";
 import useAlertStore from "../../store/useAlertStore";
-import useSessionStore from "../../store/userSession";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { pageWrapperSx } from "@/theme";
 

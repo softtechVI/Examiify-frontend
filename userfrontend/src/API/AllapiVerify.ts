@@ -2,13 +2,10 @@
 
 import axios, { AxiosError } from "axios";
 import { message } from "antd";
-import useSessionStore  from "../store/userSession";
 import useAlertStore from "../store/useAlertStore";
-import type { User } from "@/types/index";
 
 const API_URL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 const Razorpay_key = import.meta.env.VITE_REACT_APP_RAZORPAY_KEY_ID;
-const showAlert = useAlertStore.getState().showAlert;
 
 export const EmailOtpVerify = async (otp: number, email: string) => {
   try {
@@ -90,52 +87,9 @@ export const GetAllPlan = async (instituteType: string) => {
   }
 };
 
-// Login Varify
-export const loginUser = async (email: string, password: string) => {
-  const setUser = useSessionStore.getState().setUser;
 
-  try {
-    const response = await axios.post(
-      `${API_URL}/api/user/login`,
-      { email, password },
-      { withCredentials: true }
-    );
 
-    const user = response.data.user;
-
-    setUser(user);
-    // console.log("User in store after login:", useSessionStore.getState().user);
-    showAlert("success", "Login successful!");
-
-    const needsReset = user.status;
-
-    return {
-      success: true,
-      user,
-      nextRoute: needsReset ? "/dashboard" : "/plan-renew",
-      extra: needsReset ? null : { email: user.email, id: user.id, institutionType: user.institutionType },
-    };
-  } catch (error) {
-    if (error instanceof AxiosError) {
-      const status = error.response?.status;
-      const msg =
-        error.response?.data?.message || error.message || "Login failed";
-
-      if (status === 403) {
-        showAlert("error", "User Not Found.");
-      } else {
-        showAlert("error", msg);
-      }
-
-      return { success: false, nextRoute: null };
-    }
-
-    showAlert("error", "Something went wrong during login.");
-    return { success: false, nextRoute: null };
-  }
-};
 // Phone Otp Varify
-
 export const PhoneOtpVerify = async (otp: string, phone: string) => {
   try {
     const response = await axios.post(
@@ -382,3 +336,4 @@ export const sendContactMessage = async (
     throw error;
   }
 };
+

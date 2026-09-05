@@ -1,6 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AdminLayout } from "@/Components/layout/AdminLayout";
 import { FeatureCard } from "@/Components/features/FeatureCard";
+import {
+  getFeatures,
+  updateFeaturesBulk,
+  resetFeatures,
+} from "../services/feature";
+
 import {
   Box,
   Typography,
@@ -24,6 +30,7 @@ import {
   Search,
   RefreshCw,
   Save,
+  LucideIcon,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -35,15 +42,41 @@ import {
   brandColors,
 } from "@/theme";
 
-interface Feature {
+type UserType = "both" | "admin" | "user";
+
+type Feature = {
   id: string;
-  icon: any;
   title: string;
   description: string;
   enabled: boolean;
-  userType: "admin" | "user" | "both";
+  userType: UserType;
   category: string;
-}
+  icon: LucideIcon;
+};
+
+const normalizeUserType = (value: string): UserType => {
+  if (value === "admin" || value === "user" || value === "both") {
+    return value;
+  }
+
+  return "both";
+};
+
+const iconMap: Record<string, LucideIcon> = {
+  Smartphone,
+  Shield,
+  KeyRound,
+  Brain,
+  FileCheck,
+  Mail,
+  Bell,
+  CreditCard,
+  UserCheck,
+  Lock,
+};
+
+const getIconByName = (iconName?: string): LucideIcon =>
+  (iconName && iconMap[iconName]) || Shield;
 
 const initialFeatures: Feature[] = [
   {
@@ -141,28 +174,84 @@ const initialFeatures: Feature[] = [
 const categories = ["All", "Authentication", "AI Features", "Notifications", "Payments", "Security"];
 
 const FeatureControl = () => {
-  const [features, setFeatures] = useState<Feature[]>(initialFeatures);
+  const [features, setFeatures] = useState<Feature[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [hasChanges, setHasChanges] = useState(false);
 
+useEffect(() => {
+  const loadFeatures = async () => {
+    try {
+      setLoading(true);
+
+      const data = await getFeatures();
+
+      setFeatures(
+        data.map((feature: any) => ({
+          ...(feature as Feature),
+          id: feature.featureId,
+          // ensure icon name is string when passed to getIconByName
+          icon: getIconByName(String(feature.icon)),
+        })) as Feature[]
+      );
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : String(error ?? "Failed to load features");
+      toast.error(msg);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  loadFeatures();
+}, []);
+
   const handleToggle = (featureId: string, enabled: boolean) => {
-    setFeatures((prev) =>
-      prev.map((f) => (f.id === featureId ? { ...f, enabled } : f))
+    setFeatures((prevFeatures) =>
+      prevFeatures.map((feature) =>
+        feature.id === featureId ? { ...feature, enabled } : feature
+      )
     );
     setHasChanges(true);
   };
 
-  const handleSave = () => {
-    toast.success("Feature settings saved successfully!");
-    setHasChanges(false);
-  };
+const handleSave = async () => {
+  try {
+    const updates = features.map((feature) => ({
+      featureId: feature.id,
+      enabled: feature.enabled,
+    }));
 
-  const handleReset = () => {
+    await updateFeaturesBulk(updates);
+
+    toast.success("Feature settings saved successfully");
+
+    setHasChanges(false);
+  } catch (error) {
+    toast.error(
+      error instanceof Error
+        ? error.message
+        : "Failed to save feature settings"
+    );
+  }
+};
+
+const handleReset = async () => {
+  try {
+    await resetFeatures();
+
     setFeatures(initialFeatures);
     setHasChanges(false);
-    toast.info("Features reset to default settings");
-  };
+
+    toast.success("Feature settings reset to default");
+  } catch (error) {
+    toast.error(
+      error instanceof Error
+        ? error.message
+        : "Failed to reset feature settings"
+    );
+  }
+};
 
   const filteredFeatures = features.filter((feature) => {
     const matchesSearch =
@@ -175,6 +264,8 @@ const FeatureControl = () => {
 
   const enabledCount = features.filter((f) => f.enabled).length;
   const disabledCount = features.length - enabledCount;
+
+
 
   return (
     <AdminLayout>

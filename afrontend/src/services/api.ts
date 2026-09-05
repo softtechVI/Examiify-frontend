@@ -1,6 +1,30 @@
 import axios, { AxiosError } from "axios";
-import type { RoleCatalogResponse, RoleRecord } from "@/types";
+import type { RoleCatalogResponse, RoleRecord, User } from "@/types";
 const API_URL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+
+export interface AuthMeResponse {
+  user: User | null;
+  success?: boolean;
+  message?: string;
+}
+
+export const getCurrentUser = async (): Promise<AuthMeResponse> => {
+  const { data } = await axios.post<AuthMeResponse>(
+    `${API_URL}/api/auth/checkadmin`,
+    {},
+    {
+      withCredentials: true,
+    }
+  );
+
+  if (data && typeof data === "object" && "user" in data) {
+    return data;
+  }
+
+  return {
+    user: (data as unknown as User) ?? null,
+  };
+};
 
 export const AddCoupon = async (formData: FormData) => {
   // Log each key-value pair in the FormData
@@ -85,9 +109,11 @@ export const EmailOtpVerify = async (otp: number, email: string) => {
 };
 
 export const getRoles = async (): Promise<RoleCatalogResponse> => {
+  console.log("Get roles");
   const { data } = await axios.get<RoleCatalogResponse>(`${API_URL}/api/admin/roles`, {
     withCredentials: true,
   });
+  console.log("Roles fetched:", data);
   return data;
 };
 
@@ -124,32 +150,41 @@ export const loginAdmin = async (email: string, password: string) => {
       `${API_URL}/api/admin/login`,
       { email, password },
       {
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         withCredentials: true,
       }
     );
 
     if (response.status === 200) {
-     return { success: true, message: response.data.message};
+      if (response.data.user) {
+        return {
+          success: true,
+          otpRequired: false,
+          user: response.data.user,
+          message: "Login successful",
+        };
+      }
+      return {
+        success: true,
+        otpRequired: true,
+        message: response.data.message,
+      };
     }
 
   } catch (error: any) {
     if (axios.isAxiosError(error)) {
       return {
-      success: false,
-      message: error.response?.data?.message || "Internal Server Error.",
-    };
-   } else {
+        success: false,
+        otpRequired: false,
+        message: error.response?.data?.message || "Internal Server Error.",
+      };
+    } else {
       throw new Error("Something went wrong during login.");
     }
   }
 };
 
 // Delete Coupon Varify
-
-
 export const DeleteCoupon = async (id: string) => {
   try {
     const response = await axios.delete(
@@ -395,5 +430,41 @@ export const GetAllContacts = async () => {
       throw new Error(error.response?.data?.message || error.message);
     }
     throw new Error("Something went wrong while fetching the contacts.");
+  }
+};
+
+
+export const GetBlockedIps = async () => {
+  try {
+    const response = await axios.get(
+      `${API_URL}/api/admin/blocked-ip`,
+      {
+        withCredentials: true,
+      }
+    );
+
+    return response.data;
+  } catch (error: any) {
+    throw new Error(
+      error.response?.data?.message || "Failed to fetch blocked IPs."
+    );
+  }
+};
+
+
+export const UnblockIp = async (ip: string) => {
+  try {
+    const response = await axios.delete(
+      `${API_URL}/api/admin/unblock-ip/${ip}`,
+      {
+        withCredentials: true,
+      }
+    );
+
+    return response.data;
+  } catch (error: any) {
+    throw new Error(
+      error.response?.data?.message || "Failed to unblock IP."
+    );
   }
 };
