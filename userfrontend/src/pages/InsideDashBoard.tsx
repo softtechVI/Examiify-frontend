@@ -1,8 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import InsideHeader from "@/components/InsideHeader";
 import useSessionStore from "@/store/userSession";
 import { instituteTypeconstant } from "../constants";
+import { getUserPermissions } from "../utils/getaccess"; // ✅ add
 import {
   Users,
   FileText,
@@ -14,8 +13,13 @@ import {
   GraduationCap,
   Sparkles,
   ArrowRight,
+  Settings,
+  Brain,
+  Tag,
+  ShieldCheck,
+  User,
 } from "lucide-react";
-import { Link } from "react-router-dom";  // 👈 yeh import add kiya
+import { Link } from "react-router-dom";
 
 interface FeatureCardProps {
   title: string;
@@ -24,18 +28,18 @@ interface FeatureCardProps {
   buttonText: string;
   gradient: string;
   delay: number;
-  href: string;   // 👈 href prop add kiya
+  href: string;
 }
 
 const FeatureCard = ({ title, description, icon: Icon, buttonText, gradient, delay, href }: FeatureCardProps) => {
   return (
-    <div 
+    <div
       className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${gradient} p-[1px] transition-all duration-500 hover:scale-105 hover:rotate-1 animate-fade-in`}
       style={{ animationDelay: `${delay}ms` }}
     >
       <div className="relative h-full rounded-2xl bg-card/95 backdrop-blur-sm p-8 transition-all duration-300 group-hover:bg-card/98">
         <div className="absolute -top-2 -right-2 w-20 h-20 bg-gradient-to-br from-primary/20 to-transparent rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        
+
         <div className="flex flex-col items-center text-center space-y-6 relative z-10">
           <div className="relative">
             <div className="p-4 bg-gradient-to-br from-primary/10 to-accent/20 rounded-2xl backdrop-blur-sm group-hover:scale-110 transition-transform duration-300">
@@ -43,7 +47,7 @@ const FeatureCard = ({ title, description, icon: Icon, buttonText, gradient, del
             </div>
             <Sparkles className="absolute -top-1 -right-1 h-5 w-5 text-primary/60 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:animate-pulse" />
           </div>
-          
+
           <div className="space-y-3">
             <h3 className="text-2xl font-bold text-card-foreground group-hover:text-primary transition-colors duration-300">
               {title}
@@ -52,9 +56,8 @@ const FeatureCard = ({ title, description, icon: Icon, buttonText, gradient, del
               {description}
             </p>
           </div>
-          
-          {/* 👇 Button ko Link ke andar wrap kar diya */}
-          <Button 
+
+          <Button
             asChild
             className="group/btn relative bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-primary-foreground font-semibold px-8 py-3 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl border-0 overflow-hidden"
           >
@@ -74,16 +77,156 @@ const FeatureCard = ({ title, description, icon: Icon, buttonText, gradient, del
 
 const Dashboard = () => {
   const { user } = useSessionStore();
-  console.log("user",user)
-  const features = [
-    { title: "Manage Exam", description: "Create and schedule new exams with precision and ease.", icon: Calendar, buttonText: "View Schedule", gradient: "from-blue-500/20 via-indigo-500/20 to-purple-600/20", delay: 0, href: "/view-exam" },
-    { title: "Room Management", description: "Efficiently manage and allocate rooms for all examinations.", icon: MapPin, buttonText: "Manage Rooms", gradient: "from-emerald-500/20 via-teal-500/20 to-cyan-600/20", delay: 100, href: "/manage-rooms" },
-    { title: "Manage Students", description: "Comprehensive student information and profile management.", icon: Users, buttonText: "Manage", gradient: "from-orange-500/20 via-red-500/20 to-pink-600/20", delay: 200, href: "/manage-students" },
-    { title: "Seat Allocation", description: "Smart automated seat assignment for optimal arrangement.", icon: ClipboardList, buttonText: "Allocate Seats", gradient: "from-violet-500/20 via-purple-500/20 to-fuchsia-600/20", delay: 300, href: "/seat-allocation" },
-    { title: "Generate Reports", description: "Comprehensive analytics and detailed examination reports.", icon: BarChart3, buttonText: "View Reports", gradient: "from-yellow-500/20 via-amber-500/20 to-orange-600/20", delay: 400, href: "/reports" },
-    { title: String(user.institutionType) === String(instituteTypeconstant.school) ? "Add Class" : "Add Degree" + " & Subject", description: "Organize academic programs and class configurations.", icon: GraduationCap, buttonText: "Add Details", gradient: "from-green-500/20 via-emerald-500/20 to-teal-600/20", delay: 500, href: "/addclass-degree" },
-    { title: "Teacher Management", description: "Manage teacher profiles and their examination roles.", icon: BookOpen, buttonText: "Manage Teachers", gradient: "from-red-500/20 via-pink-500/20 to-rose-600/20", delay: 600, href: "/manage-teachers" },
+  console.log("user", user);
+
+  // ✅ Permissions lo localStorage se
+  const permissions = getUserPermissions();
+
+  // ✅ Sabke saath permission key attach karo
+  const allFeatures = [
+    {
+      permission: "manage_exams",
+      title: "Manage Exam",
+      description: "Create and schedule new exams with precision and ease.",
+      icon: Calendar,
+      buttonText: "View Schedule",
+      gradient: "from-blue-500/20 via-indigo-500/20 to-purple-600/20",
+      delay: 0,
+      href: "/manage-exam",
+    },
+    {
+      permission: "manage_rooms",
+      title: "Room Management",
+      description: "Efficiently manage and allocate rooms for all examinations.",
+      icon: MapPin,
+      buttonText: "Manage Rooms",
+      gradient: "from-emerald-500/20 via-teal-500/20 to-cyan-600/20",
+      delay: 100,
+      href: "/manage-rooms",
+    },
+    {
+      permission: "manage_students",
+      title: "Manage Students",
+      description: "Comprehensive student information and profile management.",
+      icon: Users,
+      buttonText: "Manage",
+      gradient: "from-orange-500/20 via-red-500/20 to-pink-600/20",
+      delay: 200,
+      href: "/manage-students",
+    },
+    {
+      permission: "manage_users",
+      title: "Manage Users",
+      description: "Manage all system users and their access.",
+      icon: ShieldCheck,
+      buttonText: "Manage Users",
+      gradient: "from-violet-500/20 via-purple-500/20 to-fuchsia-600/20",
+      delay: 300,
+      href: "/manage-users",
+    },
+    {
+      permission: "view_reports",
+      title: "Generate Reports",
+      description: "Comprehensive analytics and detailed examination reports.",
+      icon: BarChart3,
+      buttonText: "View Reports",
+      gradient: "from-yellow-500/20 via-amber-500/20 to-orange-600/20",
+      delay: 400,
+      href: "/view-reports",
+    },
+    {
+      permission: "view_exam",
+      title: "View Exam",
+      description: "View all scheduled and past examinations.",
+      icon: FileText,
+      buttonText: "View Exams",
+      gradient: "from-cyan-500/20 via-blue-500/20 to-indigo-600/20",
+      delay: 600,
+      href: "/view-exam",
+    },
+    {
+      permission: "view_results",
+      title: "View Results",
+      description: "View examination results and performance analytics.",
+      icon: ClipboardList,
+      buttonText: "View Results",
+      gradient: "from-pink-500/20 via-rose-500/20 to-red-600/20",
+      delay: 700,
+      href: "/view-results",
+    },
+    {
+      permission: "attempt_exams",
+      title: "Attempt Exam",
+      description: "Appear in your scheduled examinations.",
+      icon: BookOpen,
+      buttonText: "Start Exam",
+      gradient: "from-red-500/20 via-pink-500/20 to-rose-600/20",
+      delay: 800,
+      href: "/attempt-exam",
+    },
+    {
+      permission: "manage_roles",
+      title: "Manage Roles",
+      description: "Define and manage role-based access control.",
+      icon: ShieldCheck,
+      buttonText: "Manage Roles",
+      gradient: "from-slate-500/20 via-gray-500/20 to-zinc-600/20",
+      delay: 900,
+      href: "/manage-roles",
+    },
+    {
+      permission: "manage_plans",
+      title: "Manage Plans",
+      description: "Configure subscription plans and pricing.",
+      icon: Tag,
+      buttonText: "Manage Plans",
+      gradient: "from-teal-500/20 via-cyan-500/20 to-sky-600/20",
+      delay: 1000,
+      href: "/manage-plans",
+    },
+    {
+      permission: "manage_coupons",
+      title: "Manage Coupons",
+      description: "Create and manage discount coupons.",
+      icon: Tag,
+      buttonText: "Manage Coupons",
+      gradient: "from-lime-500/20 via-green-500/20 to-emerald-600/20",
+      delay: 1100,
+      href: "/manage-coupons",
+    },
+    {
+      permission: "manage_ai",
+      title: "Manage AI",
+      description: "Configure AI settings and integrations.",
+      icon: Brain,
+      buttonText: "Manage AI",
+      gradient: "from-purple-500/20 via-violet-500/20 to-indigo-600/20",
+      delay: 1200,
+      href: "/manage-ai",
+    },
+    {
+      permission: "manage_settings",
+      title: "Settings",
+      description: "Configure system settings and preferences.",
+      icon: Settings,
+      buttonText: "Manage Settings",
+      gradient: "from-gray-500/20 via-slate-500/20 to-zinc-600/20",
+      delay: 1300,
+      href: "/manage-settings",
+    },
+    {
+      permission: "manage_profile",
+      title: "Profile",
+      description: "Manage your profile and account settings.",
+      icon: User,
+      buttonText: "Manage Profile",
+      gradient: "from-blue-500/20 via-indigo-500/20 to-violet-600/20",
+      delay: 1300,
+      href: "/manage-profile",
+    },
   ];
+
+  const features = allFeatures.filter((f) => permissions.includes(f.permission));
 
   const stats = [
     { label: "Total Exams", value: "1,234", icon: FileText },
@@ -97,8 +240,8 @@ const Dashboard = () => {
       {/* Animated Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-primary/5 to-accent/10">
         <div className="absolute top-0 left-0 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primary/10 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-accent/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: "2s" }} />
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primary/10 rounded-full blur-2xl animate-pulse" style={{ animationDelay: "1s" }} />
       </div>
 
       {/* Content */}
@@ -137,7 +280,7 @@ const Dashboard = () => {
                 buttonText={feature.buttonText}
                 gradient={feature.gradient}
                 delay={feature.delay}
-                href={feature.href}   // 👈 yaha pass kiya
+                href={feature.href}
               />
             ))}
           </div>

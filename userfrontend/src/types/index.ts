@@ -108,15 +108,6 @@ export interface ApiResponse<T> {
   message?: string;
 }
 
-// User Types (for future authentication)
-// export interface User {
-//   id: string;
-//   name: string;
-//   email: string;
-//   role: 'admin' | 'teacher' | 'student';
-//   avatar?: string;
-// }
-
 export interface User {
   id: string;
   name: string;

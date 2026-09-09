@@ -112,3 +112,14 @@ export interface ContactItem {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface Feature {
+  _id: string;
+  featureId: string;
+  name: string;
+  description: string;
+  defaultEnabled: boolean;
+  enabled: boolean;
+  createdAt: string;
+  updatedAt?: string;
+}

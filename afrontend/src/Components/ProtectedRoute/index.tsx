@@ -1,16 +1,10 @@
 import { Navigate, Outlet } from "react-router-dom";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { Box, CircularProgress, Typography } from "@mui/material";
-
-const API_URL = import.meta.env.VITE_REACT_APP_SERVER_URL;
+import useSessionStore from "@/store/userSession";
 
 interface User {
   role: string | number;
-}
-
-interface ResponseData {
-  user?: User;
 }
 
 interface ProtectedRouteProps {
@@ -20,30 +14,18 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ expectedRoles }) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const [userRole, setUserRole] = useState<number | null>(null);
+  const user = useSessionStore((state) => state.user);
 
   useEffect(() => {
-    const verifyUser = async () => {
-      try {
-        const response = await axios.post<ResponseData>(
-          `${API_URL}/api/auth/checkadmin`,
-          {},
-          {
-            headers: { "Content-Type": "application/json" },
-            withCredentials: true,
-          }
-        );
+    if (!user) {
+      setIsAuthenticated(false);
+      setUserRole(null);
+      return;
+    }
 
-        if (response.data.user) {
-          setIsAuthenticated(true);
-          setUserRole(Number(response.data.user.role));
-        }
-      } catch {
-        setIsAuthenticated(false);
-      }
-    };
-
-    verifyUser();
-  }, []);
+    setIsAuthenticated(true);
+    setUserRole(Number(user.role));
+  }, [user]);
 
   if (isAuthenticated === null) {
     return (
