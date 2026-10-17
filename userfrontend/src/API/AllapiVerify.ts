@@ -2,7 +2,6 @@
 
 import axios, { AxiosError } from "axios";
 import { message } from "antd";
-import useAlertStore from "../store/useAlertStore";
 
 const API_URL = import.meta.env.VITE_REACT_APP_SERVER_URL;
 const Razorpay_key = import.meta.env.VITE_REACT_APP_RAZORPAY_KEY_ID;
